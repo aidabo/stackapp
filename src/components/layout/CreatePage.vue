@@ -27,78 +27,21 @@
           <span>Drop here to remove!</span>
         </div>
       </div>
-      <!-- 1 -->
-      <div class="newWidget grid-stack-item dragNewItem">
-        <div class="grid-stack-item-content" :gscomponent="gsGetComponentInfo('uploadForm')">
-          <div>
-            <i class="fa fa-solid fa-plus" style="font-size: 200%"></i>
-          </div>
-          <div>
-            <span>Drag me UploadForm in the dashboard!</span>
-          </div>
-        </div>
-      </div>
-      <!-- 2 -->
-      <div class="newWidget grid-stack-item dragNewItem">
-        <div class="grid-stack-item-content" :gscomponent="gsGetComponentInfo('customForm')">
-          <div>
-            <i class="fa fa-solid fa-plus" style="font-size: 200%"></i>
-          </div>
-          <div>
-            <span>Drag me CustomForm in the dashboard!</span>
-          </div>
-        </div>
-      </div>
 
-      <!-- 3 -->
-      <div class="newWidget grid-stack-item dragNewItem">
-        <div class="grid-stack-item-content" :gscomponent="gsGetComponentInfo('layoutParts')">
+      <!-- <div v-for="item in gsComponentData" class="newWidget grid-stack-item dragNewItem" :key="item.name">
+        <div class="grid-stack-item-content drag" :gscomponent="gsGetComponentInfo(item.name)">
           <div>
             <i class="fa fa-solid fa-plus" style="font-size: 200%"></i>
           </div>
           <div>
-            <span>Drag me Acro LayoutParts in the dashboard!</span>
+            <span>{{ item.name }}</span>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <!-- 4 -->
-      <div class="newWidget grid-stack-item dragNewItem">
-        <div class="grid-stack-item-content" :gscomponent="gsGetComponentInfo('editable')">
-          <div>
-            <i class="fa fa-solid fa-plus" style="font-size: 200%"></i>
-          </div>
-          <div>
-            <span>Drag me Editable in the dashboard!</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5 -->
-      <div class="newWidget grid-stack-item dragNewItem">
-        <div class="grid-stack-item-content drag" :gscomponent="gsGetComponentInfo('arcoform')">
-          <div>
-            <i class="fa fa-solid fa-plus" style="font-size: 200%"></i>
-          </div>
-          <div>
-            <span>Drag me Arco Form in the dashboard!</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5 -->
-      <div class="newWidget grid-stack-item dragNewItem">
-        <div class="grid-stack-item-content drag" :gscomponent="gsGetComponentInfo('pageList')">
-          <div>
-            <i class="fa fa-solid fa-plus" style="font-size: 200%"></i>
-          </div>
-          <div>
-            <span>Drag me PageList in the dashboard!</span>
-          </div>
-        </div>
-      </div>
-
+      <component-list></component-list>
     </div>
+
   </div>
 
   <div class="flex justify-between align-items-center bg-blue-600 text-white">
@@ -128,11 +71,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from 'vue-router';
+import ComponentList from "@/components/layout/ComponentList.vue";
 import GridStackLayout from "@/components/layout/GridStackLayout.vue";
-import { Base64 } from "js-base64";
 import { createPageProps } from "@/store/pagelayout";
 import { usePageLayoutStore } from "@/store/pagelayout";
-import { usePageComponents } from "../parts/usePageComponents";
+// import { usePageComponents } from "@/components/layout/usePageComponents";
 
 const gridRef = ref(null);
 
@@ -150,11 +93,11 @@ const editable = ref(true);
 const { savePage, getPageById } = usePageLayoutStore();
 
 //page parts component info & component 
-const { gsComponentData, gsComponents } = usePageComponents();
+//const { gsComponentData, gsComponents } = usePageComponents();
 
-const gsGetComponentInfo = (key: string) => {
-  return Base64.encode(JSON.stringify(gsComponentData.value.find(c => c.name == key)));
-}
+// const gsGetComponentInfo = (key: string) => {
+//   return Base64.encode(JSON.stringify(gsComponentData.value.find(c => c.name == key)));
+// }
 
 const pannelWidth = ref(250);
 
@@ -184,11 +127,12 @@ const load = async () => {
   let data = await getPageById(gsPageParams.value["id"]);
   if (data) {
     debugLog(data);
-    data["gsComponents"] = (data["gsComponents"] as any)?.map((item: any) => { 
-      delete item["locked"]; 
-      delete item["noMove"]; 
-      delete item["noResize"]; 
-      return item; })
+    data["gsComponents"] = (data["gsComponents"] as any)?.map((item: any) => {
+      delete item["locked"];
+      delete item["noMove"];
+      delete item["noResize"];
+      return item;
+    })
     gsPageParams.value = data;
     loadFun(gsPageParams.value["gsComponents"]);
   } else {
@@ -274,7 +218,7 @@ const publish = async () => {
 /* Position and style the close button (top right corner) */
 .sidenav .mybtn {
   /* position: absolute; */
-  top: 0;  
+  top: 0;
   font-size: 1.5rem;
   /* margin-left: 15px; */
   color: #b1b1b1;

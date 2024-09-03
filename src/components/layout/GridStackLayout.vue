@@ -16,14 +16,14 @@ import 'gridstack/dist/gridstack.min.css';
 import { GridStack } from 'gridstack';
 import { Base64 } from "js-base64";
 import { v4 as uuidv4 } from 'uuid';
-import { usePageComponents } from "@/components/parts/usePageComponents";
+import { usePageComponents } from "@/components/layout/usePageComponents";
 
 const props = defineProps({
     gsPageParams: Object,
     editable: Boolean
 })
 
-const { getItemCompnent } = usePageComponents();
+const { gsGetItemCompnent } = usePageComponents();
 
 var grid: any = null; // DO NOT use ref(null) as proxies GS will break all logic when comparing structures... see https://github.com/gridstack/gridstack.js/issues/2115
 
@@ -91,7 +91,7 @@ onMounted(async () => {
                 return;
             }
 
-            let component = getItemCompnent(gscomponentData.name);
+            let component = gsGetItemCompnent(gscomponentData.name);
             if (!component) {
                 console.log("No componnent found!");
                 return;

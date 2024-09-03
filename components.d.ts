@@ -8,11 +8,14 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ArcoForm: typeof import('./src/components/parts/ArcoForm.vue')['default']
+    ComponentList: typeof import('./src/components/layout/ComponentList.vue')['default']
+    Components: typeof import('./src/components/layout/Components.vue')['default']
     CreatePage: typeof import('./src/components/layout/CreatePage.vue')['default']
     CreatePageDialog: typeof import('./src/components/parts/CreatePageDialog.vue')['default']
     CustomForm: typeof import('./src/components/parts/CustomForm.vue')['default']
     Editable: typeof import('./src/components/parts/Editable.vue')['default']
     Footer: typeof import('./src/components/menu/Footer.vue')['default']
+    FormCreate: typeof import('./src/components/parts/FormCreate.vue')['default']
     GridStackLayout: typeof import('./src/components/layout/GridStackLayout.vue')['default']
     LayoutParts: typeof import('./src/components/parts/LayoutParts.vue')['default']
     Menubar: typeof import('./src/components/menu/Menubar.vue')['default']
@@ -25,5 +28,6 @@ declare module 'vue' {
     Test: typeof import('./src/components/test/Test.vue')['default']
     Top: typeof import('./src/components/page/Top.vue')['default']
     UploadForm: typeof import('./src/components/parts/UploadForm.vue')['default']
+    UseComponentList: typeof import('./src/components/layout/useComponentList.vue')['default']
   }
 }

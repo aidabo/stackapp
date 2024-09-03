@@ -4,13 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --debug",
     "build": "vue-tsc -b && vite build --mode production",
     "build:staging": "vue-tsc -b && vite build --mode staging",
     "preview": "vite preview"
   },
   "dependencies": {
     "@arco-plugins/vite-vue": "^1.4.5",
+    "@form-create/arco-design": "^3.1.29",
     "@types/node": "^22.5.0",
     "@vee-validate/i18n": "^4.13.2",
     "@vee-validate/rules": "^4.13.2",

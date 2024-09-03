@@ -18,8 +18,7 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from 'vue-router';
 import GridStackLayout from "@/components/layout/GridStackLayout.vue";
-import { createPageProps } from "@/store/pagelayout";
-import { usePageLayoutStore } from "@/store/pagelayout";
+import { createPageProps, usePageLayoutStore } from "@/store/pagelayout";
 
 const gridRef = ref(null);
 

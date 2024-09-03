@@ -34,7 +34,7 @@
                     </template>
                 </a-list-item-meta>
                 <template #actions>
-                    <span @click.prevent="onEdit(page.id)">編集</span>
+                    <span @click.prevent="onEdit(page.id)"><icon-edit />編集</span>
                     <span @click.prevent="onDelete(page.id)"><icon-delete />削除</span>
                     <a-select :style="{width:'220px'}" placeholder="Please select ...">
                       <a-option :value="true">Change Category</a-option>
@@ -46,6 +46,7 @@
 </template>
 
 <script setup lang="ts">
+
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router"
 import { PageProps, usePageLayoutStore } from "@/store/pagelayout";
@@ -64,15 +65,15 @@ const dialogRef = ref(null);
 
 const router = useRouter();
 
-const initailData = async() =>{
-    pages.value = await getPageList();
+const loadList = async()=> {
+    pages.value = await getPageList();  
     editables.value = pages.value.map(c => {
         return { "id": c.id, "editable": false }
     })
 }
 
 onMounted(async () => {
-    initailData();
+    await loadList();
 })
 
 const isEditable = (pageid: string) => {
@@ -131,7 +132,7 @@ const onOpen = async(pageId: string) => {
 
 const onDelete = async(pageId: string) => {
     await deletePage(pageId);
-    await initailData();
+    await loadList();
 }
 
 </script>

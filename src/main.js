@@ -13,6 +13,7 @@ import ProgessBar from './includes/progressBar';
 import ArcoVue from '@arco-design/web-vue';
 import '@arco-design/web-vue/dist/arco.css';
 import '@arco-design/web-vue/es/icon';
+//import formCreate from '@form-create/arco-design'
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -23,6 +24,7 @@ app.use(router);
 app.use(ArcoVue);
 app.use(VeeValidatePlugin);
 app.use(environment);
+//app.use(formCreate);
 
 ProgessBar(router);
 

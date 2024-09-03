@@ -1,4 +1,3 @@
-import { defineAsyncComponent } from "vue";
 import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 
 const routes = [

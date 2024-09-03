@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import SimpleListParts from "../parts/SimpleListParts.vue";
+import SimpleListParts from "@/components/parts/SimpleListParts.vue";
 
 </script>
 
