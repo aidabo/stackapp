@@ -1,18 +1,43 @@
+import { defineAsyncComponent } from "vue";
 import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
-
-const Top = () => import("@/components/page/Top.vue");
 
 const routes = [
   {
     path: "/",
     name: "top",
-    component: Top,
+    component: () => import("@/components/page/Top.vue"),
   },
   {
     path: "/home",
     name: "home",
-    component: Top,
+    component: () => import("@/components/page/Top.vue"),
   },
+  {
+    path: "/mypage",
+    name: "mypage",
+    component: ()=>import("@/components/page/MyPage.vue"),
+  },
+  {
+    path: "/pagelist",
+    name: "pagelist",
+    component: ()=>import("@/components/page/PageList.vue"),
+  },  
+  {
+    path: "/page/w/:id?",
+    name: "createpage",
+    component: ()=>import("@/components/layout/CreatePage.vue"),
+  },
+  {
+    path: "/page/r/:id?",
+    name: "page",
+    component: ()=>import("@/components/page/Page.vue"),
+  },
+  {
+    path: "/test",
+    name: "test",
+    component: ()=>import("@/components/test/Test.vue"),
+  },
+
   {
     path: "/:cacheAll(.*)*",
     redirect: { name: "top" },

@@ -1,6 +1,9 @@
 <template>
    <div class="topnav">
   <router-link :to="{ name: 'home' }">Home</router-link>
+  <router-link :to="{ name: 'mypage' }">MyPage</router-link>
+  <router-link :to="{ name: 'createpage' }">CreatePage</router-link>
+  <router-link :to="{ name: 'pagelist' }">PageList</router-link>
   <a href="#news">News</a>
   <a href="#contact">Contact</a>
   <a href="#about" class="split">Help</a>
