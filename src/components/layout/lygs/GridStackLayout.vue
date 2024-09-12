@@ -1,22 +1,25 @@
 <template>
     <div class="full-w px-4">
         <div class="full-w page">
-            <div id="gridcon" class="grid-stack">
-                <div class="drag2here">Drag to here </div>
+            <div ref="gsContainer" id="gridcon" class="grid-stack">
+                <div class="drag-to-here">Drag to here </div>
                 <slot name="stack" :grid="grid"></slot>
             </div>
         </div>
         <hr />
+        <div></div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, h, render, inject, reactive, defineExpose, watch } from "vue";
+import { onMounted, h, render, ref, defineExpose, watch, watchEffect, resolveDynamicComponent, defineComponent } from "vue";
 import 'gridstack/dist/gridstack.min.css';
 import { GridStack } from 'gridstack';
 import { Base64 } from "js-base64";
 import { v4 as uuidv4 } from 'uuid';
-import { usePageComponents } from "@/components/layout/usePageComponents";
+import { usePageComponents } from "@/components/layout/shared/usePageComponents";
+
+const gsContainer = ref(null);
 
 const props = defineProps({
     gsPageParams: Object,
@@ -27,7 +30,7 @@ const { gsGetItemCompnent } = usePageComponents();
 
 var grid: any = null; // DO NOT use ref(null) as proxies GS will break all logic when comparing structures... see https://github.com/gridstack/gridstack.js/issues/2115
 
-onMounted(async () => {    
+onMounted(async () => {
     grid = GridStack.init({ // DO NOT user grid.value = GridStack.init(), see above
         float: true,
         cellHeight: "80",
@@ -73,7 +76,7 @@ onMounted(async () => {
             //      Supports: emit, slots, props, attrs, see onRemove event below
 
             //remove dragitem custom class
-            itemEl.className = itemEl.className.replace(/dragNewItem/, "");
+            itemEl.className = itemEl.className.replace(/grid\-custom/, "");
 
             //if create new widget
             addWidgetComponentCB(item);
@@ -97,6 +100,10 @@ onMounted(async () => {
                 return;
             }
 
+            
+            resolveDynamicComponent('FormKit');
+
+            
             const itemContentVNode = h(
                 component,
                 {
@@ -116,7 +123,7 @@ onMounted(async () => {
 
                     onSubmit: (itemId: any, gsItemData: any) => {
                         alert("submit emited called: " + itemId + " " + JSON.stringify(gsItemData));
-                    }
+                    },
                 }
             )
 
@@ -183,21 +190,26 @@ const removeWidget = (el: any) => {
     grid.removeWidget(el, false);
 }
 
-watch(props, ()=>{
-    if(props.editable){
+watch(props, () => {
+    if (props.editable) {
         console.log("watch event", props.editable, grid);
     }
-}, { deep: true})
+}, { deep: true })
+
+watchEffect(()=>{
+    console.log("gs dom", gsContainer.value);
+})
 
 //expose function to parent
-defineExpose({load, save, clear});
+defineExpose({ load, save, clear });
+
 
 </script>
 
 <style>
 /** stack */
 
-.drag2here {
+.drag-to-here {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -211,7 +223,7 @@ defineExpose({load, save, clear});
     /* background-color: #18bc9c;  */
     background-color: rgba(255, 255, 255, 0.95);
     border: lightgray solid 1px;
- 
+
 }
 
 .pagemain-edit .page .grid-stack-item-content {

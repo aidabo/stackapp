@@ -4,12 +4,10 @@ import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import url from '@rollup/plugin-url';
 import { visualizer } from "rollup-plugin-visualizer";
-
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite';
 import { ArcoResolver } from 'unplugin-vue-components/resolvers';
 import { vitePluginForArco } from '@arco-plugins/vite-vue'
-
 
 export default defineConfig(({ /*command,*/ mode }) => {
   Object.assign(process.env, loadEnv(mode, process.cwd()))
@@ -21,10 +19,16 @@ export default defineConfig(({ /*command,*/ mode }) => {
   return defineConfig({    
     //base: baseUrl, //not work for reload, just add base into index.html
     plugins: [      
-      vue(),
+      vue({
+        template: {
+          compilerOptions: {
+            isCustomElement: (tag) => ['xcustom-'].includes(tag),
+          }
+        }
+      }),
       vueJsx({
         // options are passed on to @vue/babel-plugin-jsx
-      }), 
+      }),       
       AutoImport({
         resolvers: [ArcoResolver()],
       }),     

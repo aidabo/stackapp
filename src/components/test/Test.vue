@@ -1,52 +1,23 @@
 <template>
-<!-- <div class="row">
-  <div class="column">
-    <div class="card">
-      <img src="/assets/images/samples/01.jpg" alt="Jane" style="width:100%">
-      <div class="container">
-        <h2>Jane Doe</h2>
-        <p class="title">CEO & Founder</p>
-        <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-        <p>jane@example.com</p>
-        <p><button class="button">Contact</button></p>
-      </div>
+  <div class="flex flex-col mx-6">
+    <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-6 dark:bg-gray-700">
+    <div>
+        <div>FullExample</div>
+        <FormExample></FormExample>
     </div>
-  </div>
-
-  <div class="column">
-    <div class="card">
-      <img src="/assets/images/samples/02.jpg" alt="Mike" style="width:100%">
-      <div class="container">
-        <h2>Mike Ross</h2>
-        <p class="title">Art Director</p>
-        <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-        <p>mike@example.com</p>
-        <p><button class="button">Contact</button></p>
-      </div>
+    <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-6 dark:bg-gray-700">
+    <div>
+        <div>Dynamic Render</div>
+        <DynamicRender itemId="2389434" componentName="test000"></DynamicRender>  
     </div>
+    <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-6 dark:bg-gray-700">
   </div>
-
-  <div class="column">
-    <div class="card">
-      <img src="/assets/images/samples/03.jpg" alt="John" style="width:100%">
-      <div class="container">
-        <h2>John Doe</h2>
-        <p class="title">Designer</p>
-        <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-        <p>john@example.com</p>
-        <p><button class="button">Contact</button></p>
-      </div>
-    </div>
-  </div>
-</div> -->
-<LayoutParts></LayoutParts>
-
 </template>
 
-<script setup>
-import { defineAsyncComponent } from 'vue';
+<script setup lang="ts">
 
-const LayoutParts = defineAsyncComponent(() => import("@/components/parts/LayoutParts.vue"));
+import DynamicRender from '../formkit/DynamicRender';
+import FormExample from '../formkit/FormExample.vue';
 
 </script>
 

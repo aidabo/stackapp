@@ -14,10 +14,10 @@
   <Footer></Footer>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { markRaw, defineAsyncComponent, onMounted, onUnmounted } from "vue";
-import Footer from "./components/menu/Footer.vue";
-import Menubar from "./components/menu/Menubar.vue";
+import Footer from "@/components/menu/Footer.vue";
+import Menubar from "@/components/menu/Menubar.vue";
 
 onMounted(async()=>{
 })

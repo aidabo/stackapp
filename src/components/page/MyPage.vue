@@ -14,9 +14,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
-import GridStackLayout from "../layout/GridStackLayout.vue";
+import GridStackLayout from "@/components/layout/lygs/GridStackLayout.vue";
 
 const pannelWidth = ref(0);
 

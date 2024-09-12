@@ -4,13 +4,13 @@
   <router-link :to="{ name: 'mypage' }">MyPage</router-link>
   <router-link :to="{ name: 'createpage' }">CreatePage</router-link>
   <router-link :to="{ name: 'pagelist' }">PageList</router-link>
-  <a href="#news">News</a>
+  <router-link :to="{ name: 'test' }">Test</router-link>
   <a href="#contact">Contact</a>
   <a href="#about" class="split">Help</a>
 </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 </script>
 
 <style scoped>

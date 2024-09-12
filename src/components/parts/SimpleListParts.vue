@@ -43,6 +43,7 @@
             </a-list-item>
         </a-list>
     </div>
+    
 </template>
 
 <script setup lang="ts">
@@ -50,7 +51,7 @@
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router"
 import { PageProps, usePageLayoutStore } from "@/store/pagelayout";
-import CreatePageDialog from "@/components/parts/CreatePageDialog.vue"
+import CreatePageDialog from "@/components/dialog/CreatePageDialog.vue"
 import { v4 as uuidv4 } from 'uuid';
 
 const { getPageList, savePage, getPageById, deletePage } = usePageLayoutStore();

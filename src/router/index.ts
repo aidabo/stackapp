@@ -19,24 +19,23 @@ const routes = [
   {
     path: "/pagelist",
     name: "pagelist",
-    component: ()=>import("@/components/page/PageList.vue"),
+    component: ()=>import("@/components/page/GridStackPageList.vue"),
   },  
   {
     path: "/page/w/:id?",
     name: "createpage",
-    component: ()=>import("@/components/layout/CreatePage.vue"),
+    component: ()=>import("@/components/layout/lygs/GridStackCreate.vue"),
   },
   {
     path: "/page/r/:id?",
     name: "page",
-    component: ()=>import("@/components/page/Page.vue"),
+    component: ()=>import("@/components/page/GridStackPage.vue"),
   },
   {
     path: "/test",
     name: "test",
     component: ()=>import("@/components/test/Test.vue"),
   },
-
   {
     path: "/:cacheAll(.*)*",
     redirect: { name: "top" },
@@ -44,11 +43,11 @@ const routes = [
 ];
 
 const router = createRouter({
-  mode: 'history',
+  // mode: 'history',
   history: createWebHistory(),
   //createWebHashHistory(),
   routes,
-  force: true,
+  // force: true,
   linkExactActiveClass: "text-yellow-500",
 });
 

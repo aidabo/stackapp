@@ -8,7 +8,7 @@ import.meta.env.DEV: {boolean} アプリが開発で動作しているかどう�
 import.meta.env.SSR: {boolean} アプリがサーバで動作しているかどうか
 */
 
-const environment = () => {
+export const environment = () => {
     const env = {
             "env": import.meta.env.MODE,
             "base_url": import.meta.env.BASE_URL,
@@ -19,8 +19,7 @@ const environment = () => {
             "db_api_url": import.meta.env.VITE_PG_API_URL,
     };
 
-    return  env 
+    return  { env }
 };
 
-export default environment;
 

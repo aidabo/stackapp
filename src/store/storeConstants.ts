@@ -1,9 +1,11 @@
 // @ts-ignore
-import env from "../includes/environment"
+import { environment } from "@/common/environment";
 
-const baseDbApiUrl = env().db_api_url;
+const { env } = environment();
 
-const webApiUrl = env().web_api_url;
+const baseDbApiUrl = env.db_api_url;
+
+const webApiUrl = env.web_api_url;
 
 const apiJsonHeaders = {
   'Accept': 'application/json',
