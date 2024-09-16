@@ -24,17 +24,22 @@ const routes = [
   {
     path: "/page/w/:id?",
     name: "createpage",
-    component: ()=>import("@/components/layout/lygs/GridStackCreate.vue"),
+    component: ()=>import("@/components/layout/lygs/GridStackMultiCreate.vue"),
   },
   {
-    path: "/page/r/:id?",
+    path: "/page/r/:id",
     name: "page",
+    component: ()=>import("@/components/page/GridStackPage.vue"),
+  },
+  {
+    path: "/page/p/:id",
+    name: "preview",
     component: ()=>import("@/components/page/GridStackPage.vue"),
   },
   {
     path: "/test",
     name: "test",
-    component: ()=>import("@/components/test/Test.vue"),
+    component: ()=>import("@/components/layout/lygs/GridStackMultiCreate.vue"),
   },
   {
     path: "/:cacheAll(.*)*",

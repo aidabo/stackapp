@@ -1,28 +1,58 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { v4 as uuidv4 } from 'uuid';
 import { apiJsonHeaders, webApiUrl } from "./storeConstants";
+import { PageProps } from "@/components/layout/lygs/GridEvent";
 
-export type PageProps = {
-  id: string,
-  title: string,  
-  description?: string,
-  icon?: string,
-  image?: string,
-  category?: string,
-  status?: string,
-  editable?: boolean,
-  gsComponents?: []
+/*
+export interface GridOptions {
+  id: string;
+  columns: number;
+  float: boolean;
+  compact: boolean;
+  minRow?: number;
+  maxRow?: number;
+  cellHeight: number;
+  components?: [];
 }
 
-export function createPageProps(): PageProps  {
-    const pageProps =  {
-      id: uuidv4(),
-      name: "New Page",
-      title: "Create a New Page!"
-    };
-    return pageProps
+export interface PageProps {
+  id: string;
+  title: string;
+  static: true;
+  description?: string;
+  icon?: string;
+  image?: string;
+  category?: string;
+  status?: string;
+  grids?: Array<GridOptions>;
+  gsComponents?: [];
 }
+
+export const createGridOptions = (opt?: Partial<GridOptions>): GridOptions => {
+  return {
+    id: opt?.id ?? uuidv4(),
+    columns: opt?.columns ?? 12,
+    float: opt?.float ?? false,
+    compact: opt?.compact ?? false,
+    cellHeight: opt?.cellHeight ?? 70,
+    components: opt?.components ?? [],
+  } as GridOptions;
+};
+
+export const createPageProps = (opt?: Partial<PageProps>): PageProps => {
+  return {
+    id: opt?.id ?? uuidv4(),
+    title: opt?.title ?? "Create a new Page",
+    static: opt?.static ?? true,
+    description: opt?.description ?? opt?.title,
+    icon: opt?.icon ?? "",
+    image: opt?.image ?? "",
+    category: opt?.category ?? "unknown",
+    status: opt?.status ?? "",
+  } as PageProps;
+};
+
+*/
 
 export const usePageLayoutStore = defineStore("pagelayout", {
   state: () => ({
@@ -31,19 +61,18 @@ export const usePageLayoutStore = defineStore("pagelayout", {
 
   getters: {
     category: (state) => {
-      return (pageId: string) => state.pageList.find((page) => page.id === pageId);
+      return (pageId: string) =>
+        state.pageList.find((page) => page.id === pageId);
     },
   },
 
-  actions: {    
+  actions: {
     async getPageList() {
-      return await axios
-        .get(`${webApiUrl}/pages`)
-        .then((response) => {            
-            this.pageList = response.data;
-            console.log("getAll", response.data);
-            return response.data;
-        });        
+      return await axios.get(`${webApiUrl}/pages`).then((response) => {
+        this.pageList = response.data;
+        console.log("getAll", response.data);
+        return response.data;
+      });
     },
 
     async getPageById(pageId: string) {
@@ -51,21 +80,24 @@ export const usePageLayoutStore = defineStore("pagelayout", {
         .get(`${webApiUrl}/pages/${pageId}`)
         .then((response) => {
           return response.data;
-        }).catch(err=>{
+        })
+        .catch((err) => {
           console.log(err.message);
           return null;
         });
     },
 
     async exists(pageId: string) {
-      return (await this.getPageList() || []).find((p:any)=>p.id == pageId);
+      return ((await this.getPageList()) || []).find(
+        (p: any) => p.id == pageId
+      );
     },
 
     async savePage(data: PageProps) {
-      if(!await this.exists(data.id)){
-        return await this.insertPage(data);  
-      }else{
-        return await this.updatePage(data);  
+      if (!(await this.exists(data.id))) {
+        return await this.insertPage(data);
+      } else {
+        return await this.updatePage(data);
       }
     },
 
@@ -85,7 +117,7 @@ export const usePageLayoutStore = defineStore("pagelayout", {
     },
 
     async updatePage(data: PageProps) {
-      const method = "PUT"; 
+      const method = "PUT";
       const body = JSON.stringify(data);
       const headers = apiJsonHeaders;
       return await axios
@@ -108,8 +140,7 @@ export const usePageLayoutStore = defineStore("pagelayout", {
         })
         .then((response) => {
           return response.data;
-        })
+        });
     },
-
   }, //actions
 });

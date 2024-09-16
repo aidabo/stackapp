@@ -15,117 +15,52 @@
 import { onMounted, h, render, ref, defineExpose, watch, watchEffect, resolveDynamicComponent, defineComponent } from "vue";
 import 'gridstack/dist/gridstack.min.css';
 import { GridStack } from 'gridstack';
-import { Base64 } from "js-base64";
+import GridStackItem from "./GridStackItem";
 import { v4 as uuidv4 } from 'uuid';
-import { usePageComponents } from "@/components/layout/shared/usePageComponents";
 
 const gsContainer = ref(null);
 
 const props = defineProps({
-    gsPageParams: Object,
-    editable: Boolean
+    pageProps: Object,
+    pageStatic: Boolean
 })
-
-const { gsGetItemCompnent } = usePageComponents();
 
 var grid: any = null; // DO NOT use ref(null) as proxies GS will break all logic when comparing structures... see https://github.com/gridstack/gridstack.js/issues/2115
 
 onMounted(async () => {
     grid = GridStack.init({ // DO NOT user grid.value = GridStack.init(), see above
         float: true,
-        cellHeight: "80",
-        minRow: 1,
+        cellHeight: "70",
+        minRow: 5,
+        //sizeToContent: true,
+        //resizable: { handles: 'all'}, // do all sides for testing
         acceptWidgets: true,
         removable: '#trash', // drag-out delete class
     });
+
+    grid.setStatic(props.pageStatic?? false);
 
     GridStack.setupDragIn('.newWidget', { appendTo: 'body', helper: 'clone' });
 
     //debug
     //addEvents(grid);
 
-    function addWidgetComponentCB(item: any) {
-        const itemEl = item.el
-        const itemElContent = itemEl.querySelector('.grid-stack-item-content')
-
-        //if widget added by drag or add button
-        const newWidget = itemEl.className.match(/newWidget\s/)
-        if (newWidget) {
-            const gscomponent = itemElContent.getAttribute("gscomponent");
-            if (!gscomponent) {
-                alert("No componnent info found!, newWidget must set gscomponent attrbute as component info");
-                return;
-            }
-            const gscomponentData = JSON.parse(Base64.decode(gscomponent));
-            //set component data info to item to serialized to save
-            item["gscomponent"] = gscomponentData;
-        }
-    }
-
     grid.on('added', function (event: any, items: any) {
         for (const item of items) {
             const itemEl = item.el
             const itemElContent = itemEl.querySelector('.grid-stack-item-content')
-            let itemId = item.id || item._id
-            if (!itemId) {
-                itemId = item.id = item._id = uuidv4();
+            if(!item.id && item._id){
+                item.id = item._id;
+            }else if(!item.id && !item._id){
+                item.id = item._id = uuidv4();
             }
-
             // Use Vue's render function to create the content
             // See https://vuejs.org/guide/extras/render-function.html#render-functions-jsx
             //      Supports: emit, slots, props, attrs, see onRemove event below
-
             //remove dragitem custom class
             itemEl.className = itemEl.className.replace(/grid\-custom/, "");
 
-            //if create new widget
-            addWidgetComponentCB(item);
-
-            //get component info from item
-            const gscomponentData = item["gscomponent"];
-            //custom id
-            const cid = uuidv4();
-            gscomponentData["cid"] = cid;
-            //gs item id
-            gscomponentData["id"] = itemId;
-
-            if (!gscomponentData) {
-                console.log("No componnent data found!");
-                return;
-            }
-
-            let component = gsGetItemCompnent(gscomponentData.name);
-            if (!component) {
-                console.log("No componnent found!");
-                return;
-            }
-
-            
-            resolveDynamicComponent('FormKit');
-
-            
-            const itemContentVNode = h(
-                component,
-                {
-                    itemId: "" + itemId,
-                    cid: cid,
-                    gsProps: gscomponentData.props,
-                    gsInitData: gscomponentData.data,
-
-                    onRemove: (itemId: any) => {
-                        grid.removeWidget(itemEl)
-                    },
-
-                    onItemChanged: (props: any, gsItemData: any) => {
-                        console.log("stackChanged emited called", props.itemId, gsItemData);
-                        gscomponentData["data"] = gsItemData;
-                    },
-
-                    onSubmit: (itemId: any, gsItemData: any) => {
-                        alert("submit emited called: " + itemId + " " + JSON.stringify(gsItemData));
-                    },
-                }
-            )
+            const itemContentVNode: any = h(GridStackItem, {"item": item});
 
             //clear dragged element content from .grid-stack-item-content div
             itemElContent.innerHTML = ""
@@ -146,11 +81,8 @@ onMounted(async () => {
     });
 
     grid.on('change', function (e: any, items: any) {
-        // let str = '';
-        // items = items || [];
-        // (items || []).forEach(function (item) { str += ' (x,y)=' + item.x + ',' + item.y; });
-        // console.log(e.type + ' ' + items.length + ' items:' + str);
-        console.log("gs changed event***: ", e, items);
+        items = items || [];
+        console.log("gs changed event: ", e, items);
     });
 
 });
@@ -174,35 +106,37 @@ const clear = () => {
     grid.removeAll();
 }
 
-const addNewWidget = () => {
-    const node = grid.items[grid.items.length] || {
-        x: Math.round(12 * Math.random()),
-        y: Math.round(5 * Math.random()),
-        w: Math.round(1 + 3 * Math.random()),
-        h: Math.round(1 + 3 * Math.random()),
-    };
-    node.id = uuidv4();
-    grid.addWidget(node);
-}
-
 const removeWidget = (el: any) => {
     el.remove();
     grid.removeWidget(el, false);
 }
 
+const float = (value: boolean) =>{
+    (grid as any).float(value);
+}
+
+const compact = (value: boolean) =>{
+    if(value){
+        (grid as any).compact();
+    }
+}
+
+const column = (value: number) =>{
+    if(value != grid.column){
+        grid.column(value, 'list');
+    }
+}
+
+
 watch(props, () => {
-    if (props.editable) {
-        console.log("watch event", props.editable, grid);
+    if (props.pageStatic) {
+        console.log("watch event", props.pageStatic, grid);
     }
 }, { deep: true })
 
-watchEffect(()=>{
-    console.log("gs dom", gsContainer.value);
-})
 
 //expose function to parent
-defineExpose({ load, save, clear });
-
+defineExpose({ load, save, clear, float, compact, column });
 
 </script>
 
@@ -221,7 +155,7 @@ defineExpose({ load, save, clear });
 .page .grid-stack-item-content {
     text-align: center;
     /* background-color: #18bc9c;  */
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color:rgba(255, 255, 255, 0.95);
     border: lightgray solid 1px;
 
 }

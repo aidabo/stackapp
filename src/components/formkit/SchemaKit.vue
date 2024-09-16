@@ -1,12 +1,15 @@
 <template>
-  <FormKitProvider :config="FormKitConfig"  >
-    <FormKit type="form" v-model="data" @submit="handleSubmit">
-      <FormKitSchema :schema="schema" :data="data" />
-    </FormKit>
-  </FormKitProvider>
-  <pre>
-{{ data }}
-</pre>
+  <Suspense>
+    <FormKitProvider :config="FormKitConfig">
+      <FormKit type="form" v-model="data" @submit="handleSubmit">
+        <FormKitSchema :schema="schema" :data="data" />
+      </FormKit>
+    </FormKitProvider>
+  </Suspense>
+  <pre
+    >{{ data }}
+</pre
+  >
 </template>
 
 <script setup lang="ts">
@@ -19,7 +22,7 @@ const schema = [
     $formkit: "text",
     name: "name",
     label: "Full Name",
-    placeholder: "Enter your name..."
+    placeholder: "Enter your name...",
   },
   {
     $formkit: "checkbox",
@@ -46,5 +49,4 @@ const data = ref({
 });
 
 const handleSubmit = () => alert("Valid submit!");
-
 </script>

@@ -3,7 +3,7 @@ import { Base64 } from "js-base64";
 
 export const usePageComponents = () => {
 
-  const gsComponentData = ref([
+  const gsComponentData = reactive([
     {
       name: "uploadForm",
       description: "Drag me UploadForm",
@@ -63,7 +63,6 @@ export const usePageComponents = () => {
 
   ]);
 
-
   const gsComponents: any = ref({
     //MUST use defineAsyncComponent to render lazy
     customForm: markRaw(defineAsyncComponent(() => import("@/components/parts/CustomForm.vue"))),
@@ -90,7 +89,7 @@ export const usePageComponents = () => {
   }
 
   const gsGetComponentInfo = (componentName: string) => {
-    return Base64.encode(JSON.stringify(gsComponentData.value.find(c => c.name == componentName)));
+    return Base64.encode(JSON.stringify(gsComponentData.find(c => c.name == componentName)));
   }
   
   return { gsComponentData, gsComponents, gsGetItemCompnent, gsGetComponentInfo };

@@ -8,8 +8,10 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ArcoForm: typeof import('./src/components/parts/ArcoForm.vue')['default']
+    copy: typeof import('./src/components/layout/lygs/GridStackLayout copy.vue')['default']
     CreatePageDialog: typeof import('./src/components/dialog/CreatePageDialog.vue')['default']
     CustomForm: typeof import('./src/components/parts/CustomForm.vue')['default']
+    DebugInfo: typeof import('./src/components/layout/lygs/DebugInfo.vue')['default']
     Editable: typeof import('./src/components/parts/Editable.vue')['default']
     FileUpload: typeof import('./src/components/formkit/FileUpload.vue')['default']
     Footer: typeof import('./src/components/menu/Footer.vue')['default']
@@ -19,6 +21,9 @@ declare module 'vue' {
     GridStackCreate: typeof import('./src/components/layout/lygs/GridStackCreate.vue')['default']
     GridStackLayout: typeof import('./src/components/layout/lygs/GridStackLayout.vue')['default']
     GridStackLayout2: typeof import('./src/components/layout/lygs/GridStackLayout2.vue')['default']
+    GridStackLayoutMulti: typeof import('./src/components/layout/lygs/GridStackLayoutMulti.vue')['default']
+    GridStackMultiCreate: typeof import('./src/components/layout/lygs/GridStackMultiCreate.vue')['default']
+    GridStackMultiLayout: typeof import('./src/components/layout/lygs/GridStackMultiLayout.vue')['default']
     GridStackPage: typeof import('./src/components/page/GridStackPage.vue')['default']
     GridStackPageList: typeof import('./src/components/page/GridStackPageList.vue')['default']
     LayoutPageList: typeof import('./src/components/page/LayoutPageList.vue')['default']
@@ -27,6 +32,7 @@ declare module 'vue' {
     MyPage: typeof import('./src/components/page/MyPage.vue')['default']
     PageGridLayout: typeof import('./src/components/layout/lyvgl/PageGridLayout.vue')['default']
     PageGridLayoutCreate: typeof import('./src/components/layout/lyvgl/PageGridLayoutCreate.vue')['default']
+    PageInfoDialog: typeof import('./src/components/dialog/PageInfoDialog.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SchemaKit: typeof import('./src/components/formkit/SchemaKit.vue')['default']
