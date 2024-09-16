@@ -50,7 +50,8 @@
 
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router"
-import { PageProps, usePageLayoutStore } from "@/store/pagelayout";
+import { usePageLayoutStore } from "@/store/pagelayout";
+import { PageProps } from "@/components/layout/lygs/GridEvent";
 import CreatePageDialog from "@/components/dialog/CreatePageDialog.vue"
 import { v4 as uuidv4 } from 'uuid';
 
@@ -68,7 +69,7 @@ const router = useRouter();
 
 const loadList = async()=> {
     pages.value = await getPageList();  
-    editables.value = pages.value.map(c => {
+    editables.value = pages.value.map((c:any) => {
         return { "id": c.id, "editable": false }
     })
 }

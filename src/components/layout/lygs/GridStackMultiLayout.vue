@@ -5,9 +5,9 @@
       :id="id"
       class="grid-stack"
       :class="{ editable: pageStatic == false }"
-    >
-      <div v-if="!pageStatic" class="drag-to-here">Drag to here</div>
+    >      
       <slot name="menu"></slot>
+      <div v-if="!pageStatic" class="drag-to-here">Drag to here</div>      
     </div>
     <hr />
     <div></div>
@@ -26,6 +26,7 @@ import {
   onUnmounted,
 } from "vue";
 import "gridstack/dist/gridstack.min.css";
+import "gridstack/dist/gridstack-extra.min.css";
 import { GridStack } from "gridstack";
 import GridStackItem from "./GridStackItem";
 import { v4 as uuidv4 } from "uuid";
@@ -61,6 +62,14 @@ onMounted(async () => {
       minRow: 5,
       acceptWidgets: true,
       removable: "#trash", // drag-out delete class
+      columnOpts: {
+        breakpointForWindow: true,  // test window vs grid size
+        breakpoints: [{w:700, c:1},{w:850, c:3},{w:950, c:6},{w:1100, c:8}]
+      },
+      // animate: false, // show immediate (animate: true is nice for user dragging though)
+      // columnOpts: {
+      //   columnWidth: 300, // wanted width
+      // },
     },
     el
   );
@@ -68,6 +77,9 @@ onMounted(async () => {
   grid.setStatic(props.pageStatic ?? false);
 
   GridStack.setupDragIn(".newWidget", { appendTo: "body", helper: "clone" });
+
+  //re-layout pattern: moveScale, move, scale, list, compact, none
+  grid.opts.columnOpts.layout = "list";
 
   //debug
   //addEvents(grid);
@@ -151,12 +163,6 @@ const compact = (value: boolean) => {
   }
 };
 
-const column = (value: number) => {
-  if (value != grid.column) {
-    grid.column(value, "list");
-  }
-};
-
 watch(
   props,
   () => {
@@ -167,8 +173,20 @@ watch(
   { deep: true }
 );
 
+const destroyGrid = (gridId: string) =>{
+  if(grid && gridId == props.id){
+    console.log("Destroy grid in layout: " + gridId);
+    try{
+      grid.destroy(true);
+      grid = null;
+    }catch(err){
+      console.log(err);
+    }
+  }
+}
+
 //expose function to parent
-defineExpose({ load, save, clear, float, compact });
+defineExpose({ props, load, save, clear, float, compact, destroyGrid });
 </script>
 
 <style>
@@ -222,7 +240,7 @@ defineExpose({ load, save, clear, float, compact });
 }
 
 /* Responsive Grid Layout */
-@media (min-width: 768px) {
+/* @media (min-width: 768px) {
   .grid-stack {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -238,5 +256,5 @@ defineExpose({ load, save, clear, float, compact });
   .grid-stack {
     grid-template-columns: repeat(4, 1fr);
   }
-}
+} */
 </style>

@@ -180,9 +180,19 @@
           :ref="setGridStackRef(index)"
           :pageProps="pageProps"
           :pageStatic="pageStatic"
+          :key="id"
         >
-          <template v-slot:menu> </template>
+          <template #menu>
+            <grid-menu
+              :gridId="id"
+              v-if="!pageStatic"
+              @grid:remove="removeGrid"
+            ></grid-menu>
+          </template>
         </grid-stack-multi-layout>
+        <template #fallback>  
+          <div>Loading...</div>  
+        </template>  
       </suspense>
     </div>
     <div class="flex flex-col justify-end align-items-center mb-5">
@@ -208,6 +218,7 @@ import { usePageComponents } from "@/components/layout/shared/usePageComponents"
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 import { Base64 } from "js-base64";
 import { Notification } from "@arco-design/web-vue";
+import GridMenu from "@/components/layout/lygs/GridMenu.vue";
 
 //grid id
 const gridStacks = ref<string[]>([]);
@@ -418,6 +429,47 @@ const addGrid = () => {
   nextTick(() => {
     //console.log("grid increase", gridStackRefs.value.length)
   });
+};
+
+const removeGrid = async (gridId: string) => {
+  if (gridStacks.value.length == 1) {
+    Notification.error({
+      id: "delete_grid",
+      title: "Error",
+      content: "Only one grid in the layout, ignore delete!",
+    });
+  } else if (gridStacks.value.find((i) => i == gridId)) {
+    try {
+      //destroy grid stack DOM
+      const index = gridStacks.value.findIndex((i) => i == gridId);
+      const grid = gridStackRefs.value[index];
+      grid.destroyGrid(gridId);
+      //remove grid from ref
+      gridStacks.value.splice(index, 1);
+      //wait update
+      nextTick(async () => {
+        //remain only active grid refs 
+        const allRefs = gridStackRefs.value.splice(0, gridStackRefs.value.length);
+        gridStacks.value.forEach((id) => {
+          const mygrid = allRefs.find((g) => g.props.id == id);
+          gridStackRefs.value.push(mygrid);
+        });
+      });
+    } catch (err) {
+      Notification.error({
+        id: "delete_grid",
+        title: "Error",
+        content: "Grid deleted from layout error: " + gridId,
+      });
+    }
+    //nextTick(() => {
+    // Notification.success({
+    //   id: "delete_grid",
+    //   title: "Success",
+    //   content: "Grid deleted from layout: " + gridId,
+    // });
+    //});
+  }
 };
 </script>
 
