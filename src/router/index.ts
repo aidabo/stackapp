@@ -24,7 +24,7 @@ const routes = [
   {
     path: "/page/w/:id?",
     name: "createpage",
-    component: ()=>import("@/components/layout/lygs/GridStackMultiCreate.vue"),
+    component: ()=>import("@/components/layout/GridStackCreate.vue"),
   },
   {
     path: "/page/r/:id",
@@ -39,7 +39,7 @@ const routes = [
   {
     path: "/test",
     name: "test",
-    component: ()=>import("@/components/layout/lygs/GridStackMultiCreate.vue"),
+    component: ()=>import("@/components/layout/GridStackCreate.vue"),
   },
   {
     path: "/:cacheAll(.*)*",

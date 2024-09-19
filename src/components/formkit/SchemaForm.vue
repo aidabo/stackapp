@@ -43,8 +43,8 @@ const schema = [
 ];
 
 const data = ref({
-  name: null,
-  email: null,
+  name: "aidabo",
+  email: "aidabo@test.com",
   hasEmail: false,
 });
 

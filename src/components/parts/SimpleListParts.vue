@@ -50,8 +50,8 @@
 
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router"
-import { usePageLayoutStore } from "@/store/pagelayout";
-import { PageProps } from "@/components/layout/lygs/GridEvent";
+import { usePageLayoutStore } from "@/store/PageLayoutStore";
+import { PageProps } from "@/components/layout/GridEvent";
 import CreatePageDialog from "@/components/dialog/CreatePageDialog.vue"
 import { v4 as uuidv4 } from 'uuid';
 
@@ -113,7 +113,7 @@ const onCreatePage = () =>{
 
 const doneDlg = async(form: any) =>{
     if(form.title){
-        form["id"] = uuidv4();
+        form["id"] = `page@${uuidv4()}`;
         await savePage(form);        
     }    
     showDialog.value = false;

@@ -10,7 +10,11 @@
       >
         <span class="p-3"><icon-edit size="25" /></span>
       </button>
-      <button v-if="pageStatic && isPreview" @click.prevent="onHistory(-1)" class="text-stone-200 font-bold py-2 px-4 rounded hover:text-white">
+      <button
+        v-if="pageStatic && isPreview"
+        @click.prevent="onHistory(-1)"
+        class="text-stone-200 font-bold py-2 px-4 rounded hover:text-white"
+      >
         <!-- <span class="p-3"><icon-arrow-left size="25" /></span> -->
         <i class="fa fa-arrow-circle-left text-2xl" aria-hidden="true"></i>
       </button>
@@ -21,12 +25,12 @@
   <div class="page-show">
     <div v-for="(id, index) in gridStacks">
       <suspense>
-        <grid-stack-multi-layout
+        <grid-stack-layout
           :id="id"
           :ref="setGridStackRef(index)"
           :pageProps="pageProps"
           :pageStatic="pageStatic"
-        ></grid-stack-multi-layout>
+        ></grid-stack-layout>
       </suspense>
     </div>
     <div class="flex flex-col justify-end align-items-center mb-5">
@@ -40,13 +44,13 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import GridStackMultiLayout from "@/components/layout/lygs/GridStackMultiLayout.vue";
+import GridStackLayout from "@/components/layout/GridStackLayout.vue";
 import {
   createPageProps,
   GridOptions,
   PageProps,
-} from "@/components/layout/lygs/GridEvent";
-import { usePageLayoutStore } from "@/store/pagelayout";
+} from "@/components/layout/GridEvent";
+import { usePageLayoutStore } from "@/store/PageLayoutStore";
 import { Base64 } from "js-base64";
 
 //grid id
@@ -99,7 +103,9 @@ onMounted(async () => {
     //show preview
     let data = localStorage.getItem((route.params as any).id);
     if (data) {
-      let grids = JSON.parse(Base64.decode(data));
+      let previewData = JSON.parse(Base64.decode(data));
+      pageProps.value.title = previewData.title;
+      const grids = previewData.grids;
       gridStacks.value = grids.map((g: any) => g.id);
       nextTick(async () => {
         await load(grids);
@@ -156,4 +162,5 @@ const onHistory = (n: number) => {
 .page .grid-stack-item-content {
   cursor: default;
 }
+
 </style>

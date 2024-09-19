@@ -4,7 +4,7 @@ import {
 } from "vue";
 import { Base64 } from "js-base64";
 import { v4 as uuidv4 } from "uuid";
-import { usePageComponents } from "../shared/usePageComponents";
+import { usePageComponents } from "@/components/async/usePageComponents";
 
 export interface GridStackitemProps {
   item: Object,
@@ -56,6 +56,7 @@ export default defineComponent({
 
       //get component info from item
       const gscomponentData = item["gscomponent"];
+      
       //component id
       const cid = uuidv4();
       gscomponentData["cid"] = cid;

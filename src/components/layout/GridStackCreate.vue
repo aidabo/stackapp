@@ -24,12 +24,11 @@
       </div>
       <div class="flex-initial">
         <a href="#" class="mybtn" @click.prevent="close()"
-          ><i class="fa fa-solid fa-times"></i
+          ><i class="fa fa-solid fa-arrow-left"></i
         ></a>
       </div>
     </div>
-
-    <div>
+    
       <!-- remove component panel-->
       <div
         id="trash"
@@ -45,6 +44,7 @@
       </div>
 
       <!-- list of components to be selected  -->
+      <div class="overflow-y-auto h-lvh">
       <div
         v-for="item in gsComponentData"
         class="newWidget grid-stack-item grid-custom"
@@ -61,7 +61,9 @@
           </div>
         </div>
       </div>
-    </div>
+
+    </div><!-- component list-->
+
   </div>
 
   <!-- Show components panel and page title -->
@@ -74,6 +76,7 @@
         >
           <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
         </button>
+
         <a-space class="ml-64 text-lg font-bold">
           <span v-if="!isTitleEditable">{{ pageProps.title }}</span>
           <a-input
@@ -88,14 +91,15 @@
             @click.prevent="onTitleEditable"
           />
         </a-space>
+
         <a-space class="mx-8 text-lg">
-          Float
+          <!-- Float
           <a-switch
             class="mx-3"
             v-model="gridOption.float"
             checked-color="#14C9C9"
             unchecked-color="lightgray"
-          ></a-switch>
+          ></a-switch> -->
           Compact
           <a-switch
             class="mx-3"
@@ -104,14 +108,35 @@
             unchecked-color="lightgray"
           ></a-switch>
         </a-space>
+
+        <a-space
+          class="mx-3 text-2xl font-bold"
+          v-if="!pageStatic"
+          @click.prevent="addGrid()"
+        >
+          <a-tooltip content="Add a grid into layout">
+            <a-button type="outline">
+              <template #icon>
+                <i
+                  class="fa fa-solid fa-plus text-white size-6 justify-center mt-2"
+                ></i>
+              </template>
+              <!-- Use the default slot to avoid extra spaces -->
+              <template #default
+                ><span class="text-white">Increase Grid</span></template
+              >
+            </a-button>
+          </a-tooltip>
+        </a-space>
       </h1>
     </div>
     <div class="flex justify-between align-items-center">
       <!-- right -->
+
       <a-space class="mx-3 text-2xl font-bold">
         <a-tooltip content="Show page info">
           <button @click.prevent="showInfo">
-            <span><icon-info-circle-fill /></span>
+            <span><i class="fa-solid fa-circle-info"></i></span>
           </button>
         </a-tooltip>
         <page-info-dialog
@@ -119,24 +144,59 @@
           :items="pageDebugInfo"
         ></page-info-dialog>
       </a-space>
+
       <a-space class="mx-3 text-2xl font-bold">
         <a-tooltip content="Page Preview">
           <button v-if="!pageStatic" @click.prevent="preview()">
-            <span><icon-eye /></span>
+            <span><i class="fa-solid fa-eye"></i></span>
           </button>
+        </a-tooltip>
+      </a-space>
+
+      <a-space class="mx-3 text-2xl font-bold" v-if="!pageStatic">
+        <a-tooltip content="Exit page design">
+          <a-popconfirm
+            content="Are you sure you want to exit "
+            type="info"
+            @ok="closeDesign"
+          >
+            <a-button type="outline" status="warning" style="font-weight: 600">
+              <template #icon>
+                <icon-close size="18" />
+              </template>
+              <!-- Use the default slot to avoid extra spaces -->
+              <template #default>Exit Design</template>
+            </a-button>
+          </a-popconfirm>
         </a-tooltip>
       </a-space>
     </div>
   </div>
 
   <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
-  <div class="pagemain-edit" :style="{ marginLeft: pannelWidth + 'px' }">    
-    <grid-stack-layout
-      ref="gridRef"
-      :id="gridId"
-      :pageProps="pageProps"
-      :pageStatic="pageStatic"
-    ></grid-stack-layout>
+  <div class="page-create" :style="{ marginLeft: pannelWidth + 'px' }">
+    <div v-for="(id, index) in gridStacks">
+      <suspense>
+        <grid-stack-layout
+          :id="id"
+          :ref="setGridStackRef(index)"
+          :pageProps="pageProps"
+          :pageStatic="pageStatic"
+          :key="id"
+        >
+          <template #menu>
+            <grid-menu
+              :gridId="id"
+              v-if="!pageStatic"
+              @grid:remove="removeGrid"
+            ></grid-menu>
+          </template>
+        </grid-stack-layout>
+        <template #fallback>
+          <div>Loading...</div>
+        </template>
+      </suspense>
+    </div>
     <div class="flex flex-col justify-end align-items-center mb-5">
       <div>
         <!-- bottom  -->
@@ -146,57 +206,77 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import GridStackLayout from "@/components/layout/lygs/GridStackLayout.vue";
-import { createPageProps, PageProps } from "@/components/layout/lygs/GridEvent";
-import { usePageLayoutStore } from "@/store/pagelayout";
-import { usePageComponents } from "@/components/layout/shared/usePageComponents";
-import { Base64 } from "js-base64";
-import { v4 as uuidv4} from "uuid";
+import GridStackLayout from "@/components/layout/GridStackLayout.vue";
+import {
+  createNewGrid,
+  createPageProps,
+  GridOptions,
+  PageProps,
+} from "@/components/layout/GridEvent";
+import { usePageLayoutStore } from "@/store/PageLayoutStore";
+import { usePageComponents } from "@/components/async/usePageComponents";
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
+import { Base64 } from "js-base64";
+import { Notification } from "@arco-design/web-vue";
+import GridMenu from "@/components/layout/GridMenu.vue";
 
-const gridRef = ref(null);
+//grid id
+const gridStacks = ref<string[]>([]);
 
-//route
-const route = useRoute();
-
-const router = useRouter();
+// 使用 reactive 或 ref 来跟踪组件引用（但这里我们实际上使用 DOM 的 ref 属性）
+const gridStackRefs = ref<any[]>([]); // 注意：这里的类型应该根据你的组件类型来定义
 
 //page parameters
 const pageProps = ref<PageProps>(createPageProps());
 
-const gridId = ref(uuidv4());
-
+//static (editable or show)
 const pageStatic = ref(false);
 
+//route params
+const route = useRoute();
+
+//router
+const router = useRouter();
+
+// 定义一个方法来设置每个 grid-stack-multi-layout 的 ref
+const setGridStackRef = (index: number) => {
+  return (el: any) => {
+    if (el) {
+      if (!gridStackRefs.value[index]) {
+        gridStackRefs.value[index] = el;
+      }
+    }
+  };
+};
+
+//title edit status
 const isTitleEditable = ref(false);
 
+//title edit status toggle
 const onTitleEditable = () => {
   isTitleEditable.value = !isTitleEditable.value;
 };
 
+//if title edit started or end
 const onTitleChanged = () => {
   isTitleEditable.value = !isTitleEditable.value;
 };
 
+//compact or float grid
 const gridOption = ref({
   float: false,
   compact: false,
-  columns: 12,
 });
 
+//show dialog which include grid info for debug
 const showInfoDialog = ref(false);
 
-const pageDebugInfo = ref();
+//debug info
+const pageDebugInfo = ref([]);
 
-const showInfo = () => {
-  const saveFun: Function = (gridRef.value as any).save;
-  pageDebugInfo.value = saveFun();
-  showInfoDialog.value = true;
-};
-
-//save page component & grid layout info
+//persistence save page component & grid layout info
 const { savePage, getPageById } = usePageLayoutStore();
 
 const { gsComponentData, gsGetComponentInfo } = usePageComponents();
@@ -206,8 +286,26 @@ const pannelWidth = ref(250);
 onMounted(async () => {
   if (route.params.id) {
     pageProps.value = await getPageById((route.params as any).id);
-    await load();    
+    const grids = pageProps.value.grids || [];
+    gridStacks.value = grids.map((g) => g.id);
+    if (gridStacks.value.length == 0) {
+      addGrid();
+    }
+    nextTick(async () => {
+      await load();
+    });
+  } else {
+    const grids = pageProps.value.grids || [];
+    gridStacks.value = grids.map((g) => g.id);
+    if (gridStacks.value.length == 0) {
+      addGrid();
+    }
   }
+});
+
+onUnmounted(() => {
+  //gridStackRefs.value.splice(0, gridStackRefs.value.length);
+  console.log("unmount called...");
 });
 
 const open = () => {
@@ -219,61 +317,174 @@ const close = () => {
 };
 
 const load = async () => {
-  const loadFun: Function = (gridRef.value as any).load;
-  let data = await getPageById(pageProps.value["id"]);
-  if (data) {
-    pageProps.value = data;
-    loadFun(pageProps.value["gsComponents"]);
-  } else {
-    return [loadFun({ id: 1, x: 2, y: 1, h: 2 })];
+  pageProps.value = (await getPageById(pageProps.value["id"])) as any;
+  // for each grid-stack-multi-layout
+  gridStackRefs.value.forEach((gridStack, index) => {
+    if (gridStack) {
+      const grid = (
+        pageProps.value.grids ||
+        pageProps.value.gsComponents ||
+        []
+      ).find((g) => g.id == gridStacks.value[index]);
+      if (grid) {
+        gridStack.load(grid.items);
+      } else {
+        gridStack.load({ id: 1, x: 2, y: 1, h: 2 });
+      }
+    }
+  });
+};
+
+const save = async (isPublish = false) => {
+  const grids = Array<GridOptions>();
+  gridStackRefs.value.forEach((gridStack, index) => {
+    if (gridStack) {
+      // 现在你可以使用 gridStack 来访问对应的组件实例或 DOM 元素了
+      grids.push({ id: gridStacks.value[index], items: gridStack.save() });
+    }
+  });
+  pageProps.value.grids = grids;
+  await savePage(pageProps.value);
+
+  if (!isPublish) {
+    Notification.success({
+      id: "page_create_save",
+      title: "Success",
+      content: "Saved successfully!",
+    });
   }
 };
 
-const save = async () => {
-  const saveFun: Function = (gridRef.value as any).save;
-  let data = saveFun();
-  pageProps.value["gsComponents"] = data;
-  await savePage(pageProps.value);
-  console.log("saved: ", pageProps.value);
-  return true;
-};
-
 const clear = async () => {
-  const clearFun: Function = (gridRef.value as any).clear;
-  clearFun();
+  gridStackRefs.value.forEach((gridStack, index) => {
+    if (gridStack) {
+      gridStack.clear();
+    }
+  });
 };
 
 const preview = async () => {
   const id = pageProps.value["id"];
-  const saveFun: Function = (gridRef.value as any).save;
-  let data = Base64.encode(JSON.stringify(saveFun()));
+  const grids = Array<GridOptions>();
+  gridStackRefs.value.forEach((gridStack, index) => {
+    if (gridStack) {
+      grids.push({
+        id: gridStacks.value[index] as string,
+        items: gridStack.save(),
+      });
+    }
+  });
+  const previewData = { title: pageProps.value.title, grids: grids };
+  let data = Base64.encode(JSON.stringify(previewData));
   localStorage.setItem(id, data);
   router.push({ name: "preview", params: { id: id } });
 };
 
 const publish = async () => {
-  await save();
-  const id = pageProps.value["id"];
-  router.push({ name: "page", params: { id: id } });
+  pageProps.value.status = "published";
+  await save(true);
+
+  Notification.success({
+    id: "page_create_publish",
+    title: "Success",
+    content: "Published successfully!",
+  });
+
+  setTimeout(() => {
+    const id = pageProps.value["id"];
+    router.push({ name: "page", params: { id: id } });
+  }, 1000);
+};
+
+const closeDesign = () => {
+  router.push({ name: "pagelist" });
 };
 
 watch(
   gridOption.value,
-  (newValue, oldValue) => {
-    if (newValue.float != oldValue.float) {
-      const float: Function = (gridRef.value as any).float;
-      float(newValue.float);
-    }
-    if (newValue.compact != oldValue.compact) {
-      const compact: Function = (gridRef.value as any).compact;
-      compact(newValue.compact);
-    }
+  () => {
+    gridStackRefs.value.forEach((gridStack, index) => {
+      if (gridStack) {
+        gridStack.float(gridOption.value.float);
+        if (gridOption.value.compact) {
+          gridStack.compact(gridOption.value.compact);
+        }
+      }
+    });
   },
   { deep: true }
 );
+
+const showInfo = () => {
+  const grids = Array<GridOptions>();
+  gridStackRefs.value.forEach((gridStack, index) => {
+    if (gridStack) {
+      grids.push({
+        id: gridStacks.value[index] as string,
+        items: gridStack.save(),
+      });
+    }
+  });
+  const page = JSON.parse(JSON.stringify(pageProps.value));
+  page.grids = grids;
+  pageDebugInfo.value = page;
+  showInfoDialog.value = true;
+};
+
+const addGrid = () => {
+  const grid = createNewGrid();
+  gridStacks.value.push(grid.id);
+  nextTick(() => {
+    //console.log("grid increase", gridStackRefs.value.length)
+  });
+};
+
+const removeGrid = async (gridId: string) => {
+  if (gridStacks.value.length == 1) {
+    Notification.error({
+      id: "delete_grid",
+      title: "Error",
+      content: "Only one grid in the layout, ignore delete!",
+    });
+  } else if (gridStacks.value.find((i) => i == gridId)) {
+    try {
+      //destroy grid stack DOM
+      const index = gridStacks.value.findIndex((i) => i == gridId);
+      const grid = gridStackRefs.value[index];
+      grid.destroyGrid(gridId);
+      //remove grid from ref
+      gridStacks.value.splice(index, 1);
+      //wait update
+      nextTick(async () => {
+        //remain only active grid refs
+        const allRefs = gridStackRefs.value.splice(
+          0,
+          gridStackRefs.value.length
+        );
+        gridStacks.value.forEach((id) => {
+          const mygrid = allRefs.find((g) => g.props.id == id);
+          gridStackRefs.value.push(mygrid);
+        });
+      });
+    } catch (err) {
+      Notification.error({
+        id: "delete_grid",
+        title: "Error",
+        content: "Grid deleted from layout error: " + gridId,
+      });
+    }
+    //nextTick(() => {
+    // Notification.success({
+    //   id: "delete_grid",
+    //   title: "Success",
+    //   content: "Grid deleted from layout: " + gridId,
+    // });
+    //});
+  }
+};
 </script>
 
-<style>
+<style scoped>
 /* The side navigation menu */
 .sidenav {
   height: 100%;
@@ -349,9 +560,9 @@ watch(
 }
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
-.pagemain-edit {
+.page-create {
   transition: margin-left 0.5s;
-  padding: 20px;
+  padding: 0.75rem;
 }
 
 .trash {

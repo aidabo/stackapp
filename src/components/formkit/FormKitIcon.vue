@@ -31,7 +31,7 @@
 import { ref } from "vue";
 import { FormKitIcon } from "@formkit/vue";
 import { FormKit, FormKitProvider } from "@formkit/vue";
-import FormKitConfig from "@/components/formkit/FormKitConfig";
+import FormKitConfig from "@/config/FormKitConfig";
 
 const icons = ["happy", "sad", "heart"];
 const icon = ref(icons[0]);

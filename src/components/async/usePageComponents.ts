@@ -5,6 +5,26 @@ export const usePageComponents = () => {
 
   const gsComponentData = reactive([
     {
+      name: "arcoform",
+      description: "Drag me Arcoform",
+      props: {},
+    },
+    {
+      name: "dynamicrender",
+      description: "Drag me DynamicRender",
+      props: {},
+    }, 
+    {
+      name: "example",
+      description: "Drag me Example",
+      props: {},
+    }, 
+    {
+      name: "componentb",
+      description: "Drag me componentB",
+      props: {},
+    },
+    {
       name: "uploadForm",
       description: "Drag me UploadForm",
       props: {},
@@ -25,25 +45,10 @@ export const usePageComponents = () => {
       props: {},
     },
     {
-      name: "arcoform",
-      description: "Drag me Arcoform",
-      props: {},
-    },
-    {
       name: "pageList",
       description: "Drag me PageList",
       props: {},
     },    
-    {
-      name: "dynamicrender",
-      description: "Drag me DynamicRender",
-      props: {},
-    }, 
-    {
-      name: "example",
-      description: "Drag me Example",
-      props: {},
-    }, 
     {
       name: "forminput",
       description: "Drag me FormkitInput",
@@ -60,7 +65,16 @@ export const usePageComponents = () => {
       description: "Drag me FormKit Icon",
       props: {},
     }, 
-
+    {
+      name: "componenta",
+      description: "Drag me componentA",
+      props: {},
+    },
+    {
+      name: "image",
+      description: "Drag me Image",
+      props: {},
+    },
   ]);
 
   const gsComponents: any = ref({
@@ -76,7 +90,9 @@ export const usePageComponents = () => {
     schemakit: markRaw(defineAsyncComponent(() => import("@/components/formkit/SchemaKit.vue"))),
     formkiticon: markRaw(defineAsyncComponent(() => import("@/components/formkit/FormKitIcon.vue"))),
     uploadForm: markRaw(defineAsyncComponent(() => import("@/components/formkit/FileUpload.vue"))),
-
+    componentb: markRaw(defineAsyncComponent(() => import("@/components/test/ComponentB.vue"))),
+    componenta: markRaw(defineAsyncComponent(() => import("@/components/test/ComponentA"))),
+    image: markRaw(defineAsyncComponent(() => import("@/components/test/Image.vue"))),
   });
 
   /**

@@ -61,7 +61,7 @@ export const createPageProps = (opt?: Partial<PageProps>): PageProps => {
   } as PageProps;
 };
 
-export const createNewGrid = () =>{
-  return {id: `grid@${uuidv4()}`, items: []}
+export const createNewGrid = () : GridOptions =>{
+  return {id: `grid@${uuidv4()}`, items: []} as GridOptions
 }
 

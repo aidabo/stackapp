@@ -30,6 +30,7 @@ import "gridstack/dist/gridstack-extra.min.css";
 import { GridStack } from "gridstack";
 import GridStackItem from "./GridStackItem";
 import { v4 as uuidv4 } from "uuid";
+import GridStackItemWrapper from "./GridStackItemWrapper";
 
 const gsLayout = ref(null);
 
@@ -57,7 +58,7 @@ onMounted(async () => {
   grid = GridStack.init(
     {
       // DO NOT user grid.value = GridStack.init(), see above
-      float: true,
+      //float: true,
       cellHeight: "25",
       minRow: 5,
       acceptWidgets: true,
@@ -101,7 +102,8 @@ onMounted(async () => {
       //remove dragitem custom class to remove drag item background style
       itemEl.className = itemEl.className.replace(/grid\-custom/, "");
 
-      const itemContentVNode: any = h(GridStackItem, { item: item });
+      //const itemContentVNode: any = h(GridStackItem, { item: item });
+      const itemContentVNode: any = h(GridStackItemWrapper, { gsItem: item });
 
       //clear dragged element content from .grid-stack-item-content div
       itemElContent.innerHTML = "";

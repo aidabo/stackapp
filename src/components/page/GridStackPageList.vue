@@ -1,5 +1,5 @@
 <template>  
-    <div class="pagemain">
+    <div class="page-list">
      <simple-list-parts></simple-list-parts>
   </div>
 </template>
@@ -11,7 +11,7 @@ import SimpleListParts from "@/components/parts/SimpleListParts.vue";
 
 <style scoped>
 
-.pagemain {
+.page-list {
   transition: margin-left .5s;
   padding: 20px;
 }

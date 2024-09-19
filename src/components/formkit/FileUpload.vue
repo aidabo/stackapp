@@ -33,7 +33,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { FormKit, FormKitProvider } from "@formkit/vue";
-import FormKitConfig from "@/components/formkit/FormKitConfig";
+import FormKitConfig from "@/config/FormKitConfig";
 
 const values = ref({
   another_file: [{ name: "pizza.jpg" }],

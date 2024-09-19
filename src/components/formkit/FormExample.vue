@@ -9,6 +9,7 @@
           submit-label="Register"
           @submit="submitHandler"
           :actions="false"
+          #default="{ value }"
         >
           <h1 class="text-2xl font-bold mb-2">Register!</h1>
           <p class="text-sm mb-4">
@@ -55,7 +56,7 @@
           </div>
 
           <FormKit type="submit" label="Register" />
-          <!-- <pre wrap>{{ value }}</pre> -->
+          <pre wrap>{{ value }}</pre>
         </FormKit>
       </FormKitProvider>
     </Suspense>
@@ -69,7 +70,7 @@
 import { ref, watch, onMounted } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import { FormKit, FormKitProvider } from "@formkit/vue";
-import FormKitConfig from "@/components/formkit/FormKitConfig";
+import FormKitConfig from "@/config/FormKitConfig";
 
 const submitted = ref(false);
 

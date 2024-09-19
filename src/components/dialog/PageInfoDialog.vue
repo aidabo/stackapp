@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:visible="visible" @ok="handleOk" draggable unmount-on-close hide-cancel="true">
+    <a-modal v-model:visible="visible" @ok="handleOk" draggable unmount-on-close :hide-cancel="true">
         <template #title>
             Page Layout Info
         </template>
@@ -24,7 +24,7 @@ const props = defineProps({
 });
 
 const visible = ref(false);
-const pageInfo = ref()
+const pageInfo = ref("")
 
 watch(props, ()=>{
     visible.value = props.show;

@@ -22,5 +22,5 @@
 
 <script setup lang="ts">
 import { FormKit, FormKitProvider } from "@formkit/vue";
-import FormKitConfig from "@/components/formkit/FormKitConfig";
+import FormKitConfig from "@/config/FormKitConfig";
 </script>

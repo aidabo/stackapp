@@ -1,5 +1,5 @@
 import { h, defineComponent } from 'vue';
-import { usePageComponents } from '@/components/layout/shared/usePageComponents';
+import { usePageComponents } from '@/components/async/usePageComponents';
 
 export default defineComponent({  
   render() {      

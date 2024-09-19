@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { apiJsonHeaders, webApiUrl } from "./storeConstants";
-import { PageProps } from "@/components/layout/lygs/GridEvent";
+import { PageProps } from "@/components/layout/GridEvent";
 
 export const usePageLayoutStore = defineStore("pagelayout", {
   state: () => ({
