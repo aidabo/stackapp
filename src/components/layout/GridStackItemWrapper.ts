@@ -1,92 +1,90 @@
-import { defineComponent, h, ref, onMounted, defineExpose } from "vue";
-import { Base64 } from "js-base64";
+import { defineComponent, h, ref, onMounted, defineExpose, watch, resolveComponent, resolveDynamicComponent } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import { usePageComponents } from "@/components/async/usePageComponents";
-
-export interface GridStackitemWrapperProps {
-  gsItem: Object;
-  //gsCompProps?: Object,
-  gsPageProps?: Object;
-  onGsLoad?: (event: any) => void;
-  onGsSave?: (event: any) => void;
-  onGsItemChanged?: (event: any) => void;
-  onGsRemove?: (event: any) => void;
-}
+import { GsComponentRefs } from "@/components/layout/GridEvent";
 
 export default defineComponent({
   name: "GridStackItemWrapper",
-
   props: {
     gsItem: Object,
     //gsCompProps: Object,
     gsPageProps: Object,
-    onGsLoad: Function,
-    onGsSave: Function,
-    onGsItemChanged: Function,
-    onGsRemove: Function,
-  },
+    gsLoad: Function,
+    gsSave: Function,
+    gsRegister: Function,
+    gsItemChanged: Function,
+    gsRemove: Function,
+   },
 
-  setup(props, { slots }) {
+  setup(props, { slots, emit }) {
+
     /**
      * gscomponent reactive props
      */
-    const gsCompProps = ref<any>(null);
+    const gsCompProps = ref<any>();
 
     const gsComponent = ref<any>(null);
 
     /**
-     * get gscomponent 
+     * get gscomponent
      */
-    const { gsGetItemCompnent } = usePageComponents();
+    const { gsGetItemCompnent, gsGetComponentInfo } = usePageComponents();
 
     /**
      * Callback provided by parent to load data
-     * @param event 
+     * @param event
      */
-    const onLoad = (event: any) => {
-      if (props.onGsLoad) {
-        props.onGsLoad(event);
+    const onLoad = (cid: string, data: any) => {
+      if (props.gsLoad) {
+        props.gsLoad(cid, data);
       }
     };
 
     /**
      * Callback provided by parent to save data to store
-     * @param event 
+     * @param event
      */
-    const onSave = (event: any) => {
-      if (props.onGsSave) {
-        props.onGsSave(event);
+    const onSave = (cid: string, data: any) => {
+      if (props.gsSave) {
+        props.gsSave(cid, data);
       }
     };
 
     /**
-     * emited by gscomponent when data changed 
-     * @param event 
+     * emited by gscomponent when data changed
+     * @param event
      */
-    const onItemChanged = (event: any) => {
-      if (props.onGsItemChanged) {
-        props.onGsItemChanged(event);
+    const onItemChanged = (cid: string, data: any) => {
+      if (props.gsItemChanged) {
+        props.gsItemChanged(cid, data);
       }
     };
 
     /**
-     * Callback provided by parent when remove widget from grid-stack
-     * @param event 
+     * emitted by gscomponent to process removing widget work by grid-stack
+     * @param event
      */
-    const onRemove = (event: any) => {
-      if (props.onGsRemove) {
-        props.onGsRemove(event);
+    const onRemove = () => {
+      if (props.gsRemove) {
+        //call removeWidget function of layout
+        props.gsRemove((props.gsItem as any).el);
       }
     };
-    
-    onMounted(() => {
+
+    const onRegister = (cid: string, data: GsComponentRefs) => {
+      if (props.gsRegister) {
+        props.gsRegister(cid, data);
+      }
+    };
+
+    onMounted(() => {      
       addWidgetComponentCB(props.gsItem);
       gsComponent.value = getGsComponent(props.gsItem);
     });
 
     /**
      * when creating page, drag gscomponent into page firstly
-     * @param item 
+     * @param item
      */
     const addWidgetComponentCB = (item: any) => {
       const itemEl = item.el;
@@ -99,46 +97,50 @@ export default defineComponent({
         if (!gscomponent) {
           throw "No componnent info found!, newWidget must set gscomponent attrbute as component info\n <div class='newWidget ...' gscomponent=xxx>...</div>";
         }
-        const gscomponentProps = JSON.parse(Base64.decode(gscomponent));
-        gscomponentProps["cid"] = `comp@${uuidv4()}`;
-        item["gscomponent"] = gscomponentProps;
+        const gsComponentInfo = gsGetComponentInfo(gscomponent);
+        if (gsComponentInfo) {
+          gsComponentInfo["cid"] = `comp@${uuidv4()}`;
+        }
+        item["gscomponent"] = gsComponentInfo;
       }
     };
 
     /**
-     * get gscomponent and it's props definition
-     * @param item 
-     * @returns 
+     * Get gscomponent and it's props definition
+     * @param item
+     * @returns
      */
     const getGsComponent = (item: any) => {
       const gscomponentProps = item["gscomponent"];
       if (!gscomponentProps) {
         return null;
       }
-      gsCompProps.value = gscomponentProps;
-      return gsGetItemCompnent(gscomponentProps.name);
+      gsCompProps.value = gscomponentProps;      
+      return resolveDynamicComponent(gsGetItemCompnent(gscomponentProps.name));
     };
 
-    /**
-     * Expose gscomponent props, maybe page need to control it 
-     */
-    //defineExpose({ gsCompProps });
+    watch(gsCompProps, () => {
+      console.log("component data changed: ", gsCompProps.value);
+    });
 
     return () => {
       if (!gsComponent.value) {
-        console.warn("Not found gs component or component props");
         return null;
       }
       return h(gsComponent.value, {
-        ...props.gsPageProps,
-        "gs-comp-props": gsCompProps.value,
-        onGsLoad: onLoad,
-        onGsSave: onSave,
-        onGsItemChanged: onItemChanged,
-        onGsRemove: onRemove,
+        cid: gsCompProps.value.cid,
+        //gridstackitem
+        gsItem: props.gsItem,
+        //page props
+        gsPage: props.gsPageProps,
+        //component props
+        gsComponent: gsCompProps.value,
+        gsLoad: onLoad,
+        gsSave: onSave,
+        gsItemChanged: onItemChanged,
+        gsRemove: onRemove,
+        gsRegister: onRegister,
       });
     };
-
   },
-  
 });

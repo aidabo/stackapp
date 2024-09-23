@@ -1,13 +1,13 @@
 <template>
   <div class="full-w p-1 page">
     <div
-      ref="gsLayout"
+      ref="gsLayoutRef"
       :id="id"
       class="grid-stack"
       :class="{ editable: pageStatic == false }"
-    >      
+    >
       <slot name="menu"></slot>
-      <div v-if="!pageStatic" class="drag-to-here">Drag to here</div>      
+      <div v-if="!pageStatic" class="drag-to-here">Drag to here</div>
     </div>
     <hr />
     <div></div>
@@ -22,17 +22,21 @@ import {
   ref,
   defineExpose,
   watch,
-  inject,
   onUnmounted,
+  reactive,
+  inject,
 } from "vue";
 import "gridstack/dist/gridstack.min.css";
 import "gridstack/dist/gridstack-extra.min.css";
 import { GridStack } from "gridstack";
-import GridStackItem from "./GridStackItem";
 import { v4 as uuidv4 } from "uuid";
-import GridStackItemWrapper from "./GridStackItemWrapper";
+import GridStackItemWrapper from "@/components/layout/GridStackItemWrapper";
+import {
+  GsComponentHandlers,
+  GsComponentRefs,
+} from "@/components/layout/GridEvent";
 
-const gsLayout = ref(null);
+const gsLayoutRef = ref(null);
 
 const props = defineProps({
   id: {
@@ -49,12 +53,16 @@ const props = defineProps({
   },
 });
 
+const handlers: any = inject("__page_handlers");
+
+const components = reactive<{ [key: string]: GsComponentRefs }>({});
+
 var grid: any = null; // DO NOT use ref(null) as proxies GS will break all logic when comparing structures... see https://github.com/gridstack/gridstack.js/issues/2115
 
 onMounted(async () => {
   //@ts-ignore
-  let el: HTMLElement =
-    document.getElementById(props.id) || document.querySelector(".grid-stack");
+  // let el: HTMLElement =
+  //   document.getElementById(props.id) || document.querySelector(".grid-stack");
   grid = GridStack.init(
     {
       // DO NOT user grid.value = GridStack.init(), see above
@@ -64,15 +72,21 @@ onMounted(async () => {
       acceptWidgets: true,
       removable: "#trash", // drag-out delete class
       columnOpts: {
-        breakpointForWindow: true,  // test window vs grid size
-        breakpoints: [{w:700, c:1},{w:850, c:3},{w:950, c:6},{w:1100, c:8}]
+        breakpointForWindow: true, // test window vs grid size
+        breakpoints: [
+          { w: 700, c: 1 },
+          { w: 850, c: 3 },
+          { w: 950, c: 6 },
+          { w: 1100, c: 8 },
+        ],
       },
       // animate: false, // show immediate (animate: true is nice for user dragging though)
       // columnOpts: {
       //   columnWidth: 300, // wanted width
       // },
     },
-    el
+    gsLayoutRef.value as any
+    //el
   );
 
   grid.setStatic(props.pageStatic ?? false);
@@ -94,7 +108,7 @@ onMounted(async () => {
       } else if (!item.id && !item._id) {
         item.id = item._id = uuidv4();
       }
-      
+
       // Use Vue's render function to create the content
       // See https://vuejs.org/guide/extras/render-function.html#render-functions-jsx
       //      Supports: emit, slots, props, attrs, see onRemove event below
@@ -103,7 +117,15 @@ onMounted(async () => {
       itemEl.className = itemEl.className.replace(/grid\-custom/, "");
 
       //const itemContentVNode: any = h(GridStackItem, { item: item });
-      const itemContentVNode: any = h(GridStackItemWrapper, { gsItem: item });
+      const itemContentVNode: any = h(GridStackItemWrapper, {
+        gsItem: item,
+        gsPageProps: props.pageProps,
+        gsLoad: onCompLoad,
+        gsSave: onCompSave,
+        gsItemChanged: onCompItemChanged,
+        gsRegister: onCompRegister,
+        gsRemove: removeWidget,
+      });
 
       //clear dragged element content from .grid-stack-item-content div
       itemElContent.innerHTML = "";
@@ -125,7 +147,7 @@ onMounted(async () => {
 
   grid.on("change", function (e: any, items: any) {
     items = items || [];
-    console.log("gs changed event: ", e, items);
+    //console.log("gs changed event: ", e, items);
   });
 });
 
@@ -155,6 +177,17 @@ const removeWidget = (el: any) => {
   grid.removeWidget(el, false);
 };
 
+const destroyGrid = (gridId: string) => {
+  if (grid && gridId == props.id) {
+    try {
+      grid.destroy(true);
+      grid = null;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+};
+
 const float = (value: boolean) => {
   (grid as any).float(value);
 };
@@ -165,30 +198,81 @@ const compact = (value: boolean) => {
   }
 };
 
-watch(
-  props,
-  () => {
-    if (props.pageStatic) {
-      console.log("watch event", props.pageStatic, grid);
-    }
-  },
-  { deep: true }
-);
+// const createEventData = (cid: string, data: any) => {
+//   return { pid: props.pageProps.id, gid: props.id, cid: cid, data: data };
+// };
 
-const destroyGrid = (gridId: string) =>{
-  if(grid && gridId == props.id){
-    console.log("Destroy grid in layout: " + gridId);
-    try{
-      grid.destroy(true);
-      grid = null;
-    }catch(err){
-      console.log(err);
-    }
-  }
-}
+/**
+ * Callback provided by parent to load data
+ * @param event
+ */
+const onCompLoad = async (cid: string, data: any) => {
+  console.log("onCompLoad emit");
+  return await handlers.loadHandler(cid, data);
+};
+
+/**
+ * Callback provided by parent to save data to store
+ * @param event
+ */
+const onCompSave = async (cid: string, data: any) => {
+  console.log("onCompSave called");
+  return await handlers.saveHandler(cid, data);
+};
+
+/**
+ * emited by gscomponent when data changed
+ * @param event
+ */
+const onCompItemChanged = async (cid: string, data: any) => {
+  console.log("onCompItemChanged emit");
+  return await handlers.itemChangedHandler(cid, data);
+};
+
+const onCompRegister = (cid: string, data: GsComponentRefs) => {
+  components[cid] = data;
+};
+
+const findCompFn = (fn: string, cid?: string): GsComponentHandlers[] => {
+  let funcs = Object.keys(components)
+    .map((key) => {
+      const { ...fns } = components[key].handlers || {};
+      return fns[fn]
+        ? { cid: key, f: fns[fn], fn: fn }
+        : { cid: key, f: undefined, fn: fn };
+    })
+    .filter((c) => c.f != undefined);
+  return cid ? funcs.filter((c) => c.cid == cid) : funcs;
+};
+
+const findCompFnByName = (
+  fn: string,
+  compName?: string /*component's props.name*/
+): GsComponentHandlers[] => {
+  let funcs = Object.keys(components)
+    .map((key) => {
+      const { ...fns } = components[key].handlers || {};
+      return fns[fn]
+        ? { cid: key, fn: fn, f: fns[fn], name: components[key].props.name }
+        : { cid: key, fn: fn, f: undefined, name: components[key].props.name };
+    })
+    .filter((c) => c.f != undefined);
+  return compName ? funcs.filter((c) => c.name == compName) : funcs;
+};
 
 //expose function to parent
-defineExpose({ props, load, save, clear, float, compact, destroyGrid });
+defineExpose({
+  props,
+  components,
+  findCompFn,
+  findCompFnByName,
+  load,
+  save,
+  clear,
+  float,
+  compact,
+  destroyGrid,
+});
 </script>
 
 <style>
@@ -240,23 +324,4 @@ defineExpose({ props, load, save, clear, float, compact, destroyGrid });
   inset: 0;
   /* TODO change top: if you have content in nested grid */
 }
-
-/* Responsive Grid Layout */
-/* @media (min-width: 768px) {
-  .grid-stack {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 992px) {
-  .grid-stack {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (min-width: 1200px) {
-  .grid-stack {
-    grid-template-columns: repeat(4, 1fr);
-  }
-} */
 </style>

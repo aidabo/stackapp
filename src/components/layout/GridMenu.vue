@@ -12,7 +12,7 @@
           type="info"
           @ok="onDelete"
         >
-          <a-button type="secondary" class="text-lg"
+          <a-button type="secondary" class="text-lg" :disabled="!lastGrid"
             ><icon-delete />Delete</a-button
           >
         </a-popconfirm>
@@ -28,6 +28,10 @@ const props = defineProps({
   gridId: {
     type: String,
     required: true,
+  },
+  lastGrid: {
+    type: Boolean,
+    default: false
   },
 });
 

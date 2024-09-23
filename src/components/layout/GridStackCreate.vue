@@ -13,7 +13,7 @@
         ></a>
       </div>
       <div class="flex-initial">
-        <a href="#" class="mybtn" @click.prevent="load()"
+        <a href="#" class="mybtn" @click.prevent="loadStore()"
           ><i class="fa fa-solid fa-refresh"></i
         ></a>
       </div>
@@ -28,31 +28,29 @@
         ></a>
       </div>
     </div>
-    
-      <!-- remove component panel-->
-      <div
-        id="trash"
-        style="padding: 5px; margin-bottom: 10px"
-        class="text-center text-white bg-amber-400"
-      >
-        <div>
-          <i class="fa fa-solid fa-trash" style="font-size: 250%"></i>
-        </div>
-        <div class="py-5">
-          <span>Drop here to remove!</span>
-        </div>
-      </div>
 
-      <!-- list of components to be selected  -->
-      <div class="overflow-y-auto h-lvh">
+    <!-- remove component panel-->
+    <div
+      id="trash"
+      style="padding: 5px; margin-bottom: 10px"
+      class="text-center text-white bg-amber-400"
+    >
+      <div>
+        <i class="fa fa-solid fa-trash" style="font-size: 250%"></i>
+      </div>
+      <div class="py-5">
+        <span>Drop here to remove!</span>
+      </div>
+    </div>
+
+    <!-- list of components to be selected  -->
+
+    <div class="overflow-y-auto h-lvh">
       <div
         v-for="item in gsComponentData"
         class="newWidget grid-stack-item grid-custom"
       >
-        <div
-          class="grid-stack-item-content drag"
-          :gscomponent="gsGetComponentInfo(item.name)"
-        >
+        <div class="grid-stack-item-content drag" :gscomponent="item.name">
           <div>
             <i class="fa fa-solid fa-plus" style="font-size: 200%"></i>
           </div>
@@ -61,12 +59,11 @@
           </div>
         </div>
       </div>
-
-    </div><!-- component list-->
-
+    </div>
   </div>
+  <!-- end component list-->
 
-  <!-- Show components panel and page title -->
+  <!-- Show create page time and menu -->
   <div class="flex justify-between align-items-center bg-blue-600 text-white">
     <div class="ml-4 flex-1">
       <h1 class="m-1">
@@ -134,6 +131,14 @@
       <!-- right -->
 
       <a-space class="mx-3 text-2xl font-bold">
+        <a-tooltip content="just for test">
+          <button @click.prevent="test()">
+            <span><i class="fa-solid fa-fire"></i></span>
+          </button>
+        </a-tooltip>
+      </a-space>
+
+      <a-space class="mx-3 text-2xl font-bold">
         <a-tooltip content="Show page info">
           <button @click.prevent="showInfo">
             <span><i class="fa-solid fa-circle-info"></i></span>
@@ -186,7 +191,10 @@
         >
           <template #menu>
             <grid-menu
-              :gridId="id"
+              :grid-id="id"
+              :last-grid="
+                index == gridStacks.length - 1 && gridStacks.length > 1
+              "
               v-if="!pageStatic"
               @grid:remove="removeGrid"
             ></grid-menu>
@@ -206,20 +214,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
+import {
+  ref,
+  onMounted,
+  onUnmounted,
+  watch,
+  nextTick,
+  provide,
+  reactive,
+} from "vue";
 import { useRoute, useRouter } from "vue-router";
 import GridStackLayout from "@/components/layout/GridStackLayout.vue";
 import {
   createNewGrid,
   createPageProps,
   GridOptions,
+  GsComponentHandlers,
   PageProps,
 } from "@/components/layout/GridEvent";
 import { usePageLayoutStore } from "@/store/PageLayoutStore";
 import { usePageComponents } from "@/components/async/usePageComponents";
+import { useComponentHandlers } from "./useComponentHandlers";
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 import { Base64 } from "js-base64";
-import { Notification } from "@arco-design/web-vue";
+import { Notification, Result } from "@arco-design/web-vue";
 import GridMenu from "@/components/layout/GridMenu.vue";
 
 //grid id
@@ -250,6 +268,29 @@ const setGridStackRef = (index: number) => {
     }
   };
 };
+
+const invoke = async (fn: string, cid?: string, data?: any): Promise<any[]> =>
+  await invokeInternal(fn, cid, data);
+
+const invokeByName = async (
+  fn: string,
+  compName?: string,
+  data?: any
+): Promise<any[]> => await invokeByNameInternal(fn, compName, data);
+
+const { loadHandler, saveHandler, itemChangedHandler } = useComponentHandlers(
+  pageProps.value,
+  invoke,
+  invokeByName
+);
+
+const eventHandlers = reactive({
+  loadHandler,
+  saveHandler,
+  itemChangedHandler,
+});
+
+provide("__page_handlers", eventHandlers);
 
 //title edit status
 const isTitleEditable = ref(false);
@@ -284,16 +325,10 @@ const { gsComponentData, gsGetComponentInfo } = usePageComponents();
 const pannelWidth = ref(250);
 
 onMounted(async () => {
-  if (route.params.id) {
-    pageProps.value = await getPageById((route.params as any).id);
-    const grids = pageProps.value.grids || [];
-    gridStacks.value = grids.map((g) => g.id);
-    if (gridStacks.value.length == 0) {
-      addGrid();
-    }
-    nextTick(async () => {
-      await load();
-    });
+  if (route.params.id && route.fullPath.match(/\/page\/w/)) {
+    loadStore();
+  } else if (route.params.id && route.fullPath.match(/\/page\/b\/w/)) {
+    loadLocal();
   } else {
     const grids = pageProps.value.grids || [];
     gridStacks.value = grids.map((g) => g.id);
@@ -305,7 +340,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   //gridStackRefs.value.splice(0, gridStackRefs.value.length);
-  console.log("unmount called...");
+  console.log("unmount called when move from create...");
 });
 
 const open = () => {
@@ -316,23 +351,51 @@ const close = () => {
   pannelWidth.value = 0;
 };
 
-const load = async () => {
-  pageProps.value = (await getPageById(pageProps.value["id"])) as any;
+const load = async (_grids: Array<GridOptions>) => {
   // for each grid-stack-multi-layout
   gridStackRefs.value.forEach((gridStack, index) => {
     if (gridStack) {
-      const grid = (
-        pageProps.value.grids ||
-        pageProps.value.gsComponents ||
-        []
-      ).find((g) => g.id == gridStacks.value[index]);
-      if (grid) {
-        gridStack.load(grid.items);
-      } else {
-        gridStack.load({ id: 1, x: 2, y: 1, h: 2 });
-      }
+      const grid = _grids[index];
+      gridStack.load(grid.items);
+    } else {
+      gridStack.load({ id: 1, x: 2, y: 1, h: 2 });
     }
   });
+};
+
+const loadLocal = async () => {
+  //show preview
+  let data = localStorage.getItem((route.params as any).id);
+  if (data) {
+    pageProps.value = JSON.parse(Base64.decode(data));
+    const grids = pageProps.value.grids;
+    gridStacks.value = grids.map((g: any) => g.id);
+    nextTick(async () => {
+      await load(grids);
+    });    
+  }
+};
+
+const loadStore = async () => {
+  pageProps.value = (await getPageById((route.params as any).id)) as any;
+  gridStacks.value = pageProps.value.grids.map((g) => g.id);
+  nextTick(async () => {
+      await load(pageProps.value.grids);
+  });
+
+  // for each grid-stack-multi-layout
+  // gridStackRefs.value.forEach((gridStack, index) => {
+  //   if (gridStack) {
+  //     const grid = (pageProps.value.grids || []).find(
+  //       (g) => g.id == gridStacks.value[index]
+  //     );
+  //     if (grid) {
+  //       gridStack.load(grid.items);
+  //     } else {
+  //       gridStack.load({ id: 1, x: 2, y: 1, h: 2 });
+  //     }
+  //   }
+  // });
 };
 
 const save = async (isPublish = false) => {
@@ -365,17 +428,7 @@ const clear = async () => {
 
 const preview = async () => {
   const id = pageProps.value["id"];
-  const grids = Array<GridOptions>();
-  gridStackRefs.value.forEach((gridStack, index) => {
-    if (gridStack) {
-      grids.push({
-        id: gridStacks.value[index] as string,
-        items: gridStack.save(),
-      });
-    }
-  });
-  const previewData = { title: pageProps.value.title, grids: grids };
-  let data = Base64.encode(JSON.stringify(previewData));
+  let data = Base64.encode(JSON.stringify(currentPageProps()));
   localStorage.setItem(id, data);
   router.push({ name: "preview", params: { id: id } });
 };
@@ -415,7 +468,10 @@ watch(
   { deep: true }
 );
 
-const showInfo = () => {
+/**
+ * Current layout info in memory
+ */
+const currentPageProps = () =>{
   const grids = Array<GridOptions>();
   gridStackRefs.value.forEach((gridStack, index) => {
     if (gridStack) {
@@ -427,7 +483,11 @@ const showInfo = () => {
   });
   const page = JSON.parse(JSON.stringify(pageProps.value));
   page.grids = grids;
-  pageDebugInfo.value = page;
+  return page;
+}
+
+const showInfo = () => {
+  pageDebugInfo.value = currentPageProps();
   showInfoDialog.value = true;
 };
 
@@ -450,22 +510,26 @@ const removeGrid = async (gridId: string) => {
     try {
       //destroy grid stack DOM
       const index = gridStacks.value.findIndex((i) => i == gridId);
-      const grid = gridStackRefs.value[index];
-      grid.destroyGrid(gridId);
-      //remove grid from ref
-      gridStacks.value.splice(index, 1);
-      //wait update
-      nextTick(async () => {
-        //remain only active grid refs
-        const allRefs = gridStackRefs.value.splice(
-          0,
-          gridStackRefs.value.length
-        );
-        gridStacks.value.forEach((id) => {
-          const mygrid = allRefs.find((g) => g.props.id == id);
-          gridStackRefs.value.push(mygrid);
+      //only last grid can be deleted
+      if (index == gridStacks.value.length - 1) {
+        const grid = gridStackRefs.value[index];
+        grid.clear();
+        grid.destroyGrid(gridId);
+        //remove grid from ref
+        gridStacks.value.splice(index, 1);
+        //wait update
+        nextTick(async () => {
+          //remain only active grid refs
+          const allRefs = gridStackRefs.value.splice(
+            0,
+            gridStackRefs.value.length
+          );
+          gridStacks.value.forEach((id) => {
+            const mygrid = allRefs.find((g) => g.props.id == id);
+            gridStackRefs.value.push(mygrid);
+          });
         });
-      });
+      }
     } catch (err) {
       Notification.error({
         id: "delete_grid",
@@ -473,15 +537,64 @@ const removeGrid = async (gridId: string) => {
         content: "Grid deleted from layout error: " + gridId,
       });
     }
-    //nextTick(() => {
-    // Notification.success({
-    //   id: "delete_grid",
-    //   title: "Success",
-    //   content: "Grid deleted from layout: " + gridId,
-    // });
-    //});
   }
 };
+
+const findFn = (fn: string, cid?: string): GsComponentHandlers[] => {
+  return gridStackRefs.value
+    .map((g) => g.findCompFn(fn, cid))
+    .flatMap((c) => c);
+};
+
+const findFnByName = (fn: string, compName?: string): GsComponentHandlers[] => {
+  return gridStackRefs.value
+    .map((g) => g.findCompFnByName(fn, compName))
+    .flatMap((c) => c);
+};
+
+const invokeInternal = async (fn: string, cid?: string, data?: any) => {
+  const allFuncs = findFn(fn, cid).map((c: GsComponentHandlers) => {
+    let resultOrPromise = c.f(c.cid, data);
+    if (resultOrPromise instanceof Promise) {
+      return resultOrPromise;
+    } else {
+      return Promise.resolve(resultOrPromise);
+    }
+  });
+  return await Promise.all(allFuncs).then((result) => Promise.resolve(result));
+};
+
+const invokeByNameInternal = async (
+  fn: string,
+  compName?: string,
+  data?: any
+) => {
+  const allFuncs = findFnByName(fn, compName).map((c: GsComponentHandlers) => {
+    let resultOrPromise = c.f(c.cid, data);
+    if (resultOrPromise instanceof Promise) {
+      return resultOrPromise;
+    } else {
+      return Promise.resolve(resultOrPromise);
+    }
+  });
+  return await Promise.all(allFuncs).then((result) => Promise.resolve(result));
+};
+
+const test = async () => {
+  const result = await invoke("test1", undefined, "test data in create! ");
+  result.forEach((r) => alert(r));
+};
+
+defineExpose({
+  showInfo,
+  load,
+  save,
+  clear,
+  preview,
+  publish,
+  invoke,
+  invokeByName,
+});
 </script>
 
 <style scoped>

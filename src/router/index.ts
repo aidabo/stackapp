@@ -27,6 +27,11 @@ const routes = [
     component: ()=>import("@/components/layout/GridStackCreate.vue"),
   },
   {
+    path: "/page/b/w/:id",
+    name: "createpageback",
+    component: ()=>import("@/components/layout/GridStackCreate.vue"),
+  },
+  {
     path: "/page/r/:id",
     name: "page",
     component: ()=>import("@/components/page/GridStackPage.vue"),

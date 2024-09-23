@@ -13,7 +13,6 @@ export interface PageProps {
   category?: string;
   status?: string;
   grids: Array<GridOptions>;
-  gsComponents?: []; //deleted
 }
 
 export interface GridOptions extends GridStackOptions {
@@ -29,12 +28,13 @@ export interface GridItemOptions extends GridStackPosition {
   title?: string;
 }
 
-export interface ComponentOption {
+export interface CompProps extends ComponentOption {
   //component id
-  cid: string;
+  cid: string; //required
   name: string;
-  props: any;
   description?: string;
+  dataUrl?:string;  
+  data?: any;
 }
 
 export const createGridOptions = (opt?: Partial<GridOptions>): GridOptions => {
@@ -47,6 +47,11 @@ export const createGridOptions = (opt?: Partial<GridOptions>): GridOptions => {
   } as GridOptions;
 };
 
+/**
+ * Initial create page props
+ * @param opt 
+ * @returns 
+ */
 export const createPageProps = (opt?: Partial<PageProps>): PageProps => {
   return {
     id: opt?.id ?? `page@${uuidv4()}`,
@@ -57,11 +62,102 @@ export const createPageProps = (opt?: Partial<PageProps>): PageProps => {
     image: opt?.image ?? "",
     category: opt?.category ?? "unknown",
     status: opt?.status ?? "",
-    grids: [{id: `grid@${uuidv4()}`, items: []}, {id: `grid@${uuidv4()}`, items: []} ]
+    grids: [
+      { id: `grid@${uuidv4()}`, items: [] },
+      { id: `grid@${uuidv4()}`, items: [] },
+    ],
   } as PageProps;
 };
 
-export const createNewGrid = () : GridOptions =>{
-  return {id: `grid@${uuidv4()}`, items: []} as GridOptions
+/**
+ * Create a new gridstack in page
+ * @returns 
+ */
+export const createNewGrid = (): GridOptions => {
+  return { id: `grid@${uuidv4()}`, items: [] } as GridOptions;
+};
+
+/**
+ * Define component default props
+ */
+export interface ComponentOption {
+  cid?: string; //component id, generated when in create page
+  name: string;
+  description?: string;
+  dataUrl?: string;
+  data?: any;
 }
+
+/**
+ * Binding props when component render
+ */
+export interface GsCompProps {
+  //component id = gsComponent.cid
+  cid: string; 
+  //grid-stack-item
+  gsItem: {[key:string]: any};
+  //component props
+  gsComponent: CompProps;
+  //page props
+  gsPage?: PageProps;
+  //callback load data
+  gsLoad: (cid:string, data?: any) => any;
+  //callback save data
+  gsSave: (cid: string, data: any) => any;
+  //callback register component info
+  gsRegister: (cid: string, data: GsComponentRefs) => void;
+  //callback item changed
+  gsItemChanged: (cid: string, data: any) => any;
+  //callback component removed
+  gsRemove: (itemId: string) => void;
+}
+
+/**
+ * Create a default component props
+ * @param name 
+ * @param description 
+ * @param data 
+ * @param dataUrl 
+ * @returns 
+ */
+export const createComponentOption = (
+  name: string,
+  description?: string,
+  dataUrl?: string,
+  data?: any,  
+): ComponentOption => {
+  return {
+    name: name,
+    description: description,
+    dataUrl: dataUrl,
+    data: data,
+  } as ComponentOption;
+};
+
+/**
+ * Provider informaiton in gridstacklayout
+ */
+export interface GsComponentRefs {
+  //component props
+  props: CompProps,
+  //component data or settings
+  data:  any
+  //component handlers if neccessary
+  handlers:  any
+}
+
+export const createGsComponentRefs = (props: CompProps, data?: any, handlers?: any) =>{
+  return {
+    props: props,
+    data: data,
+    handlers: handlers
+  } as GsComponentRefs
+}
+
+export interface GsComponentHandlers {
+  cid: string
+  fn: String,
+  f: (cid: string, data: any)=>any
+}
+
 

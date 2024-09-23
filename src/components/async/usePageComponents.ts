@@ -1,112 +1,234 @@
 import { ref, markRaw, defineAsyncComponent, reactive } from "vue";
 import { Base64 } from "js-base64";
+import { ComponentOption, createComponentOption } from "../layout/GridEvent";
 
 export const usePageComponents = () => {
-
-  const gsComponentData = reactive([
-    {
-      name: "arcoform",
-      description: "Drag me Arcoform",
-      props: {},
-    },
+  const gsComponentData = reactive<ComponentOption[]>([
+    createComponentOption("arcoform", "Drag me Arcoform", undefined, {
+      options: [
+        {
+          value: "beijing",
+          label: "Beijing",
+          children: [
+            {
+              value: "chaoyang",
+              label: "ChaoYang",
+              children: [
+                {
+                  value: "datunli",
+                  label: "Datunli",
+                },
+              ],
+            },
+            {
+              value: "haidian",
+              label: "Haidian",
+            },
+            {
+              value: "dongcheng",
+              label: "Dongcheng",
+            },
+            {
+              value: "xicheng",
+              label: "XiCheng",
+            },
+          ],
+        },
+        {
+          value: "shanghai",
+          label: "Shanghai",
+          children: [
+            {
+              value: "shanghaishi",
+              label: "Shanghai",
+              children: [
+                {
+                  value: "huangpu",
+                  label: "Huangpu",
+                },
+              ],
+            },
+          ],
+        },
+      ], //options
+      treeData: [
+        {
+          key: "node1",
+          title: "Node1",
+          children: [
+            {
+              key: "node2",
+              title: "Node2",
+            },
+          ],
+        },
+        {
+          key: "node3",
+          title: "Node3",
+          children: [
+            {
+              key: "node4",
+              title: "Node4",
+            },
+            {
+              key: "node5",
+              title: "Node5",
+            },
+          ],
+        },
+      ],
+      gsData: {
+        size: "medium",
+        name: "",
+        age: undefined,
+        section: "",
+        province: "haidian",
+        options: [],
+        date: "",
+        time: "",
+        radio: "radio one",
+        slider: 5,
+        score: 5,
+        switch: false,
+        multiSelect: ["section one"],
+        treeSelect: "",
+      },
+    }),
     {
       name: "dynamicrender",
       description: "Drag me DynamicRender",
-      props: {},
-    }, 
+      data: {},
+    },
     {
       name: "example",
       description: "Drag me Example",
-      props: {},
-    }, 
+      data: {},
+    },
     {
       name: "componentb",
       description: "Drag me componentB",
-      props: {},
+      data: {},
     },
     {
-      name: "uploadForm",
+      name: "uploadform",
       description: "Drag me UploadForm",
-      props: {},
+      data: {},
     },
     {
       name: "customForm",
       description: "Drag me CustomForm",
-      props: {},
+      data: {},
     },
     {
       name: "layoutParts",
       description: "Drag me LayoutParts",
-      props: {},
-    },
-    {
-      name: "editable",
-      description: "Drag me Editable",
-      props: {},
+      data: {},
     },
     {
       name: "pageList",
       description: "Drag me PageList",
-      props: {},
-    },    
+      data: {},
+    },
     {
       name: "forminput",
       description: "Drag me FormkitInput",
-      props: {},
-    }, 
+      data: {},
+    },
     {
       name: "schemakit",
       description: "Drag me SchemaKit",
-      props: {},
-    }, 
+      data: {},
+    },
 
     {
       name: "formkiticon",
       description: "Drag me FormKit Icon",
-      props: {},
-    }, 
+      data: {},
+    },
     {
       name: "componenta",
       description: "Drag me componentA",
-      props: {},
+      data: {},
     },
     {
       name: "image",
       description: "Drag me Image",
-      props: {},
+      data: {},
     },
   ]);
 
-  const gsComponents: any = ref({
+  const gsComponents: any = reactive({
     //MUST use defineAsyncComponent to render lazy
-    customForm: markRaw(defineAsyncComponent(() => import("@/components/parts/CustomForm.vue"))),
-    layoutParts: markRaw(defineAsyncComponent(() => import("@/components/parts/LayoutParts.vue"))),
-    editable: markRaw(defineAsyncComponent(() => import("@/components/parts/Editable.vue"))),
-    arcoform: markRaw(defineAsyncComponent(() => import("@/components/parts/ArcoForm.vue"))),
-    pageList: markRaw(defineAsyncComponent(() => import("@/components/parts/SimpleListParts.vue"))),   
-    dynamicrender: markRaw(defineAsyncComponent(()=>import('@/components/formkit/DynamicRender'))),
-    example: markRaw(defineAsyncComponent(() => import("@/components/formkit/FormExample.vue"))),
-    forminput: markRaw(defineAsyncComponent(() => import("@/components/formkit/FormkitInput.vue"))),
-    schemakit: markRaw(defineAsyncComponent(() => import("@/components/formkit/SchemaKit.vue"))),
-    formkiticon: markRaw(defineAsyncComponent(() => import("@/components/formkit/FormKitIcon.vue"))),
-    uploadForm: markRaw(defineAsyncComponent(() => import("@/components/formkit/FileUpload.vue"))),
-    componentb: markRaw(defineAsyncComponent(() => import("@/components/test/ComponentB.vue"))),
-    componenta: markRaw(defineAsyncComponent(() => import("@/components/test/ComponentA"))),
-    image: markRaw(defineAsyncComponent(() => import("@/components/test/Image.vue"))),
+    customForm: markRaw(
+      defineAsyncComponent(() => import("@/components/parts/CustomForm.vue"))
+    ),
+    layoutParts: markRaw(
+      defineAsyncComponent(() => import("@/components/parts/LayoutParts.vue"))
+    ),
+    editable: markRaw(
+      defineAsyncComponent(() => import("@/components/parts/Editable.vue"))
+    ),
+    arcoform: markRaw(
+      defineAsyncComponent(() => import("@/components/parts/ArcoForm.vue"))
+    ),
+    pageList: markRaw(
+      defineAsyncComponent(
+        () => import("@/components/parts/SimpleListParts.vue")
+      )
+    ),
+    dynamicrender: markRaw(
+      defineAsyncComponent(() => import("@/components/formkit/DynamicRender"))
+    ),
+    example: markRaw(
+      defineAsyncComponent(() => import("@/components/formkit/FormExample.vue"))
+    ),
+    forminput: markRaw(
+      defineAsyncComponent(
+        () => import("@/components/formkit/FormkitInput.vue")
+      )
+    ),
+    schemakit: markRaw(
+      defineAsyncComponent(() => import("@/components/formkit/SchemaKit.vue"))
+    ),
+    formkiticon: markRaw(
+      defineAsyncComponent(() => import("@/components/formkit/FormKitIcon.vue"))
+    ),
+    uploadForm: markRaw(
+      defineAsyncComponent(() => import("@/components/formkit/FileUpload.vue"))
+    ),
+    componentb: markRaw(
+      defineAsyncComponent(() => import("@/components/test/ComponentB.vue"))
+    ),
+    componenta: markRaw(
+      defineAsyncComponent(() => import("@/components/test/ComponentA"))
+    ),
+    image: markRaw(
+      defineAsyncComponent(() => import("@/components/test/Image.vue"))
+    ),
   });
 
   /**
-   * Get component itself
-   * @param componentName 
-   * @returns 
+   * Get component
+   * @param componentName
+   * @returns
    */
-  function gsGetItemCompnent(componentName: string) {
-    return gsComponents.value[componentName];
-  }
+  const gsGetItemCompnent = (componentName: string) => {
+    return gsComponents[componentName];
+  };
 
+  /**
+   * Get component props info
+   * @param componentName
+   * @returns
+   */
   const gsGetComponentInfo = (componentName: string) => {
-    return Base64.encode(JSON.stringify(gsComponentData.find(c => c.name == componentName)));
-  }
-  
-  return { gsComponentData, gsComponents, gsGetItemCompnent, gsGetComponentInfo };
+    return gsComponentData.find((c) => c.name == componentName);
+  };
+
+  return {
+    gsComponentData,
+    gsComponents,
+    gsGetItemCompnent,
+    gsGetComponentInfo,
+  };
 };
