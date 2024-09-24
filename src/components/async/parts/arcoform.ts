@@ -1,18 +1,13 @@
-import { defineAsyncComponent, markRaw } from "vue";
-import {
-  ComponentOption,
-  createComponentOption,
-} from "@/components/layout/GridEvent";
-import { webApiUrl } from "@/store/storeConstants";
+import { markRaw, defineAsyncComponent, reactive } from "vue";
+import { ComponentOption, createComponentOption } from "@/components/layout/GridEvent";
+// @ts-ignore
+import { environment } from "@/common/environment";
+const { env } = environment();
 
-export const arcoformUrl = `${webApiUrl}/compsdata_arcoform`;
+export const arcoform = markRaw(defineAsyncComponent(() => import("@/components/parts/CustomForm.vue")))
 
-export const arcoform = markRaw(
-  defineAsyncComponent(() => import("@/components/parts/ArcoForm.vue"))
-);
-
-export const props = withDefaults(defineProps<ComponentOption>(), {
-  ...createComponentOption("arcoform", "Drag me Arcoform", arcoformUrl, {
+export const props = withDefaults(defineProps<ComponentOption>(), 
+  createComponentOption("arcoform", "Drag me Arcoform", undefined, {
     options: [
       {
         value: "beijing",
@@ -85,25 +80,7 @@ export const props = withDefaults(defineProps<ComponentOption>(), {
         ],
       },
     ],
-  }),
-});
+  })
+)
 
-export interface ArcoformData {    
-  id: string;  
-  compname: "arcoform"
-  typeid?: string;
-  size: string;
-  name: string;
-  age: number;
-  section: string;
-  province: string;
-  options: [];
-  date: string;
-  time: string;
-  radio: string;
-  slider: number;
-  score: number;
-  switch: false;
-  multiSelect: string[];
-  treeSelect: string;
-}
+export const dataUrl = `${env.web_api_url}/compdata`;

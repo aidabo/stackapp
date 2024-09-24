@@ -22,6 +22,7 @@
     "@vitejs/plugin-vue-jsx": "^4.0.1",
     "@vueuse/core": "^11.0.3",
     "axios": "^1.7.5",
+    "camelcase": "^8.0.0",
     "dir": "^0.1.2",
     "from": "^0.1.7",
     "gridstack": "^10.3.1",

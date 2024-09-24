@@ -14,3 +14,23 @@ https://github.com/vuejs/rfcs/blob/master/active-rfcs/0009-global-api-change.md
 ## Dynamica load Vue Component
 
 https://stackoverflow.com/questions/77139424/dynamically-adding-new-vue-component
+
+## VNode tree
+
+The component rendered with h function of Vue3 in GridStack will not be seen in vue-dev-tools. And the components in grid layout can not be communicate with page or GridStackLayout component.
+Replace it, h function rendered with callback function as props to use.
+
+## Dynamically import and defined parts
+
+- Page handlers
+
+- Component handlers
+
+- Upload new component 
+
+- Add a new component into components info
+
+
+
+
+

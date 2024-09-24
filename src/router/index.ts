@@ -34,12 +34,12 @@ const routes = [
   {
     path: "/page/r/:id",
     name: "page",
-    component: ()=>import("@/components/page/GridStackPage.vue"),
+    component: ()=>import("@/components/layout/GridStackPage.vue"),
   },
   {
     path: "/page/p/:id",
     name: "preview",
-    component: ()=>import("@/components/page/GridStackPage.vue"),
+    component: ()=>import("@/components/layout/GridStackPage.vue"),
   },
   {
     path: "/test",

@@ -25,6 +25,7 @@ import {
   onUnmounted,
   reactive,
   inject,
+  PropType,
 } from "vue";
 import "gridstack/dist/gridstack.min.css";
 import "gridstack/dist/gridstack-extra.min.css";
@@ -34,6 +35,7 @@ import GridStackItemWrapper from "@/components/layout/GridStackItemWrapper";
 import {
   GsComponentHandlers,
   GsComponentRefs,
+  PageProps,
 } from "@/components/layout/GridEvent";
 
 const gsLayoutRef = ref(null);
@@ -44,7 +46,7 @@ const props = defineProps({
     required: true,
   },
   pageProps: {
-    type: Object,
+    type: Object as PropType<PageProps>,
     required: true,
   },
   pageStatic: {
@@ -54,6 +56,7 @@ const props = defineProps({
 });
 
 const handlers: any = inject("__page_handlers");
+console.log("injected", handlers);
 
 const components = reactive<{ [key: string]: GsComponentRefs }>({});
 
@@ -120,13 +123,16 @@ onMounted(async () => {
       const itemContentVNode: any = h(GridStackItemWrapper, {
         gsItem: item,
         gsPageProps: props.pageProps,
-        gsLoad: onCompLoad,
-        gsSave: onCompSave,
-        gsItemChanged: onCompItemChanged,
+        gsLoad: handlers.loadHandler,
+        gsSave: handlers.saveHandler,
+        gsItemChanged: handlers.itemChangedHandler,
+        gsUpload: handlers.uploadHandler,
+        gsOption: handlers.optionHandler,
+        gsDelete: handlers.deleteHandler,
         gsRegister: onCompRegister,
-        gsRemove: removeWidget,
+        gsRemove: removeWidget,        
       });
-
+  
       //clear dragged element content from .grid-stack-item-content div
       itemElContent.innerHTML = "";
 
@@ -147,7 +153,7 @@ onMounted(async () => {
 
   grid.on("change", function (e: any, items: any) {
     items = items || [];
-    //console.log("gs changed event: ", e, items);
+    console.log("gs changed event: ", e, items);
   });
 });
 
@@ -198,38 +204,8 @@ const compact = (value: boolean) => {
   }
 };
 
-// const createEventData = (cid: string, data: any) => {
-//   return { pid: props.pageProps.id, gid: props.id, cid: cid, data: data };
-// };
-
-/**
- * Callback provided by parent to load data
- * @param event
- */
-const onCompLoad = async (cid: string, data: any) => {
-  console.log("onCompLoad emit");
-  return await handlers.loadHandler(cid, data);
-};
-
-/**
- * Callback provided by parent to save data to store
- * @param event
- */
-const onCompSave = async (cid: string, data: any) => {
-  console.log("onCompSave called");
-  return await handlers.saveHandler(cid, data);
-};
-
-/**
- * emited by gscomponent when data changed
- * @param event
- */
-const onCompItemChanged = async (cid: string, data: any) => {
-  console.log("onCompItemChanged emit");
-  return await handlers.itemChangedHandler(cid, data);
-};
-
 const onCompRegister = (cid: string, data: GsComponentRefs) => {
+  console.log(`Component ${cid} registered}`)
   components[cid] = data;
 };
 

@@ -1,25 +1,40 @@
+import { ref, reactive } from "vue";
+import { useDefaultComponentDataStore } from "@/store/DefaultPageDataStore";
 import { PageProps } from "@/components/layout/GridEvent";
 
-export const useComponentHandlers = (
-  page: PageProps,
-  invoke: (fn: string, cid?: string, data?: any) => any,
-  invokeByName: (fn: string, compName?: string, data?: any) => any,
-  //hook to override handlers
+export const useDefaultPageHandlers = (
   loadHandler?: (cid: string, data?: any, callback?: Function) => any,
   saveHandler?: (cid: string, data: any, callback?: Function) => any,
   itemChangedHandler?: (cid: string, data: any, callback?: Function) => any,
   deleteHandler?: (cid: string, data: any, callback?: Function) => any,
   uploadHandler?: (cid: string, data: any, callback?: Function) => any,
-  optionHandler?: (cid: string, data: any, callback?: Function) => any
+  optionHandler?: (cid: string, data?: any, callback?: Function) => any
 ) => {
+
+  const { getDataById, getDataByName, getDataByCid, getDataList, saveData, deleteData  } = useDefaultComponentDataStore();
+
+  const pageProps = ref<PageProps>()
+
+  const fns = reactive({
+    invoke: (fn: string, compname: string, data?: any, callback?: Function):any => {},
+    invokeByName: (fn: string, compname: string, data?: any, callback?: Function):any => {}
+  })
+
+  const setCaller = (page: any, invokeFn: Function, invokeByNameFn: Function) =>{
+    pageProps.value = page;
+    fns.invoke = invokeFn as any;
+    fns.invokeByName = invokeByNameFn as any;
+  }
+
   /**
    * Callback provided by parent to load data
    * @param event
    */
   const customLoadHandler =
     loadHandler ||
-    ((cid: string, data?: any, callback?: Function) => {
+    (async(cid: string, data?: any, callback?: Function) => {
       console.log("default loadHandler event called", data);
+        return await getDataById(data.id) || getDataByCid(cid);
     });
 
   /**
@@ -28,8 +43,18 @@ export const useComponentHandlers = (
    */
   const customSaveHandler =
     saveHandler ||
-    ((cid: string, data: any, callback?: Function) => {
+    (async(cid: string, data: any, callback?: any) => {
       console.log("default saveHandler event called", data);
+      try{
+        const result = await saveData(data, cid)
+        console.log("result", result);
+        if(callback){
+            callback(result);
+        }
+      }catch(err){
+        console.log(err);
+        throw err;
+      }
     });
 
   /**
@@ -38,14 +63,15 @@ export const useComponentHandlers = (
    */
   const customItemChangedHandler =
     itemChangedHandler ||
-    ((cid: string, data: any, callback?: Function) => {
-      console.log("default itemChangedHandler event received", data);
+    (async(cid: string, data: any, callback?: Function) => {
+      console.log("default itemChangedHandler event received: ", cid, data);
     });
 
   const customDeleteHandler =
     deleteHandler ||
-    ((cid: string, data: any, callback?: Function) => {
+    (async(cid: string, data: any, callback?: Function) => {
       console.log("default deleteHandler event called", data);
+      await deleteData(data.id);
     });
 
   const customUploadHandler =
@@ -75,9 +101,12 @@ export const useComponentHandlers = (
   const invokeCF = async (
     fn: string,
     cid?: string,
-    data?: any
-  ): Promise<any[]> => {
-    return await invoke(fn, cid, data);
+    data?: any,
+    callback?: Function
+  ) => {
+    if(fns.invoke){
+      return await (fns.invoke as Function) (fn, cid, data, callback) as any;
+    }
   };
 
   /**
@@ -90,9 +119,12 @@ export const useComponentHandlers = (
   const invokeCFByName = async (
     fn: string,
     compName?: string,
-    data?: any
-  ): Promise<any[]> => {
-    return await invokeByName(fn, compName, data);
+    data?: any,
+    callback?: Function
+  ) => {
+    if(fns.invokeByName){
+      return await (fns.invokeByName as Function) (fn, compName, data, callback) as any;
+    }
   };
 
   return {
@@ -104,5 +136,6 @@ export const useComponentHandlers = (
     optionHandler: customOptionHandler,
     invokeCF,
     invokeCFByName,
+    setCaller
   };
 };

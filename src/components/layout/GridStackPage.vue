@@ -84,7 +84,7 @@ import {
 } from "@/components/layout/GridEvent";
 import { usePageLayoutStore } from "@/store/PageLayoutStore";
 import { Base64 } from "js-base64";
-import { useComponentHandlers } from "@/components/layout/useComponentHandlers";
+import { useDefaultPageHandlers } from "@/components/async/handlers/DefaultPageHandler"
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 
 
@@ -122,13 +122,10 @@ const invoke = async (fn: string, cid?: string, data?: any): Promise<any[]> => a
 const invokeByName = async (fn: string, compName?: string, data?: any): Promise<any[]> => await invokeByNameInternal(fn, compName, data);
 
 //process handler of component 
-const { loadHandler, saveHandler, itemChangedHandler  } = useComponentHandlers(pageProps.value, invoke, invokeByName);
-const eventHandlers = reactive({
-  loadHandler,
-  saveHandler,
-  itemChangedHandler,
-});
-
+//Page data handlers register to GridStackLayout
+const pageHandlers = useDefaultPageHandlers()
+pageHandlers.setCaller(pageProps, invoke, invokeByName);
+const eventHandlers = reactive({...pageHandlers})
 provide("__page_handlers", eventHandlers);
 
 const { getPageById } = usePageLayoutStore();

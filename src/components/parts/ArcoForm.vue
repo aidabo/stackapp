@@ -167,7 +167,9 @@ const treeData = ref<any>();
 const options = ref<any>();
 
 const gsData: any = ref({
-  id: uuidv4(),
+  id: "",
+  cid: props.cid,
+  cname: props.gsComponent.name,
   size: "medium",
   name: "",
   age: undefined,
@@ -201,10 +203,10 @@ const setProps = () => {
 onMounted(() => {
   registerCallback();
   setProps();
-  const initData = props.gsLoad(props.cid);
-  if (initData) {
-    gsData.value = initData;
-  }
+  // const initData = props.gsLoad(props.cid, gsData.value);
+  // if (initData) {
+  //   gsData.value = initData;
+  // }
 });
 
 const test1 = async (cid: string, data: string) => {
@@ -233,22 +235,21 @@ const handleSubmit = async (form: any) => {
   const { values, errors } = form;
   console.log("values:", values, "\nerrors:", errors);
   if (!errors || errors.length == 0) {
-    if (await props.gsSave(props.cid, gsData.value)) {
-      const result = await props.gsSave(props.cid, gsData.value);
-      if (result) {
-        Notification.success({
-          id: "arcoform_save_success",
-          title: "Save Success",
-          content: "Save Arcoform successfully",
-        });
-      } else {
-        Notification.error({
-          id: "arcoform_save_failure",
-          title: "Save Failure",
-          content: "Save Arcoform Failure: " + result,
-        });
-      }
-    }
+      await props.gsSave(props.cid, gsData.value, (result: any) => {                
+        if (result === false) {
+          Notification.error({
+            id: "arcoform_save_failure",
+            title: "Save Failure",
+            content: "Save Arcoform Failure: " + result,
+          });
+        } else {
+          Notification.success({
+            id: "arcoform_save_success",
+            title: "Save Success",
+            content: "Save Arcoform successfully: " + result.id,
+          });
+        }
+      });
   }
 };
 </script>

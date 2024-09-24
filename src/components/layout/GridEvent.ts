@@ -54,7 +54,7 @@ export const createGridOptions = (opt?: Partial<GridOptions>): GridOptions => {
  */
 export const createPageProps = (opt?: Partial<PageProps>): PageProps => {
   return {
-    id: opt?.id ?? `page@${uuidv4()}`,
+    id: opt?.id ?? `page_${uuidv4()}`,
     title: opt?.title ?? "Create a new Page",
     static: opt?.static ?? true,
     description: opt?.description ?? opt?.title,
@@ -63,8 +63,8 @@ export const createPageProps = (opt?: Partial<PageProps>): PageProps => {
     category: opt?.category ?? "unknown",
     status: opt?.status ?? "",
     grids: [
-      { id: `grid@${uuidv4()}`, items: [] },
-      { id: `grid@${uuidv4()}`, items: [] },
+      { id: `grid_${uuidv4()}`, items: [] },
+      { id: `grid_${uuidv4()}`, items: [] },
     ],
   } as PageProps;
 };
@@ -74,7 +74,7 @@ export const createPageProps = (opt?: Partial<PageProps>): PageProps => {
  * @returns 
  */
 export const createNewGrid = (): GridOptions => {
-  return { id: `grid@${uuidv4()}`, items: [] } as GridOptions;
+  return { id: `grid_${uuidv4()}`, items: [] } as GridOptions;
 };
 
 /**
@@ -100,16 +100,22 @@ export interface GsCompProps {
   gsComponent: CompProps;
   //page props
   gsPage?: PageProps;
-  //callback load data
-  gsLoad: (cid:string, data?: any) => any;
-  //callback save data
-  gsSave: (cid: string, data: any) => any;
-  //callback register component info
+  //load data
+  gsLoad: (cid:string, data?: any, callback?: Function) => any;
+  //save data
+  gsSave: (cid: string, data: any, callback?: Function) => any;
+  //delete data
+  gsDelete: (cid: string, data: any, callback?: Function) => any;
+  //item changed
+  gsItemChanged: (cid: string, data: any, callback?: Function) => any;  
+  //file upload
+  gsUpload?: (cid: string, data: any, callback?: Function) => any;
+  //other event
+  gsOption?: (cid: string, data?: any, callback?: Function) => any;
+  //register component information for page
   gsRegister: (cid: string, data: GsComponentRefs) => void;
-  //callback item changed
-  gsItemChanged: (cid: string, data: any) => any;
-  //callback component removed
-  gsRemove: (itemId: string) => void;
+  //when component removed, notify grid-stack
+  gsRemove: (itemId: string) => void;  
 }
 
 /**
@@ -157,7 +163,7 @@ export const createGsComponentRefs = (props: CompProps, data?: any, handlers?: a
 export interface GsComponentHandlers {
   cid: string
   fn: String,
-  f: (cid: string, data: any)=>any
+  f: (cid: string, data?: any, callback?: Function)=>any
 }
 
 

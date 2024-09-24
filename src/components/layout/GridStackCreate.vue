@@ -3,7 +3,8 @@
     <!-- panel button action -->
     <div class="flex">
       <div class="flex-none">
-        <a href="#" class="mybtn" @click.prevent="publish()"
+        <a href="#" class="mybtn" @click.prevent="publish()
+        "
           ><i class="fa fa-solid fa-square-share-nodes"></i
         ></a>
       </div>
@@ -239,6 +240,7 @@ import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 import { Base64 } from "js-base64";
 import { Notification, Result } from "@arco-design/web-vue";
 import GridMenu from "@/components/layout/GridMenu.vue";
+import { useDefaultPageHandlers } from "@/components/async/handlers/DefaultPageHandler";
 
 //grid id
 const gridStacks = ref<string[]>([]);
@@ -278,18 +280,10 @@ const invokeByName = async (
   data?: any
 ): Promise<any[]> => await invokeByNameInternal(fn, compName, data);
 
-const { loadHandler, saveHandler, itemChangedHandler } = useComponentHandlers(
-  pageProps.value,
-  invoke,
-  invokeByName
-);
-
-const eventHandlers = reactive({
-  loadHandler,
-  saveHandler,
-  itemChangedHandler,
-});
-
+//Page data handlers register to GridStackLayout
+const pageHandlers = useDefaultPageHandlers()
+pageHandlers.setCaller(pageProps, invoke, invokeByName);
+const eventHandlers = reactive({...pageHandlers})
 provide("__page_handlers", eventHandlers);
 
 //title edit status
@@ -370,6 +364,7 @@ const loadLocal = async () => {
     pageProps.value = JSON.parse(Base64.decode(data));
     const grids = pageProps.value.grids;
     gridStacks.value = grids.map((g: any) => g.id);
+    //waiting grid-stack vnode created
     nextTick(async () => {
       await load(grids);
     });    
@@ -379,23 +374,10 @@ const loadLocal = async () => {
 const loadStore = async () => {
   pageProps.value = (await getPageById((route.params as any).id)) as any;
   gridStacks.value = pageProps.value.grids.map((g) => g.id);
+  //waiting grid-stack vnode created
   nextTick(async () => {
       await load(pageProps.value.grids);
   });
-
-  // for each grid-stack-multi-layout
-  // gridStackRefs.value.forEach((gridStack, index) => {
-  //   if (gridStack) {
-  //     const grid = (pageProps.value.grids || []).find(
-  //       (g) => g.id == gridStacks.value[index]
-  //     );
-  //     if (grid) {
-  //       gridStack.load(grid.items);
-  //     } else {
-  //       gridStack.load({ id: 1, x: 2, y: 1, h: 2 });
-  //     }
-  //   }
-  // });
 };
 
 const save = async (isPublish = false) => {

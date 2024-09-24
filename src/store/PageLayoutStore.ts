@@ -3,6 +3,8 @@ import axios from "axios";
 import { apiJsonHeaders, webApiUrl } from "./storeConstants";
 import { PageProps } from "@/components/layout/GridEvent";
 
+const dataUrl = `${webApiUrl}/pages`;
+
 export const usePageLayoutStore = defineStore("pagelayout", {
   state: () => ({
     pageList: [] as PageProps[],
@@ -17,16 +19,15 @@ export const usePageLayoutStore = defineStore("pagelayout", {
 
   actions: {
     async getPageList() {
-      return await axios.get(`${webApiUrl}/pages`).then((response) => {
+      return await axios.get(`${dataUrl}`).then((response) => {
         this.pageList = response.data;
-        console.log("getAll", response.data);
         return response.data;
       });
     },
 
     async getPageById(pageId: string) {
       return await axios
-        .get(`${webApiUrl}/pages/${pageId}`)
+        .get(`${dataUrl}/${pageId}`)
         .then((response) => {
           return response.data;
         })
@@ -37,9 +38,7 @@ export const usePageLayoutStore = defineStore("pagelayout", {
     },
 
     async exists(pageId: string) {
-      return ((await this.getPageList()) || []).find(
-        (p: any) => p.id == pageId
-      );
+      return await this.getPageById(pageId) != null;
     },
 
     async savePage(data: PageProps) {
@@ -56,7 +55,7 @@ export const usePageLayoutStore = defineStore("pagelayout", {
       const body = JSON.stringify(data);
       const headers = apiJsonHeaders;
       return await axios
-        .post(`${webApiUrl}/pages`, body, {
+        .post(`${dataUrl}`, body, {
           method,
           headers,
         })
@@ -70,7 +69,7 @@ export const usePageLayoutStore = defineStore("pagelayout", {
       const body = JSON.stringify(data);
       const headers = apiJsonHeaders;
       return await axios
-        .patch(`${webApiUrl}/pages/${data.id}`, body, {
+        .patch(`${dataUrl}/${data.id}`, body, {
           method,
           headers,
         })
@@ -83,7 +82,7 @@ export const usePageLayoutStore = defineStore("pagelayout", {
       const method = "DELETE";
       const headers = apiJsonHeaders;
       return await axios
-        .delete(`${webApiUrl}/pages/${pageId}`, {
+        .delete(`${dataUrl}/${pageId}`, {
           method,
           headers,
         })

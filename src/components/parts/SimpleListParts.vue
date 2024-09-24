@@ -113,7 +113,7 @@ const onCreatePage = () =>{
 
 const doneDlg = async(form: any) =>{
     if(form.title){
-        form["id"] = `page@${uuidv4()}`;
+        form["id"] = `page_${uuidv4()}`;
         await savePage(form);        
     }    
     showDialog.value = false;

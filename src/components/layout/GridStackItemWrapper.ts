@@ -1,7 +1,15 @@
-import { defineComponent, h, ref, onMounted, defineExpose, watch, resolveComponent, resolveDynamicComponent } from "vue";
+import {
+  defineComponent,
+  h,
+  ref,
+  onMounted,
+  watch,
+  resolveDynamicComponent,
+  PropType,
+} from "vue";
 import { v4 as uuidv4 } from "uuid";
 import { usePageComponents } from "@/components/async/usePageComponents";
-import { GsComponentRefs } from "@/components/layout/GridEvent";
+
 
 export default defineComponent({
   name: "GridStackItemWrapper",
@@ -11,13 +19,19 @@ export default defineComponent({
     gsPageProps: Object,
     gsLoad: Function,
     gsSave: Function,
-    gsRegister: Function,
+    //delete data
+    gsDelete: Function,
+    //item changed
     gsItemChanged: Function,
+    //file upload
+    gsRegister: Function,
     gsRemove: Function,
-   },
+    gsUpload: Function,
+    //other event
+    gsOption: Function,
+  },
 
   setup(props, { slots, emit }) {
-
     /**
      * gscomponent reactive props
      */
@@ -29,55 +43,8 @@ export default defineComponent({
      * get gscomponent
      */
     const { gsGetItemCompnent, gsGetComponentInfo } = usePageComponents();
-
-    /**
-     * Callback provided by parent to load data
-     * @param event
-     */
-    const onLoad = (cid: string, data: any) => {
-      if (props.gsLoad) {
-        props.gsLoad(cid, data);
-      }
-    };
-
-    /**
-     * Callback provided by parent to save data to store
-     * @param event
-     */
-    const onSave = (cid: string, data: any) => {
-      if (props.gsSave) {
-        props.gsSave(cid, data);
-      }
-    };
-
-    /**
-     * emited by gscomponent when data changed
-     * @param event
-     */
-    const onItemChanged = (cid: string, data: any) => {
-      if (props.gsItemChanged) {
-        props.gsItemChanged(cid, data);
-      }
-    };
-
-    /**
-     * emitted by gscomponent to process removing widget work by grid-stack
-     * @param event
-     */
-    const onRemove = () => {
-      if (props.gsRemove) {
-        //call removeWidget function of layout
-        props.gsRemove((props.gsItem as any).el);
-      }
-    };
-
-    const onRegister = (cid: string, data: GsComponentRefs) => {
-      if (props.gsRegister) {
-        props.gsRegister(cid, data);
-      }
-    };
-
-    onMounted(() => {      
+   
+    onMounted(() => {
       addWidgetComponentCB(props.gsItem);
       gsComponent.value = getGsComponent(props.gsItem);
     });
@@ -99,7 +66,7 @@ export default defineComponent({
         }
         const gsComponentInfo = gsGetComponentInfo(gscomponent);
         if (gsComponentInfo) {
-          gsComponentInfo["cid"] = `comp@${uuidv4()}`;
+          gsComponentInfo["cid"] = `comp_${uuidv4()}`;
         }
         item["gscomponent"] = gsComponentInfo;
       }
@@ -115,7 +82,7 @@ export default defineComponent({
       if (!gscomponentProps) {
         return null;
       }
-      gsCompProps.value = gscomponentProps;      
+      gsCompProps.value = gscomponentProps;
       return resolveDynamicComponent(gsGetItemCompnent(gscomponentProps.name));
     };
 
@@ -135,11 +102,14 @@ export default defineComponent({
         gsPage: props.gsPageProps,
         //component props
         gsComponent: gsCompProps.value,
-        gsLoad: onLoad,
-        gsSave: onSave,
-        gsItemChanged: onItemChanged,
-        gsRemove: onRemove,
-        gsRegister: onRegister,
+        gsLoad: props.gsLoad,
+        gsSave: props.gsSave,
+        gsItemChanged: props.gsItemChanged,
+        gsDelete: props.gsDelete,
+        gsUpload: props.gsUpload,
+        gsOption: props.gsOption,
+        gsRemove: props.gsRemove,
+        gsRegister: props.gsRegister,
       });
     };
   },
