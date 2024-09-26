@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, reactive, provide } from "vue";
+import { ref, onMounted, nextTick, reactive, provide, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import GridStackLayout from "@/components/layout/GridStackLayout.vue";
 import {
@@ -85,7 +85,7 @@ import {
 } from "@/components/layout/GridEvent";
 import { usePageLayoutStore } from "@/store/PageLayoutStore";
 import { Base64 } from "js-base64";
-import { useDefaultPageHandlers } from "@/components/async/handlers/DefaultPageHandler"
+import { useDefaultHandlers } from "@/components/async/handlers/DefaultHandler"
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 
 
@@ -122,12 +122,10 @@ const setGridStackRef = (index: number) => {
 const invoke = async (fn: string, event: GsEvent, callback?: Function): Promise<any[]> =>
   await invokeInternal(fn, event, callback);
 
-// const invokeByName = async (fn: string, compName?: string, data?: any): Promise<any[]> => await invokeByNameInternal(fn, compName, data);
-
 //process handler of component 
 //Page data handlers register to GridStackLayout
-const pageHandlers = useDefaultPageHandlers()
-pageHandlers.setInvoke(pageProps, invoke);
+const pageHandlers = useDefaultHandlers()
+pageHandlers.fns.invoke = invoke
 const eventHandlers = reactive({...pageHandlers})
 provide("__page_handlers", eventHandlers);
 
@@ -224,13 +222,6 @@ const findFn = (fn: string, event: GsEvent): GsComponentHandlers[] => {
     .flatMap((c) => c);
 };
 
-
-// const findFnByName = (fn: string, compName?: string): GsComponentHandlers[] => {
-//   return gridStackRefs.value
-//     .map((g) => g.findCompFnByName(fn, compName))
-//     .flatMap((c) => c);
-// };
-
 const invokeInternal = async (fn: string, event: GsEvent, callback?: Function) => {
   const allFuncs = findFn(fn, event).map((c: GsComponentHandlers) => {
     let resultOrPromise = c.f(event, callback);
@@ -244,7 +235,7 @@ const invokeInternal = async (fn: string, event: GsEvent, callback?: Function) =
 };
 
 const test = async () => {
-  const result = await invoke("test1", {cid: "", data: "test data in create! "})
+  const result = await invoke("test2", {cid: "",  data: "test data in create! "});
   result.forEach(r=>alert(r));
 };
 

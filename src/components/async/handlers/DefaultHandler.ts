@@ -1,8 +1,8 @@
-import { ref, reactive } from "vue";
-import { useDefaultComponentDataStore } from "@/store/DefaultPageDataStore";
-import { PageProps, GsEvent } from "@/components/layout/GridEvent";
+import { reactive } from "vue";
+import { useDefaultComponentStore } from "@/store/DefaultComponentStore";
+import { GsEvent } from "@/components/layout/GridEvent";
 
-export const useDefaultPageHandlers = (
+export const useDefaultHandlers = (
   loadHandler?: (event: GsEvent, callback?: Function) => any,
   saveHandler?: (event: GsEvent, callback?: Function) => any,
   itemChangedHandler?: (event: GsEvent, callback?: Function) => any,
@@ -11,18 +11,11 @@ export const useDefaultPageHandlers = (
   callHandler?: (event: GsEvent, callback?: Function) => any
 ) => {
 
-  const { getDataById, getDataByName, getDataByCid, getDataList, saveData, deleteData  } = useDefaultComponentDataStore();
-
-  const pageProps = ref<PageProps>()
+  const { getDataById, getDataByName, getDataByCid, getDataList, saveData, deleteData  } = useDefaultComponentStore();
 
   const fns = reactive({
     invoke: (fn: string, event: GsEvent, callback?: Function):any => {},
   })
-
-  const setInvoke = (page: any, invokeFn: Function) =>{
-    pageProps.value = page;
-    fns.invoke = invokeFn as any;
-  }
 
   /**
    * Callback provided by parent to load data
@@ -112,9 +105,10 @@ export const useDefaultPageHandlers = (
     callback?: Function
   ) => {
     if(fns.invoke){
-      return await (fns.invoke as Function) (fn, event, callback) as any;
+      return await fns.invoke(fn, event, callback) as any;
     }
   };
+
 
   return {
     loadHandler: customLoadHandler,
@@ -123,7 +117,6 @@ export const useDefaultPageHandlers = (
     deleteHandler: customDeleteHandler,
     uploadHandler: customUploadHandler,
     callHandler: customCallHandler,
-    invoke,
-    setInvoke
+    fns,
   };
 };

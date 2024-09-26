@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export const dataUrl = `${webApiUrl}/comp_data`;
 
-export const useDefaultComponentDataStore = defineStore("componentDataStore", {
+export const useDefaultComponentStore = defineStore("defaultComponentStore", {
   state: () => ({
     dataList: [] as any[],
   }),
