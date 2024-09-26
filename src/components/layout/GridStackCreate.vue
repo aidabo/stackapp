@@ -231,6 +231,7 @@ import {
   createPageProps,
   GridOptions,
   GsComponentHandlers,
+  GsEvent,
   PageProps,
 } from "@/components/layout/GridEvent";
 import { usePageLayoutStore } from "@/store/PageLayoutStore";
@@ -271,18 +272,12 @@ const setGridStackRef = (index: number) => {
   };
 };
 
-const invoke = async (fn: string, cid?: string, data?: any): Promise<any[]> =>
-  await invokeInternal(fn, cid, data);
-
-const invokeByName = async (
-  fn: string,
-  compName?: string,
-  data?: any
-): Promise<any[]> => await invokeByNameInternal(fn, compName, data);
+const invoke = async (fn: string, event: GsEvent, callback?: Function): Promise<any[]> =>
+  await invokeInternal(fn, event, callback);
 
 //Page data handlers register to GridStackLayout
 const pageHandlers = useDefaultPageHandlers()
-pageHandlers.setCaller(pageProps, invoke, invokeByName);
+pageHandlers.setInvoke(pageProps, invoke);
 const eventHandlers = reactive({...pageHandlers})
 provide("__page_handlers", eventHandlers);
 
@@ -522,37 +517,21 @@ const removeGrid = async (gridId: string) => {
   }
 };
 
-const findFn = (fn: string, cid?: string): GsComponentHandlers[] => {
+const findFn = (fn: string, event: GsEvent): GsComponentHandlers[] => {
   return gridStackRefs.value
-    .map((g) => g.findCompFn(fn, cid))
+    .map((g) => g.findCompFn(fn, event))
     .flatMap((c) => c);
 };
 
-const findFnByName = (fn: string, compName?: string): GsComponentHandlers[] => {
-  return gridStackRefs.value
-    .map((g) => g.findCompFnByName(fn, compName))
-    .flatMap((c) => c);
-};
+// const findFnByName = (fn: string, compName?: string): GsComponentHandlers[] => {
+//   return gridStackRefs.value
+//     .map((g) => g.findCompFnByName(fn, compName))
+//     .flatMap((c) => c);
+// };
 
-const invokeInternal = async (fn: string, cid?: string, data?: any) => {
-  const allFuncs = findFn(fn, cid).map((c: GsComponentHandlers) => {
-    let resultOrPromise = c.f(c.cid, data);
-    if (resultOrPromise instanceof Promise) {
-      return resultOrPromise;
-    } else {
-      return Promise.resolve(resultOrPromise);
-    }
-  });
-  return await Promise.all(allFuncs).then((result) => Promise.resolve(result));
-};
-
-const invokeByNameInternal = async (
-  fn: string,
-  compName?: string,
-  data?: any
-) => {
-  const allFuncs = findFnByName(fn, compName).map((c: GsComponentHandlers) => {
-    let resultOrPromise = c.f(c.cid, data);
+const invokeInternal = async (fn: string, event: GsEvent, callback?: Function) => {
+  const allFuncs = findFn(fn, event).map((c: GsComponentHandlers) => {
+    let resultOrPromise = c.f(event, callback);
     if (resultOrPromise instanceof Promise) {
       return resultOrPromise;
     } else {
@@ -563,8 +542,8 @@ const invokeByNameInternal = async (
 };
 
 const test = async () => {
-  const result = await invoke("test1", undefined, "test data in create! ");
-  result.forEach((r) => alert(r));
+  const result = await pageHandlers.invoke("test2", {cid: "",  data: "test data in create! "});
+  result.forEach((r:any) => alert(r));
 };
 
 defineExpose({
@@ -575,7 +554,7 @@ defineExpose({
   preview,
   publish,
   invoke,
-  invokeByName,
+  //invokeByName,
 });
 </script>
 

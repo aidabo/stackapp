@@ -28,7 +28,7 @@ export default defineComponent({
     gsRemove: Function,
     gsUpload: Function,
     //other event
-    gsOption: Function,
+    gsCall: Function,
   },
 
   setup(props, { slots, emit }) {
@@ -107,7 +107,7 @@ export default defineComponent({
         gsItemChanged: props.gsItemChanged,
         gsDelete: props.gsDelete,
         gsUpload: props.gsUpload,
-        gsOption: props.gsOption,
+        gsCall: props.gsCall,
         gsRemove: props.gsRemove,
         gsRegister: props.gsRegister,
       });

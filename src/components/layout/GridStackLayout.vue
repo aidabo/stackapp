@@ -33,8 +33,10 @@ import { GridStack } from "gridstack";
 import { v4 as uuidv4 } from "uuid";
 import GridStackItemWrapper from "@/components/layout/GridStackItemWrapper";
 import {
+  createGsComponentHandlers,
   GsComponentHandlers,
   GsComponentRefs,
+  GsEvent,
   PageProps,
 } from "@/components/layout/GridEvent";
 
@@ -127,8 +129,8 @@ onMounted(async () => {
         gsSave: handlers.saveHandler,
         gsItemChanged: handlers.itemChangedHandler,
         gsUpload: handlers.uploadHandler,
-        gsOption: handlers.optionHandler,
         gsDelete: handlers.deleteHandler,
+        gsCall: handlers.callHandler,
         gsRegister: onCompRegister,
         gsRemove: removeWidget,        
       });
@@ -205,35 +207,21 @@ const compact = (value: boolean) => {
 };
 
 const onCompRegister = (cid: string, data: GsComponentRefs) => {
-  console.log(`Component ${cid} registered}`)
   components[cid] = data;
+  console.log(`Component ${cid} registered}`)
 };
 
-const findCompFn = (fn: string, cid?: string): GsComponentHandlers[] => {
+const findCompFn = (fn: string, event: GsEvent): GsComponentHandlers[] => {
   let funcs = Object.keys(components)
     .map((key) => {
       const { ...fns } = components[key].handlers || {};
-      return fns[fn]
-        ? { cid: key, f: fns[fn], fn: fn }
-        : { cid: key, f: undefined, fn: fn };
+       return createGsComponentHandlers(fn, fns[fn], key, components[key].props.name, components[key].props.aliasName)
     })
     .filter((c) => c.f != undefined);
-  return cid ? funcs.filter((c) => c.cid == cid) : funcs;
-};
-
-const findCompFnByName = (
-  fn: string,
-  compName?: string /*component's props.name*/
-): GsComponentHandlers[] => {
-  let funcs = Object.keys(components)
-    .map((key) => {
-      const { ...fns } = components[key].handlers || {};
-      return fns[fn]
-        ? { cid: key, fn: fn, f: fns[fn], name: components[key].props.name }
-        : { cid: key, fn: fn, f: undefined, name: components[key].props.name };
-    })
-    .filter((c) => c.f != undefined);
-  return compName ? funcs.filter((c) => c.name == compName) : funcs;
+    if(event.cid) funcs = funcs.filter(c=>c.cid == event.cid);
+    if(event.aliasName) funcs = funcs.filter(c=>c.aliasName == event.aliasName);
+    if(event.cname) funcs = funcs.filter(c=>c.name == event.cname);
+    return funcs;
 };
 
 //expose function to parent
@@ -241,7 +229,7 @@ defineExpose({
   props,
   components,
   findCompFn,
-  findCompFnByName,
+  //findCompFnByName,
   load,
   save,
   clear,

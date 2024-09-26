@@ -18,10 +18,16 @@ export const useDefaultComponentDataStore = defineStore("componentDataStore", {
 
   actions: {
     async getDataList() {
-      return await axios.get(`${dataUrl}`).then((response) => {
-        this.dataList = response.data;
-        return response.data;
-      });
+      return await axios
+        .get(`${dataUrl}`)
+        .then((response) => {
+          this.dataList = response.data;
+          return response.data;
+        })
+        .catch((err) => {
+          console.log(err);
+          return false;
+        });
     },
 
     async getDataById(id: string) {
@@ -31,8 +37,8 @@ export const useDefaultComponentDataStore = defineStore("componentDataStore", {
           return response.data;
         })
         .catch((err) => {
-          console.log(err.message);
-          return null;
+          console.log(err);
+          return false;
         });
     },
 
@@ -43,8 +49,8 @@ export const useDefaultComponentDataStore = defineStore("componentDataStore", {
           return response.data;
         })
         .catch((err) => {
-          console.log(err.message);
-          throw err;
+          console.log(err);
+          return false;
         });
     },
 
@@ -55,8 +61,20 @@ export const useDefaultComponentDataStore = defineStore("componentDataStore", {
           return response.data;
         })
         .catch((err) => {
-          console.log(err.message);
-          throw err;
+          console.log(err);
+          return false;
+        });
+    },
+
+    async getDataByAliasName(aliasName: string) {
+      return await axios
+        .get(`${dataUrl}?cname=${aliasName}`)
+        .then((response) => {
+          return response.data;
+        })
+        .catch((err) => {
+          console.log(err);
+          return false;
         });
     },
 
@@ -71,14 +89,14 @@ export const useDefaultComponentDataStore = defineStore("componentDataStore", {
         } else {
           return await this.updateData(data, cid, cname);
         }
-      } catch (err) {
+      } catch {
         return false;
       }
     },
 
     async insertData(data: any, cid: string, cname?: string) {
       const method = "POST";
-      if(!data.id){
+      if (!data.id) {
         data.id = uuidv4();
       }
       if (cname) data["cname"] = cname;
@@ -94,8 +112,8 @@ export const useDefaultComponentDataStore = defineStore("componentDataStore", {
           return response.data;
         })
         .catch((err) => {
-          console.log(err.message);
-          throw err;
+          console.log(err);
+          return false;
         });
     },
 
@@ -114,8 +132,8 @@ export const useDefaultComponentDataStore = defineStore("componentDataStore", {
           return response.data;
         })
         .catch((err) => {
-          console.log(err.message);
-          throw err;
+          console.log(err);
+          return false;
         });
     },
 
@@ -131,8 +149,8 @@ export const useDefaultComponentDataStore = defineStore("componentDataStore", {
           return response.data;
         })
         .catch((err) => {
-          console.log(err.message);
-          throw err;
+          console.log(err);
+          return false;
         });
     },
   }, //actions

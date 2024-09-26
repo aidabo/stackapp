@@ -1,14 +1,14 @@
 import { ref, reactive } from "vue";
 import { useDefaultComponentDataStore } from "@/store/DefaultPageDataStore";
-import { PageProps } from "@/components/layout/GridEvent";
+import { PageProps, GsEvent } from "@/components/layout/GridEvent";
 
 export const useDefaultPageHandlers = (
-  loadHandler?: (cid: string, data?: any, callback?: Function) => any,
-  saveHandler?: (cid: string, data: any, callback?: Function) => any,
-  itemChangedHandler?: (cid: string, data: any, callback?: Function) => any,
-  deleteHandler?: (cid: string, data: any, callback?: Function) => any,
-  uploadHandler?: (cid: string, data: any, callback?: Function) => any,
-  optionHandler?: (cid: string, data?: any, callback?: Function) => any
+  loadHandler?: (event: GsEvent, callback?: Function) => any,
+  saveHandler?: (event: GsEvent, callback?: Function) => any,
+  itemChangedHandler?: (event: GsEvent, callback?: Function) => any,
+  deleteHandler?: (event: GsEvent, callback?: Function) => any,
+  uploadHandler?: (event: GsEvent, callback?: Function) => any,
+  callHandler?: (event: GsEvent, callback?: Function) => any
 ) => {
 
   const { getDataById, getDataByName, getDataByCid, getDataList, saveData, deleteData  } = useDefaultComponentDataStore();
@@ -16,14 +16,12 @@ export const useDefaultPageHandlers = (
   const pageProps = ref<PageProps>()
 
   const fns = reactive({
-    invoke: (fn: string, compname: string, data?: any, callback?: Function):any => {},
-    invokeByName: (fn: string, compname: string, data?: any, callback?: Function):any => {}
+    invoke: (fn: string, event: GsEvent, callback?: Function):any => {},
   })
 
-  const setCaller = (page: any, invokeFn: Function, invokeByNameFn: Function) =>{
+  const setInvoke = (page: any, invokeFn: Function) =>{
     pageProps.value = page;
     fns.invoke = invokeFn as any;
-    fns.invokeByName = invokeByNameFn as any;
   }
 
   /**
@@ -32,9 +30,14 @@ export const useDefaultPageHandlers = (
    */
   const customLoadHandler =
     loadHandler ||
-    (async(cid: string, data?: any, callback?: Function) => {
-      console.log("default loadHandler event called", data);
-        return await getDataById(data.id) || getDataByCid(cid);
+    (async(event: GsEvent, callback?: Function) => {
+      console.log("default loadHandler event called", event.data);
+      if(event.data.id){
+        const result = await getDataById(event.data.id) || getDataByCid(event.data.cid);
+        if(callback){
+          callback(result);
+        }
+      }
     });
 
   /**
@@ -43,18 +46,14 @@ export const useDefaultPageHandlers = (
    */
   const customSaveHandler =
     saveHandler ||
-    (async(cid: string, data: any, callback?: any) => {
-      console.log("default saveHandler event called", data);
-      try{
-        const result = await saveData(data, cid)
-        console.log("result", result);
+    (async(event: GsEvent, callback?: any) => {
+      console.log("default saveHandler event called", event.data);
+        event.data["cname"] = event.cname;
+        event.data["aliasName"] = event.aliasName;
+        const result = await saveData(event.data, event.cid)
         if(callback){
             callback(result);
         }
-      }catch(err){
-        console.log(err);
-        throw err;
-      }
     });
 
   /**
@@ -63,67 +62,57 @@ export const useDefaultPageHandlers = (
    */
   const customItemChangedHandler =
     itemChangedHandler ||
-    (async(cid: string, data: any, callback?: Function) => {
-      console.log("default itemChangedHandler event received: ", cid, data);
+    (async(event: GsEvent, callback?: Function) => {
+      console.log("default itemChangedHandler event received: ", event.cid, event.data);
+      if(callback){
+        callback(true)
+      }
     });
 
   const customDeleteHandler =
     deleteHandler ||
-    (async(cid: string, data: any, callback?: Function) => {
-      console.log("default deleteHandler event called", data);
-      await deleteData(data.id);
+    (async(event: GsEvent, callback?: Function) => {
+      console.log("default deleteHandler event called", event.data);
+      const result = await deleteData(event.data.id);
+      if(callback){
+        callback(result);
+      }
     });
 
   const customUploadHandler =
     uploadHandler ||
-    ((cid: string, data: any, callback?: Function) => {
-      console.log("default uploadHandler event called", data);
+    ((event: GsEvent, callback?: Function) => {
+      console.log("default uploadHandler event called", event.data);
+      //TODO
+      if(callback){
+        callback(true)
+      }
     });
 
-  const customOptionHandler =
-    optionHandler ||
-    ((cid: string, data: any, callback?: Function) => {
-      console.log("default optionHandler event called", data);
+  const customCallHandler =
+    callHandler ||
+    ((event: GsEvent, callback?: Function) => {
+      console.log("default optionHandler event called", event.data);
+      //TODO
+      if(callback){
+        callback(true);
+      }
     });
 
   /**
-   * Invoke component function, return result
-   * Function can be a async or sync function
-   * Function example:
-   * async test1(cid:string, data:any):any
-   * test1(cid:string, data:any):any
-   *
-   * @param fn function name
-   * @param cid  args of component id
-   * @param data  args of data
-   * @returns
+   * 
+   * @param fn 
+   * @param event 
+   * @param callback 
+   * @returns 
    */
-  const invokeCF = async (
+  const invoke = async (
     fn: string,
-    cid?: string,
-    data?: any,
+    event: GsEvent,
     callback?: Function
   ) => {
     if(fns.invoke){
-      return await (fns.invoke as Function) (fn, cid, data, callback) as any;
-    }
-  };
-
-  /**
-   * Invoke function specified component by name, maybe multiple
-   * @param fn
-   * @param compName
-   * @param data
-   * @returns
-   */
-  const invokeCFByName = async (
-    fn: string,
-    compName?: string,
-    data?: any,
-    callback?: Function
-  ) => {
-    if(fns.invokeByName){
-      return await (fns.invokeByName as Function) (fn, compName, data, callback) as any;
+      return await (fns.invoke as Function) (fn, event, callback) as any;
     }
   };
 
@@ -133,9 +122,8 @@ export const useDefaultPageHandlers = (
     itemChangedHandler: customItemChangedHandler,
     deleteHandler: customDeleteHandler,
     uploadHandler: customUploadHandler,
-    optionHandler: customOptionHandler,
-    invokeCF,
-    invokeCFByName,
-    setCaller
+    callHandler: customCallHandler,
+    invoke,
+    setInvoke
   };
 };

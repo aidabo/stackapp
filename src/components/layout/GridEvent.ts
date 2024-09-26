@@ -2,10 +2,15 @@
 import { v4 as uuidv4 } from "uuid";
 import { GridStackPosition, GridStackOptions } from "gridstack";
 
+/**
+ * Page props
+ * Page->Grid->GridItem->Component
+ */
 export interface PageProps {
   //page id
   id: string;
   title: string;
+  name?: string;
   static?: true;
   description?: string;
   icon?: string;
@@ -24,7 +29,7 @@ export interface GridOptions extends GridStackOptions {
 export interface GridItemOptions extends GridStackPosition {
   //grid item id
   id: string;
-  gscomponent?: Array<ComponentOption>;
+  gscomponent?: Array<CompProps>;
   title?: string;
 }
 
@@ -32,8 +37,9 @@ export interface CompProps extends ComponentOption {
   //component id
   cid: string; //required
   name: string;
+  aliasName?: string;
   description?: string;
-  dataUrl?:string;  
+  dataUrl?: string;
   data?: any;
 }
 
@@ -49,8 +55,8 @@ export const createGridOptions = (opt?: Partial<GridOptions>): GridOptions => {
 
 /**
  * Initial create page props
- * @param opt 
- * @returns 
+ * @param opt
+ * @returns
  */
 export const createPageProps = (opt?: Partial<PageProps>): PageProps => {
   return {
@@ -71,7 +77,7 @@ export const createPageProps = (opt?: Partial<PageProps>): PageProps => {
 
 /**
  * Create a new gridstack in page
- * @returns 
+ * @returns
  */
 export const createNewGrid = (): GridOptions => {
   return { id: `grid_${uuidv4()}`, items: [] } as GridOptions;
@@ -83,54 +89,79 @@ export const createNewGrid = (): GridOptions => {
 export interface ComponentOption {
   cid?: string; //component id, generated when in create page
   name: string;
+  aliasName?: string; //user specified unique name for component
   description?: string;
   dataUrl?: string;
   data?: any;
 }
+
+export interface GsEvent {
+  cid: string;
+  data: any;
+  cname?: string; //component
+  aliasName?: string;
+  eventType?: string;
+}
+
+export const createGsEvent = (
+  cid: string,
+  data: any,
+  aliasName?: string,
+  compName?: string,
+  eventType?: string
+) => {
+  return {
+    cid: cid,
+    data: data,
+    compName: compName, //component
+    aliasName: aliasName, //user specified unique name for component
+    eventType: eventType,
+  };
+};
 
 /**
  * Binding props when component render
  */
 export interface GsCompProps {
   //component id = gsComponent.cid
-  cid: string; 
+  cid: string;
   //grid-stack-item
-  gsItem: {[key:string]: any};
+  gsItem: { [key: string]: any };
   //component props
   gsComponent: CompProps;
   //page props
   gsPage?: PageProps;
   //load data
-  gsLoad: (cid:string, data?: any, callback?: Function) => any;
+  gsLoad: (event: GsEvent, callback?: Function) => any;
   //save data
-  gsSave: (cid: string, data: any, callback?: Function) => any;
+  gsSave: (event: GsEvent, callback?: Function) => any;
   //delete data
-  gsDelete: (cid: string, data: any, callback?: Function) => any;
+  gsDelete: (event: GsEvent, callback?: Function) => any;
   //item changed
-  gsItemChanged: (cid: string, data: any, callback?: Function) => any;  
-  //file upload
-  gsUpload?: (cid: string, data: any, callback?: Function) => any;
+  gsItemChanged: (event: GsEvent, callback?: Function) => any;
   //other event
-  gsOption?: (cid: string, data?: any, callback?: Function) => any;
+  gsCall: (event: GsEvent, callback?: Function) => any;
+  //file upload
+  gsUpload?: (event: GsEvent, callback?: Function) => any;
   //register component information for page
   gsRegister: (cid: string, data: GsComponentRefs) => void;
   //when component removed, notify grid-stack
-  gsRemove: (itemId: string) => void;  
+  gsRemove: (itemId: string) => void;
 }
 
 /**
  * Create a default component props
- * @param name 
- * @param description 
- * @param data 
- * @param dataUrl 
- * @returns 
+ * @param name
+ * @param description
+ * @param data
+ * @param dataUrl
+ * @returns
  */
 export const createComponentOption = (
   name: string,
   description?: string,
   dataUrl?: string,
-  data?: any,  
+  data?: any
 ): ComponentOption => {
   return {
     name: name,
@@ -145,25 +176,45 @@ export const createComponentOption = (
  */
 export interface GsComponentRefs {
   //component props
-  props: CompProps,
+  props: CompProps;
   //component data or settings
-  data:  any
+  data: any;
   //component handlers if neccessary
-  handlers:  any
+  handlers: any;
 }
 
-export const createGsComponentRefs = (props: CompProps, data?: any, handlers?: any) =>{
+export const createGsComponentRefs = (
+  props: CompProps,
+  data?: any,
+  handlers?: any
+) => {
   return {
     props: props,
     data: data,
-    handlers: handlers
-  } as GsComponentRefs
-}
+    handlers: handlers,
+  } as GsComponentRefs;
+};
 
 export interface GsComponentHandlers {
-  cid: string
-  fn: String,
-  f: (cid: string, data?: any, callback?: Function)=>any
+  fn: String;
+  f: (event: GsEvent, callback?: Function) => any;
+  cid: string;
+  name: string;
+  aliasName: string | undefined;
 }
 
-
+export const createGsComponentHandlers = (
+  fn: String,
+  f: Function | undefined,
+  cid: string,  
+  name: string,
+  aliasName: string | undefined,
+): GsComponentHandlers => {
+  return {
+    fn: fn,
+    f: f as any,
+    cid: cid,
+    name: name,
+    aliasName: aliasName,
+  };
+};
