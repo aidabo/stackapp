@@ -204,7 +204,7 @@ onMounted(() => {
   registerCallback();
   setProps();
   props.gsLoad(
-    { cid: "", data: { id: "5186e95f-f059-4654-87f3-1b267b87bff6" } },
+    { cid: "", data: { id: "104fcd51-b38f-4e21-bb03-4edf79a64aa6" } },
     (result: any) => {
       if (result) {
         gsData.value = result;

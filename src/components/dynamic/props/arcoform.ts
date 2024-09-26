@@ -10,7 +10,7 @@ export const props = withDefaults(defineProps<ComponentOption>(),
   createComponentOption("arcoform", "Drag me Arcoform", undefined, {
     options: [
       {
-        value: "beijing",
+        value: "beijing",   
         label: "Beijing",
         children: [
           {
