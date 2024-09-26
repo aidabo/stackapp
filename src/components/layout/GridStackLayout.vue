@@ -155,7 +155,7 @@ onMounted(async () => {
 
   grid.on("change", function (e: any, items: any) {
     items = items || [];
-    console.log("gs changed event: ", e, items);
+    //console.log("gs changed event: ", e, items);
   });
 });
 
@@ -229,7 +229,6 @@ defineExpose({
   props,
   components,
   findCompFn,
-  //findCompFnByName,
   load,
   save,
   clear,

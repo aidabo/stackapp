@@ -3,8 +3,6 @@ import { environment } from "@/common/environment";
 
 const { env } = environment();
 
-const baseDbApiUrl = env.db_api_url;
-
 const webApiUrl = env.web_api_url;
 
 const apiJsonHeaders = {
@@ -17,4 +15,4 @@ const csvHeaders = {
   "text/csv;charset=utf-8" 
 };
 
-export { baseDbApiUrl, apiJsonHeaders, csvHeaders, webApiUrl}
+export { apiJsonHeaders, csvHeaders, webApiUrl}

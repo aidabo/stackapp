@@ -83,11 +83,10 @@ import {
   GsComponentHandlers,
   GsEvent
 } from "@/components/layout/GridEvent";
-import { usePageLayoutStore } from "@/store/PageLayoutStore";
+import { useDefaultLayoutStore } from "@/components/dynamic/store/DefaultLayoutStore";
 import { Base64 } from "js-base64";
-import { useDefaultHandlers } from "@/components/async/handlers/DefaultHandler"
+import { useDefaultHandlers } from "@/components/dynamic/handlers/DefaultHandler"
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
-
 
 //grid id
 const gridStacks = ref<string[]>([]);
@@ -122,14 +121,14 @@ const setGridStackRef = (index: number) => {
 const invoke = async (fn: string, event: GsEvent, callback?: Function): Promise<any[]> =>
   await invokeInternal(fn, event, callback);
 
-//process handler of component 
+//process handler of component
 //Page data handlers register to GridStackLayout
 const pageHandlers = useDefaultHandlers()
 pageHandlers.fns.invoke = invoke
 const eventHandlers = reactive({...pageHandlers})
 provide("__page_handlers", eventHandlers);
 
-const { getPageById } = usePageLayoutStore();
+const { getPageById } = useDefaultLayoutStore();
 
 const noPage = ref(false);
 
@@ -199,7 +198,10 @@ const onHistory = (n: number) => {
   router.push({ name: "createpageback", params: { id: pageProps.value.id } });
 };
 
-const showInfo = () => {
+/**
+ * Current layout info in memory
+ */
+ const currentPageProps = () =>{
   const grids = Array<GridOptions>();
   gridStackRefs.value.forEach((gridStack, index) => {
     if (gridStack) {
@@ -211,7 +213,11 @@ const showInfo = () => {
   });
   const page = JSON.parse(JSON.stringify(pageProps.value));
   page.grids = grids;
-  pageDebugInfo.value = page;
+  return page;
+}
+
+const showInfo = () => {
+  pageDebugInfo.value = currentPageProps();
   showInfoDialog.value = true;
 };
 

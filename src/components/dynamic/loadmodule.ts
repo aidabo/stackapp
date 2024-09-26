@@ -2,7 +2,7 @@
 
 // export const useLoadModule = () => {
 
-//   const loadAgGridSettings = async (dynamicPath, tableName, jsName, ext = "ts") => {
+//   const loadStoreSettings = async (dynamicPath, tableName, jsName, ext = "ts") => {
 //     try {
 //       // Dynamically import the TypeScript module
 //       const moduleA = await import(

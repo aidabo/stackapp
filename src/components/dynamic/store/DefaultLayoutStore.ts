@@ -5,7 +5,7 @@ import { PageProps } from "@/components/layout/GridEvent";
 
 const dataUrl = `${webApiUrl}/pages`;
 
-export const usePageLayoutStore = defineStore("pagelayout", {
+export const useDefaultLayoutStore = defineStore("defaultLayout", {
   state: () => ({
     pageList: [] as PageProps[],
   }),

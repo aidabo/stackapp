@@ -7,7 +7,8 @@
     "dev": "vite --debug",
     "build": "vue-tsc -b && vite build --mode production",
     "build:staging": "vue-tsc -b && vite build --mode staging",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "vue-tsc -b && vite build --mode production && cp -Rf ./dist/* ../nginx/html"
   },
   "dependencies": {
     "@arco-plugins/vite-vue": "^1.4.5",

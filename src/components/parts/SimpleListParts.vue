@@ -50,12 +50,12 @@
 
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router"
-import { usePageLayoutStore } from "@/store/PageLayoutStore";
+import { useDefaultLayoutStore } from "@/components/dynamic/store/DefaultLayoutStore";
 import { PageProps } from "@/components/layout/GridEvent";
 import CreatePageDialog from "@/components/dialog/CreatePageDialog.vue"
 import { v4 as uuidv4 } from 'uuid';
 
-const { getPageList, savePage, getPageById, deletePage } = usePageLayoutStore();
+const { getPageList, savePage, getPageById, deletePage } = useDefaultLayoutStore();
 
 const pages = ref(Array<PageProps>());
 

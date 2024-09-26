@@ -8,7 +8,7 @@ import {
   PropType,
 } from "vue";
 import { v4 as uuidv4 } from "uuid";
-import { usePageComponents } from "@/components/async/usePageComponents";
+import { usePageComponents } from "@/components/dynamic/PageComponents";
 
 
 export default defineComponent({
@@ -110,7 +110,8 @@ export default defineComponent({
         gsCall: props.gsCall,
         gsRemove: props.gsRemove,
         gsRegister: props.gsRegister,
-      });
+      },
+      );
     };
   },
 });

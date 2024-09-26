@@ -1,4 +1,5 @@
 <template>
+  <slot name="stack"></slot>
   <a-form
     ref="formRef"
     :size="gsData.size"
@@ -144,9 +145,6 @@
       </a-space>
     </a-form-item>
   </a-form>
-  <div>{{ gsData }}</div>
-  <!-- {{ attrs }} -->
-  <!-- <div>{{ props }}</div> -->
 </template>
 
 <script setup lang="ts">
@@ -240,17 +238,9 @@ const handleSubmit = async (form: any) => {
   if (!errors || errors.length == 0) {
       await props.gsSave({cid: props.cid, cname: props.gsComponent.name, aliasName: props.gsComponent.aliasName??props.gsComponent.cid,  data: gsData.value}, (result: any) => {                
         if (result === false) {
-          Notification.error({
-            id: "arcoform_save_failure",
-            title: "Save Failure",
-            content: "Save Arcoform Failure: " + result,
-          });
+          Notification.error("Save Arcoform Failure: " + result);
         } else {
-          Notification.success({
-            id: "arcoform_save_success",
-            title: "Save Success",
-            content: "Save Arcoform successfully: " + result.id,
-          });
+          Notification.success("Save Arcoform successfully: " + result.id);
         }
       });
   }

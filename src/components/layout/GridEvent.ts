@@ -30,7 +30,6 @@ export interface GridItemOptions extends GridStackPosition {
   //grid item id
   id: string;
   gscomponent?: Array<CompProps>;
-  title?: string;
 }
 
 export interface CompProps extends ComponentOption {
@@ -41,6 +40,7 @@ export interface CompProps extends ComponentOption {
   description?: string;
   dataUrl?: string;
   data?: any;
+  title?: string;
 }
 
 export const createGridOptions = (opt?: Partial<GridOptions>): GridOptions => {

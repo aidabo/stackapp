@@ -1,5 +1,4 @@
 import { ref, markRaw, defineAsyncComponent, reactive } from "vue";
-import { Base64 } from "js-base64";
 import { ComponentOption, createComponentOption } from "../layout/GridEvent";
 
 export const usePageComponents = () => {

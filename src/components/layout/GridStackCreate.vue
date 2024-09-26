@@ -235,13 +235,13 @@ import {
   GsEvent,
   PageProps,
 } from "@/components/layout/GridEvent";
-import { usePageLayoutStore } from "@/store/PageLayoutStore";
-import { usePageComponents } from "@/components/async/usePageComponents";
+import { useDefaultLayoutStore } from "@/components/dynamic/store/DefaultLayoutStore";
+import { usePageComponents } from "@/components/dynamic/PageComponents";
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 import { Base64 } from "js-base64";
 import { Notification } from "@arco-design/web-vue";
 import GridMenu from "@/components/layout/GridMenu.vue";
-import { useDefaultHandlers } from "@/components/async/handlers/DefaultHandler";
+import { useDefaultHandlers } from "@/components/dynamic/handlers/DefaultHandler";
 
 //grid id
 const gridStacks = ref<string[]>([]);
@@ -275,7 +275,11 @@ const setGridStackRef = (index: number) => {
 const invoke = async (fn: string, event: GsEvent, callback?: Function): Promise<any[]> =>
   await invokeInternal(fn, event, callback);
 
-//Page data handlers register to GridStackLayout
+//page store
+const { savePage, getPageById } = useDefaultLayoutStore();
+//component import info
+const { gsComponentData, gsGetComponentInfo } = usePageComponents();
+//component handler for event interact
 const pageHandlers = useDefaultHandlers()
 pageHandlers.fns.invoke = invoke
 const eventHandlers = reactive({...pageHandlers})
@@ -305,11 +309,6 @@ const showInfoDialog = ref(false);
 
 //debug info
 const pageDebugInfo = ref([]);
-
-//persistence save page component & grid layout info
-const { savePage, getPageById } = usePageLayoutStore();
-
-const { gsComponentData, gsGetComponentInfo } = usePageComponents();
 
 const pannelWidth = ref(250);
 

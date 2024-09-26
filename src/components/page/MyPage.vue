@@ -50,7 +50,7 @@ import {
   GridOptions,
   PageProps,
 } from "@/components/layout/GridEvent";
-import { usePageLayoutStore } from "@/store/PageLayoutStore";
+import { useDefaultLayoutStore } from "@/components/dynamic/store/DefaultLayoutStore";
 import { Base64 } from "js-base64";
 
 //grid id
@@ -82,7 +82,7 @@ const setGridStackRef = (index: number) => {
   };
 };
 
-const { getPageById } = usePageLayoutStore();
+const { getPageById } = useDefaultLayoutStore();
 
 const noPage = ref(false);
 

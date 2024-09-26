@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import { useDefaultComponentStore } from "@/store/DefaultComponentStore";
+import { useDefaultComponentStore } from "@/components/dynamic/store/DefaultComponentStore";
 import { GsEvent } from "@/components/layout/GridEvent";
 
 export const useDefaultHandlers = (
@@ -117,6 +117,7 @@ export const useDefaultHandlers = (
     deleteHandler: customDeleteHandler,
     uploadHandler: customUploadHandler,
     callHandler: customCallHandler,
+    invoke,
     fns,
   };
 };
