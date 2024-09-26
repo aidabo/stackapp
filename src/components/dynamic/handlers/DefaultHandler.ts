@@ -26,7 +26,7 @@ export const useDefaultHandlers = (
     (async(event: GsEvent, callback?: Function) => {
       console.log("default loadHandler event called", event.data);
       if(event.data.id){
-        const result = await getDataById(event.data.id) || getDataByCid(event.data.cid);
+        const result = await getDataById(event.data.id);
         if(callback){
           callback(result);
         }

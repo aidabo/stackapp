@@ -94,63 +94,63 @@ export const usePageComponents = () => {
       },
     }),
     {
-      name: "dynamicrender",
+      cname: "dynamicrender",
       description: "Drag me DynamicRender",
       data: {},
     },
     {
-      name: "example",
+      cname: "example",
       description: "Drag me Example",
       data: {},
     },
     {
-      name: "componentb",
+      cname: "componentb",
       description: "Drag me componentB",
       data: {},
     },
     {
-      name: "uploadform",
+      cname: "uploadform",
       description: "Drag me UploadForm",
       data: {},
     },
     {
-      name: "customForm",
+      cname: "customForm",
       description: "Drag me CustomForm",
       data: {},
     },
     {
-      name: "layoutParts",
+      cname: "layoutParts",
       description: "Drag me LayoutParts",
       data: {},
     },
     {
-      name: "pageList",
+      cname: "pageList",
       description: "Drag me PageList",
       data: {},
     },
     {
-      name: "forminput",
+      cname: "forminput",
       description: "Drag me FormkitInput",
       data: {},
     },
     {
-      name: "schemakit",
+      cname: "schemakit",
       description: "Drag me SchemaKit",
       data: {},
     },
 
     {
-      name: "formkiticon",
+      cname: "formkiticon",
       description: "Drag me FormKit Icon",
       data: {},
     },
     {
-      name: "componenta",
+      cname: "componenta",
       description: "Drag me componentA",
       data: {},
     },
     {
-      name: "image",
+      cname: "image",
       description: "Drag me Image",
       data: {},
     },
@@ -172,7 +172,7 @@ export const usePageComponents = () => {
     ),
     pageList: markRaw(
       defineAsyncComponent(
-        () => import("@/components/parts/SimpleListParts.vue")
+        () => import("@/components/layout/SimpleListParts.vue")
       )
     ),
     dynamicrender: markRaw(
@@ -221,7 +221,7 @@ export const usePageComponents = () => {
    * @returns
    */
   const gsGetComponentInfo = (componentName: string) => {
-    return gsComponentData.find((c) => c.name == componentName);
+    return gsComponentData.find((c) => c.cname == componentName);
   };
 
   return {

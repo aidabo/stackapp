@@ -215,12 +215,12 @@ const findCompFn = (fn: string, event: GsEvent): GsComponentHandlers[] => {
   let funcs = Object.keys(components)
     .map((key) => {
       const { ...fns } = components[key].handlers || {};
-       return createGsComponentHandlers(fn, fns[fn], key, components[key].props.name, components[key].props.aliasName)
+       return createGsComponentHandlers(fn, fns[fn], key, components[key].props.cname, components[key].props.aliasName)
     })
     .filter((c) => c.f != undefined);
     if(event.cid) funcs = funcs.filter(c=>c.cid == event.cid);
     if(event.aliasName) funcs = funcs.filter(c=>c.aliasName == event.aliasName);
-    if(event.cname) funcs = funcs.filter(c=>c.name == event.cname);
+    if(event.cname) funcs = funcs.filter(c=>c.cname == event.cname);
     return funcs;
 };
 

@@ -19,7 +19,7 @@ const routes = [
   {
     path: "/pagelist",
     name: "pagelist",
-    component: ()=>import("@/components/page/GridStackPageList.vue"),
+    component: ()=>import("@/components/layout/GridStackPageList.vue"),
   },  
   {
     path: "/page/w/:id?",

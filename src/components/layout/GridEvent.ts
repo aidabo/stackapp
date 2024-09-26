@@ -35,7 +35,7 @@ export interface GridItemOptions extends GridStackPosition {
 export interface CompProps extends ComponentOption {
   //component id
   cid: string; //required
-  name: string;
+  cname: string;
   aliasName?: string;
   description?: string;
   dataUrl?: string;
@@ -45,7 +45,7 @@ export interface CompProps extends ComponentOption {
 
 export const createGridOptions = (opt?: Partial<GridOptions>): GridOptions => {
   return {
-    id: opt?.id ?? uuidv4(),
+    id: opt?.id ?? `grid_${uuidv4()}`,
     column: opt?.column ?? 12,
     float: opt?.float ?? false,
     cellHeight: opt?.cellHeight ?? 70,
@@ -61,6 +61,7 @@ export const createGridOptions = (opt?: Partial<GridOptions>): GridOptions => {
 export const createPageProps = (opt?: Partial<PageProps>): PageProps => {
   return {
     id: opt?.id ?? `page_${uuidv4()}`,
+    name: opt?.name,
     title: opt?.title ?? "Create a new Page",
     static: opt?.static ?? true,
     description: opt?.description ?? opt?.title,
@@ -88,7 +89,7 @@ export const createNewGrid = (): GridOptions => {
  */
 export interface ComponentOption {
   cid?: string; //component id, generated when in create page
-  name: string;
+  cname: string;
   aliasName?: string; //user specified unique name for component
   description?: string;
   dataUrl?: string;
@@ -107,13 +108,13 @@ export const createGsEvent = (
   cid: string,
   data: any,
   aliasName?: string,
-  compName?: string,
+  cname?: string,
   eventType?: string
 ) => {
   return {
     cid: cid,
     data: data,
-    compName: compName, //component
+    cname: cname, //component
     aliasName: aliasName, //user specified unique name for component
     eventType: eventType,
   };
@@ -158,13 +159,13 @@ export interface GsCompProps {
  * @returns
  */
 export const createComponentOption = (
-  name: string,
+  cname: string,
   description?: string,
   dataUrl?: string,
   data?: any
 ): ComponentOption => {
   return {
-    name: name,
+    cname: cname,
     description: description,
     dataUrl: dataUrl,
     data: data,
@@ -199,7 +200,7 @@ export interface GsComponentHandlers {
   fn: String;
   f: (event: GsEvent, callback?: Function) => any;
   cid: string;
-  name: string;
+  cname: string;
   aliasName: string | undefined;
 }
 
@@ -207,14 +208,14 @@ export const createGsComponentHandlers = (
   fn: String,
   f: Function | undefined,
   cid: string,  
-  name: string,
+  cname: string,
   aliasName: string | undefined,
 ): GsComponentHandlers => {
   return {
     fn: fn,
     f: f as any,
     cid: cid,
-    name: name,
+    cname: cname,
     aliasName: aliasName,
   };
 };

@@ -51,9 +51,8 @@
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router"
 import { useDefaultLayoutStore } from "@/components/dynamic/store/DefaultLayoutStore";
-import { PageProps } from "@/components/layout/GridEvent";
+import { createPageProps, PageProps } from "@/components/layout/GridEvent";
 import CreatePageDialog from "@/components/dialog/CreatePageDialog.vue"
-import { v4 as uuidv4 } from 'uuid';
 
 const { getPageList, savePage, getPageById, deletePage } = useDefaultLayoutStore();
 
@@ -113,8 +112,9 @@ const onCreatePage = () =>{
 
 const doneDlg = async(form: any) =>{
     if(form.title){
-        form["id"] = `page_${uuidv4()}`;
-        await savePage(form);        
+        const pageProps = createPageProps();
+        pageProps.title = form.title;
+        await savePage(pageProps);
     }    
     showDialog.value = false;
     await router.push({name: "createpage", params: {id: form.id}})

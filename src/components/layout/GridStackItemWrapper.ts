@@ -5,11 +5,10 @@ import {
   onMounted,
   watch,
   resolveDynamicComponent,
-  PropType,
+  Component,
 } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import { usePageComponents } from "@/components/dynamic/PageComponents";
-
 
 export default defineComponent({
   name: "GridStackItemWrapper",
@@ -35,9 +34,9 @@ export default defineComponent({
     /**
      * gscomponent reactive props
      */
-    const gsCompProps = ref<any>();
+    const compProps = ref<any>();
 
-    const gsComponent = ref<any>(null);
+    const component = ref<Component>();
 
     /**
      * get gscomponent
@@ -46,7 +45,7 @@ export default defineComponent({
    
     onMounted(() => {
       addWidgetComponentCB(props.gsItem);
-      gsComponent.value = getGsComponent(props.gsItem);
+      component.value = getGsComponent(props.gsItem) as any;
     });
 
     /**
@@ -64,11 +63,11 @@ export default defineComponent({
         if (!gscomponent) {
           throw "No componnent info found!, newWidget must set gscomponent attrbute as component info\n <div class='newWidget ...' gscomponent=xxx>...</div>";
         }
-        const gsComponentInfo = gsGetComponentInfo(gscomponent);
-        if (gsComponentInfo) {
-          gsComponentInfo["cid"] = `comp_${uuidv4()}`;
+        const gsComponentProps = gsGetComponentInfo(gscomponent);
+        if (gsComponentProps) {
+          gsComponentProps["cid"] = `comp_${uuidv4()}`;
         }
-        item["gscomponent"] = gsComponentInfo;
+        item["gscomponent"] = gsComponentProps;
       }
     };
 
@@ -82,26 +81,26 @@ export default defineComponent({
       if (!gscomponentProps) {
         return null;
       }
-      gsCompProps.value = gscomponentProps;
-      return resolveDynamicComponent(gsGetItemCompnent(gscomponentProps.name));
+      compProps.value = gscomponentProps;
+      return resolveDynamicComponent(gsGetItemCompnent(gscomponentProps.cname));
     };
 
-    watch(gsCompProps, () => {
-      console.log("component data changed: ", gsCompProps.value);
+    watch(compProps, () => {
+      console.log("component data changed: ", compProps.value);
     });
 
     return () => {
-      if (!gsComponent.value) {
+      if (!component.value) {
         return null;
       }
-      return h(gsComponent.value, {
-        cid: gsCompProps.value.cid,
+      return h(component.value, {
+        cid: compProps.value.cid,
         //gridstackitem
         gsItem: props.gsItem,
         //page props
         gsPage: props.gsPageProps,
         //component props
-        gsComponent: gsCompProps.value,
+        gsComponent: compProps.value,
         gsLoad: props.gsLoad,
         gsSave: props.gsSave,
         gsItemChanged: props.gsItemChanged,

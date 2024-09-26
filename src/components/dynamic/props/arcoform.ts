@@ -82,5 +82,3 @@ export const props = withDefaults(defineProps<ComponentOption>(),
     ],
   })
 )
-
-export const dataUrl = `${env.web_api_url}/compdata`;

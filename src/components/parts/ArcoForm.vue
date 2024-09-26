@@ -153,7 +153,7 @@ import {
   createGsComponentRefs,
   GsCompProps,
   GsEvent,
-  createGsEvent
+  createGsEvent,
 } from "@/components/layout/GridEvent";
 import { v4 as uuidv4 } from "uuid";
 import { Notification } from "@arco-design/web-vue";
@@ -169,7 +169,7 @@ const options = ref<any>();
 const gsData: any = ref({
   id: "",
   cid: props.cid,
-  cname: props.gsComponent.name,
+  cname: props.gsComponent.cname,
   size: "medium",
   name: "",
   age: undefined,
@@ -203,21 +203,27 @@ const setProps = () => {
 onMounted(() => {
   registerCallback();
   setProps();
-  props.gsLoad({cid: "", data: {id: "5186e95f-f059-4654-87f3-1b267b87bff6"}}, (result: any) =>{
-    if(result){
-      gsData.value = result;
+  props.gsLoad(
+    { cid: "", data: { id: "5186e95f-f059-4654-87f3-1b267b87bff6" } },
+    (result: any) => {
+      if (result) {
+        gsData.value = result;
+      }
     }
-  });
+  );
 });
 
-const test1 = async (event: GsEvent) => {
+const test1 = async (event: GsEvent, callback?: Function) => {
   alert("test1 called ArcoForm");
   return await new Promise((resolve) =>
-    setTimeout(() => resolve(event.data + " !! test1 result " + props.cid), 2000)
+    setTimeout(
+      () => resolve(event.data + " !! test1 result " + props.cid),
+      2000
+    )
   );
 };
 
-const test2 = (event: GsEvent) => {
+const test2 = (event: GsEvent, callback?: Function) => {
   alert("test2 called ArcoForm");
   return event.data + " !! test2 result " + props.cid;
 };
@@ -226,7 +232,7 @@ watch(
   gsData,
   (newValue, oldValue) => {
     if (props.gsItemChanged) {
-      props.gsItemChanged({cid: props.cid, data: gsData.value});
+      props.gsItemChanged({ cid: props.cid, data: gsData.value });
     }
   },
   { deep: true }
@@ -236,13 +242,21 @@ const handleSubmit = async (form: any) => {
   const { values, errors } = form;
   console.log("values:", values, "\nerrors:", errors);
   if (!errors || errors.length == 0) {
-      await props.gsSave({cid: props.cid, cname: props.gsComponent.name, aliasName: props.gsComponent.aliasName??props.gsComponent.cid,  data: gsData.value}, (result: any) => {                
+    await props.gsSave(
+      {
+        cid: props.cid,
+        cname: props.gsComponent.cname,
+        aliasName: props.gsComponent.aliasName ?? props.gsComponent.cid,
+        data: gsData.value,
+      },
+      (result: any) => {
         if (result === false) {
           Notification.error("Save Arcoform Failure: " + result);
         } else {
           Notification.success("Save Arcoform successfully: " + result.id);
         }
-      });
+      }
+    );
   }
 };
 </script>

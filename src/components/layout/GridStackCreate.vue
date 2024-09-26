@@ -51,7 +51,7 @@
         v-for="item in gsComponentData"
         class="newWidget grid-stack-item grid-custom"
       >
-        <div class="grid-stack-item-content drag" :gscomponent="item.name">
+        <div class="grid-stack-item-content drag" :gscomponent="item.cname">
           <div>
             <i class="fa fa-solid fa-plus" style="font-size: 200%"></i>
           </div>
@@ -366,7 +366,11 @@ const loadLocal = async () => {
 };
 
 const loadStore = async () => {
-  pageProps.value = (await getPageById((route.params as any).id)) as any;
+  let pageId = (route.params as any).id;
+  if(!pageId){
+    pageId = pageProps.value.id;
+  }
+  pageProps.value = await getPageById(pageId);
   gridStacks.value = pageProps.value.grids.map((g) => g.id);
   //waiting grid-stack vnode created
   nextTick(async () => {
