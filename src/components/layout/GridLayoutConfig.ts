@@ -20,14 +20,6 @@ export interface GridLayoutOptions {
   dataStore:    string;
 }
 
-// const createConfig = (opts?: any): GridLayoutOptions => {  
-//   return {
-//     eventHandler: opts?.eventHandler ?? "DefaultHandler",
-//     layoutStore: opts?.layoutStore ?? "DefaultLayoutStore",
-//     dataStore: opts?.dataStore ?? "DefaultDataStore",
-//   } as GridLayoutOptions;
-// };
-
 /**
  * A composable to provide a given configuration to all children.
  * @param config - A FormKit configuration object or a function

@@ -21,6 +21,7 @@ declare module 'vue' {
     GridMenu: typeof import('./src/components/layout/GridMenu.vue')['default']
     GridStackCreate: typeof import('./src/components/layout/GridStackCreate.vue')['default']
     GridStackLayout: typeof import('./src/components/layout/GridStackLayout.vue')['default']
+    GridStackNaviPanel: typeof import('./src/components/layout/GridStackNaviPanel.vue')['default']
     GridStackPage: typeof import('./src/components/layout/GridStackPage.vue')['default']
     GridStackPageList: typeof import('./src/components/layout/GridStackPageList.vue')['default']
     Image: typeof import('./src/components/test/Image.vue')['default']

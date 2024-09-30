@@ -1,67 +1,13 @@
-<template>
-  <div id="pageSidenav" class="sidenav" :style="{ width: pannelWidth + 'px' }">
-    <!-- panel button action -->
-    <div class="flex">
-      <div class="flex-none">
-        <a href="#" class="mybtn" @click.prevent="publish()"
-          ><i class="fa fa-solid fa-square-share-nodes"></i
-        ></a>
-      </div>
-      <div class="flex-initial">
-        <a href="#" class="mybtn" @click.prevent="save()"
-          ><i class="fa fa-solid fa-save"></i
-        ></a>
-      </div>
-      <div class="flex-initial">
-        <a href="#" class="mybtn" @click.prevent="loadStore()"
-          ><i class="fa fa-solid fa-refresh"></i
-        ></a>
-      </div>
-      <div class="flex-initial">
-        <a href="#" class="mybtn" @click.prevent="clear()"
-          ><i class="fa fa-solid fa-eraser"></i
-        ></a>
-      </div>
-      <div class="flex-initial">
-        <a href="#" class="mybtn" @click.prevent="close()"
-          ><i class="fa fa-solid fa-arrow-left"></i
-        ></a>
-      </div>
-    </div>
-
-    <!-- remove component panel-->
-    <div
-      id="trash"
-      style="padding: 5px; margin-bottom: 10px"
-      class="text-center text-white bg-amber-400"
-    >
-      <div>
-        <i class="fa fa-solid fa-trash" style="font-size: 250%"></i>
-      </div>
-      <div class="py-5">
-        <span>Drop here to remove!</span>
-      </div>
-    </div>
-
-    <!-- list of components to be selected  -->
-
-    <div class="overflow-y-auto h-lvh">
-      <div
-        v-for="item in gsComponentData"
-        class="newWidget grid-stack-item grid-custom"
-      >
-        <div class="grid-stack-item-content drag" :gscomponent="item.cname">
-          <div>
-            <i class="fa fa-solid fa-plus" style="font-size: 200%"></i>
-          </div>
-          <div class="h-10">
-            <span class="size-8 my-4">{{ item.description }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- end component list-->
+<template>   
+  <!-- navi panel -->
+  <grid-stack-navi-panel
+    :pannel-width="pannelWidth"
+    :publish="publish"
+    :save="save"
+    :load="loadStore"
+    :clear="clear"
+    :close="close"
+  ></grid-stack-navi-panel>
 
   <!-- Show create page time and menu -->
   <div class="flex justify-between align-items-center bg-blue-600 text-white">
@@ -128,6 +74,7 @@
       </h1>
     </div>
     <div class="flex justify-between align-items-center">
+      
       <!-- right -->
 
       <a-space class="mx-3 text-2xl font-bold">
@@ -182,24 +129,24 @@
   <div class="page-create" :style="{ marginLeft: pannelWidth + 'px' }">
     <div v-for="(id, index) in gridStacks">
       <suspense>
-          <grid-stack-layout
-            :id="id"
-            :ref="setGridStackRef(index)"
-            :pageProps="pageProps"
-            :pageStatic="pageStatic"
-            :key="id"
-          >
-            <template #menu>
-              <grid-menu
-                :grid-id="id"
-                :last-grid="
-                  index == gridStacks.length - 1 && gridStacks.length > 1
-                "
-                v-if="!pageStatic"
-                @grid:remove="removeGrid"
-              ></grid-menu>
-            </template>
-          </grid-stack-layout>
+        <grid-stack-layout
+          :id="id"
+          :ref="setGridStackRef(index)"
+          :pageProps="pageProps"
+          :pageStatic="pageStatic"
+          :key="id"
+        >
+          <template #menu>
+            <grid-menu
+              :grid-id="id"
+              :last-grid="
+                index == gridStacks.length - 1 && gridStacks.length > 1
+              "
+              v-if="!pageStatic"
+              @grid:remove="removeGrid"
+            ></grid-menu>
+          </template>
+        </grid-stack-layout>
         <template #fallback>
           <div>Loading...</div>
         </template>
@@ -240,6 +187,7 @@ import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 import { Base64 } from "js-base64";
 import { Notification } from "@arco-design/web-vue";
 import GridMenu from "@/components/layout/GridMenu.vue";
+import GridStackNaviPanel from "@/components/layout/GridStackNaviPanel.vue";
 import { useDefaultHandler } from "@/components/dynamic/handlers/DefaultHandler";
 
 //grid id
