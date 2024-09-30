@@ -86,12 +86,12 @@ export function useDynamicLoader() {
     }
   };
 
-  const importConfiged = async (config: GridLayoutOptions) => {
+  const importConfiged = async (config: GridLayoutOptions): Promise<GridLayoutOptions> => {
     return {
       eventHandler: await importHandler(config),
       layoutStore: await importLayoutStore(config),
       dataStore: await importDataStore(config),
-    };
+    } as GridLayoutOptions;
   };
 
   return { importLayoutStore, importHandler, importComponent, loadModule, importDataStore,  importConfiged,  };

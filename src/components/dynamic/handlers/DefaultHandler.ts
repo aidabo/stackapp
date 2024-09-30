@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import { useDefaultDataStore } from "@/components/dynamic/store/DefaultDataStore";
 import { GsEvent } from "@/components/layout/GridEvent";
-import { useTestComponentStore } from "../store/TestDataStore";
+import { useTestDataStore } from "../store/TestDataStore";
 
 export const useDefaultHandler = (
   loadHandler?: (event: GsEvent, callback?: Function) => any,
@@ -12,7 +12,7 @@ export const useDefaultHandler = (
   callHandler?: (event: GsEvent, callback?: Function) => any
 ) => {
 
-  const { getDataById, getDataByName, getDataByCid, getDataList, saveData, deleteData  } = useTestComponentStore()
+  const { getDataById, getDataByName, getDataByCid, getDataList, saveData, deleteData  } = useTestDataStore()
   //useDefaultComponentStore();
 
   const fns = reactive({

@@ -15,9 +15,9 @@ export const eventSymbol = {
  * Specify custom event handler, page store, component store
  */
 export interface GridLayoutOptions {
-  eventHandler: string;
-  layoutStore:  string;
-  dataStore:    string;
+  eventHandler: string | any;
+  layoutStore:  string | any;
+  dataStore:    string | any;
 }
 
 /**

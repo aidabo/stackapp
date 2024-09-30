@@ -1,4 +1,4 @@
-<template>   
+<template>
   <!-- navi panel -->
   <grid-stack-navi-panel
     :pannel-width="pannelWidth"
@@ -74,7 +74,6 @@
       </h1>
     </div>
     <div class="flex justify-between align-items-center">
-
       <!-- right -->
 
       <a-space class="mx-3 text-2xl font-bold">
@@ -169,7 +168,7 @@ import {
   nextTick,
   provide,
   reactive,
-  computed,
+  inject,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import GridStackLayout from "@/components/layout/GridStackLayout.vue";
@@ -188,6 +187,11 @@ import { Notification } from "@arco-design/web-vue";
 import GridMenu from "@/components/layout/GridMenu.vue";
 import GridStackNaviPanel from "@/components/layout/GridStackNaviPanel.vue";
 import { useDefaultHandler } from "@/components/dynamic/handlers/DefaultHandler";
+import {
+  eventSymbol,
+  GridLayoutOptions,
+} from "@/components/layout/GridLayoutConfig";
+import { useDynamicLoader } from "@/components/layout/DynamicLoader";
 
 //grid id
 const gridStacks = ref<string[]>([]);
@@ -218,16 +222,36 @@ const setGridStackRef = (index: number) => {
   };
 };
 
+const config: any = inject(eventSymbol.gsPageConfigOptions, false);
+
+const imports = async () => {
+  let dynaHandlers: any = false;
+  if (config) {
+    const { importConfiged } = useDynamicLoader();
+    try {
+      dynaHandlers = (await importConfiged(config)) as any;
+    } catch {}
+  }
+};
+
+const dynaHs: any = await imports();
+
+//page store
+const { savePage, getPageById } = dynaHs
+  ? (dynaHs as GridLayoutOptions).layoutStore()
+  : useDefaultLayoutStore();
+
+//component handler for event interact
+const pageHandlers = dynaHs
+  ? (dynaHs as GridLayoutOptions).eventHandler()
+  : useDefaultHandler();
+
 const invoke = async (
   fn: string,
   event: GsEvent,
   callback?: Function
 ): Promise<any[]> => await invokeInternal(fn, event, callback);
 
-//page store
-const { savePage, getPageById } = useDefaultLayoutStore();
-//component handler for event interact
-const pageHandlers = useDefaultHandler();
 pageHandlers.fns.invoke = invoke;
 const eventHandlers = reactive({ ...pageHandlers });
 provide("__page_handlers", eventHandlers);

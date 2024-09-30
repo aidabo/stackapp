@@ -11,6 +11,8 @@ declare module 'vue' {
     ComponentATest: typeof import('./src/components/test/ComponentATest.vue')['default']
     ComponentB: typeof import('./src/components/test/ComponentB.vue')['default']
     CreatePageDialog: typeof import('./src/components/dialog/CreatePageDialog.vue')['default']
+    DefaultGsPage: typeof import('./src/components/page/DefaultGsPage.vue')['default']
+    DefaultGsPageCreate: typeof import('./src/components/page/DefaultGsPageCreate.vue')['default']
     FileUpload: typeof import('./src/components/formkit/FileUpload.vue')['default']
     Footer: typeof import('./src/components/menu/Footer.vue')['default']
     FormExample: typeof import('./src/components/samples/FormExample.vue')['default']

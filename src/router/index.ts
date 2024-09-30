@@ -24,22 +24,22 @@ const routes = [
   {
     path: "/page/w/:id?",
     name: "createpage",
-    component: ()=>import("@/components/layout/GridStackCreate.vue"),
+    component: ()=>import("@/components/page/DefaultGsPageCreate.vue"),
   },
   {
     path: "/page/b/w/:id",
     name: "createpageback",
-    component: ()=>import("@/components/layout/GridStackCreate.vue"),
+    component: ()=>import("@/components/page/DefaultGsPageCreate.vue"),
   },
   {
     path: "/page/r/:id",
     name: "page",
-    component: ()=>import("@/components/layout/GridStackPage.vue"),
+    component: ()=>import("@/components/page/DefaultGsPage.vue"),
   },
   {
     path: "/page/p/:id",
     name: "preview",
-    component: ()=>import("@/components/layout/GridStackPage.vue"),
+    component: ()=>import("@/components/page/DefaultGsPage.vue"),
   },
   {
     path: "/test",

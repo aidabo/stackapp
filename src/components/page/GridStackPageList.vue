@@ -1,6 +1,6 @@
 <template>  
     <div class="page-list">
-     <simple-list-parts></simple-list-parts>
+      <simple-list-parts></simple-list-parts>
   </div>
 </template>
 

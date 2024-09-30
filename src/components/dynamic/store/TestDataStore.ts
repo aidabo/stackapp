@@ -1,13 +1,13 @@
 import { useDefaultDataStore } from "@/components/dynamic/store/DefaultDataStore"
 
-export const useTestComponentStore = () =>{
+export const useTestDataStore = () =>{
 
     const store = {...useDefaultDataStore()};
 
     const origin = store.getDataById;
 
     const customGetDataById = async(id: string) =>{
-        console.log("****This is custom GetDataById ");
+        console.log("****This is TestDataStore GetDataById ");
         return await origin(id);
     }
 

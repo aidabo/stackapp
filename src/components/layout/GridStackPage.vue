@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, reactive, provide, computed } from "vue";
+import { ref, onMounted, nextTick, reactive, provide, inject } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import GridStackLayout from "@/components/layout/GridStackLayout.vue";
 import {
@@ -87,7 +87,9 @@ import { Base64 } from "js-base64";
 import { useDefaultHandler } from "@/components/dynamic/handlers/DefaultHandler";
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 import { Notification } from "@arco-design/web-vue";
-import { GridConfigLoader } from "@/components/layout/GridLayoutConfig";
+import { eventSymbol, GridLayoutOptions } from "@/components/layout/GridLayoutConfig";
+import { useDynamicLoader } from "@/components/layout/DynamicLoader";
+
 
 const props = defineProps({
   id: {
@@ -125,6 +127,25 @@ const setGridStackRef = (index: number) => {
   };
 };
 
+const config: any = inject(eventSymbol.gsPageConfigOptions, false);
+
+const imports = async() =>{
+  let dynaHandlers: any = false;
+  if(config){
+      const { importConfiged } = useDynamicLoader();
+      try{
+        dynaHandlers = await importConfiged(config) as any;
+      }catch{}
+  }
+}
+const dynaHs: any = await imports();
+
+//page store
+const { getPageById } = dynaHs? (dynaHs as GridLayoutOptions).layoutStore() : useDefaultLayoutStore();
+
+//component handler for event interact
+const pageHandlers = dynaHs? (dynaHs as GridLayoutOptions).eventHandler() : useDefaultHandler();
+
 // invoke function call of component
 const invoke = async (
   fn: string,
@@ -132,14 +153,9 @@ const invoke = async (
   callback?: Function
 ): Promise<any[]> => await invokeInternal(fn, event, callback);
 
-//process handler of component
-//Page data handlers register to GridStackLayout
-const pageHandlers = useDefaultHandler();
 pageHandlers.fns.invoke = invoke;
 const eventHandlers = reactive({ ...pageHandlers });
 provide("__page_handlers", eventHandlers);
-
-const { getPageById } = useDefaultLayoutStore();
 
 const noPage = ref(false);
 
