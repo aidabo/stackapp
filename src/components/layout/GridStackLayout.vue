@@ -32,6 +32,7 @@ import "gridstack/dist/gridstack-extra.min.css";
 import { GridStack } from "gridstack";
 import { v4 as uuidv4 } from "uuid";
 import GridStackItemWrapper from "@/components/layout/GridStackItemWrapper";
+import GridStackItemDynamic from "@/components/layout/GridStackItemDynamic";
 import {
   createGsComponentHandlers,
   GsComponentHandlers,
@@ -122,7 +123,7 @@ onMounted(async () => {
       itemEl.className = itemEl.className.replace(/grid\-custom/, "");
 
       //const itemContentVNode: any = h(GridStackItem, { item: item });
-      const itemContentVNode: any = h(GridStackItemWrapper, {
+      const itemContentVNode: any = h(GridStackItemDynamic, {
         gsItem: item,
         gsPageProps: props.pageProps,
         gsLoad: handlers.loadHandler,

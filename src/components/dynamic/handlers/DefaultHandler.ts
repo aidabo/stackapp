@@ -1,9 +1,9 @@
 import { reactive } from "vue";
-import { useDefaultComponentStore } from "@/components/dynamic/store/DefaultComponentStore";
+import { useDefaultDataStore } from "@/components/dynamic/store/DefaultDataStore";
 import { GsEvent } from "@/components/layout/GridEvent";
-import { useTestComponentStore } from "../store/TestComponentStore";
+import { useTestComponentStore } from "../store/TestDataStore";
 
-export const useDefaultHandlers = (
+export const useDefaultHandler = (
   loadHandler?: (event: GsEvent, callback?: Function) => any,
   saveHandler?: (event: GsEvent, callback?: Function) => any,
   itemChangedHandler?: (event: GsEvent, callback?: Function) => any,

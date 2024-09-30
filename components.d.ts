@@ -35,6 +35,8 @@ declare module 'vue' {
     SimpleListParts: typeof import('./src/components/layout/SimpleListParts.vue')['default']
     Test: typeof import('./src/components/test/Test.vue')['default']
     Test1: typeof import('./src/components/formkit/Test1.vue')['default']
+    TestConfig: typeof import('./src/components/test/TestConfig.vue')['default']
+    TestLoad: typeof import('./src/components/test/TestLoad.vue')['default']
     Top: typeof import('./src/components/page/Top.vue')['default']
     UploadForm: typeof import('./src/components/parts/UploadForm.vue')['default']
   }

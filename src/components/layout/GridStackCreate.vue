@@ -3,8 +3,7 @@
     <!-- panel button action -->
     <div class="flex">
       <div class="flex-none">
-        <a href="#" class="mybtn" @click.prevent="publish()
-        "
+        <a href="#" class="mybtn" @click.prevent="publish()"
           ><i class="fa fa-solid fa-square-share-nodes"></i
         ></a>
       </div>
@@ -183,24 +182,24 @@
   <div class="page-create" :style="{ marginLeft: pannelWidth + 'px' }">
     <div v-for="(id, index) in gridStacks">
       <suspense>
-        <grid-stack-layout
-          :id="id"
-          :ref="setGridStackRef(index)"
-          :pageProps="pageProps"
-          :pageStatic="pageStatic"
-          :key="id"
-        >
-          <template #menu>
-            <grid-menu
-              :grid-id="id"
-              :last-grid="
-                index == gridStacks.length - 1 && gridStacks.length > 1
-              "
-              v-if="!pageStatic"
-              @grid:remove="removeGrid"
-            ></grid-menu>
-          </template>
-        </grid-stack-layout>
+          <grid-stack-layout
+            :id="id"
+            :ref="setGridStackRef(index)"
+            :pageProps="pageProps"
+            :pageStatic="pageStatic"
+            :key="id"
+          >
+            <template #menu>
+              <grid-menu
+                :grid-id="id"
+                :last-grid="
+                  index == gridStacks.length - 1 && gridStacks.length > 1
+                "
+                v-if="!pageStatic"
+                @grid:remove="removeGrid"
+              ></grid-menu>
+            </template>
+          </grid-stack-layout>
         <template #fallback>
           <div>Loading...</div>
         </template>
@@ -241,7 +240,7 @@ import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 import { Base64 } from "js-base64";
 import { Notification } from "@arco-design/web-vue";
 import GridMenu from "@/components/layout/GridMenu.vue";
-import { useDefaultHandlers } from "@/components/dynamic/handlers/DefaultHandler";
+import { useDefaultHandler } from "@/components/dynamic/handlers/DefaultHandler";
 
 //grid id
 const gridStacks = ref<string[]>([]);
@@ -272,17 +271,20 @@ const setGridStackRef = (index: number) => {
   };
 };
 
-const invoke = async (fn: string, event: GsEvent, callback?: Function): Promise<any[]> =>
-  await invokeInternal(fn, event, callback);
+const invoke = async (
+  fn: string,
+  event: GsEvent,
+  callback?: Function
+): Promise<any[]> => await invokeInternal(fn, event, callback);
 
 //page store
 const { savePage, getPageById } = useDefaultLayoutStore();
 //component import info
 const { gsComponentData, gsGetComponentInfo } = usePageComponents();
 //component handler for event interact
-const pageHandlers = useDefaultHandlers()
-pageHandlers.fns.invoke = invoke
-const eventHandlers = reactive({...pageHandlers})
+const pageHandlers = useDefaultHandler();
+pageHandlers.fns.invoke = invoke;
+const eventHandlers = reactive({ ...pageHandlers });
 provide("__page_handlers", eventHandlers);
 
 //title edit status
@@ -314,9 +316,9 @@ const pannelWidth = ref(250);
 
 onMounted(async () => {
   if (route.params.id && route.fullPath.match(/\/page\/w/)) {
-    loadStore();
+    await loadStore();
   } else if (route.params.id && route.fullPath.match(/\/page\/b\/w/)) {
-    loadLocal();
+    await loadLocal();
   } else {
     const grids = pageProps.value.grids || [];
     gridStacks.value = grids.map((g) => g.id);
@@ -361,20 +363,20 @@ const loadLocal = async () => {
     //waiting grid-stack vnode created
     nextTick(async () => {
       await load(grids);
-    });    
+    });
   }
 };
 
 const loadStore = async () => {
   let pageId = (route.params as any).id;
-  if(!pageId){
+  if (!pageId) {
     pageId = pageProps.value.id;
   }
   pageProps.value = await getPageById(pageId);
   gridStacks.value = pageProps.value.grids.map((g) => g.id);
   //waiting grid-stack vnode created
   nextTick(async () => {
-      await load(pageProps.value.grids);
+    await load(pageProps.value.grids);
   });
 };
 
@@ -451,7 +453,7 @@ watch(
 /**
  * Current layout info in memory
  */
-const currentPageProps = () =>{
+const currentPageProps = () => {
   const grids = Array<GridOptions>();
   gridStackRefs.value.forEach((gridStack, index) => {
     if (gridStack) {
@@ -464,7 +466,7 @@ const currentPageProps = () =>{
   const page = JSON.parse(JSON.stringify(pageProps.value));
   page.grids = grids;
   return page;
-}
+};
 
 const showInfo = () => {
   pageDebugInfo.value = currentPageProps();
@@ -526,7 +528,11 @@ const findFn = (fn: string, event: GsEvent): GsComponentHandlers[] => {
     .flatMap((c) => c);
 };
 
-const invokeInternal = async (fn: string, event: GsEvent, callback?: Function) => {
+const invokeInternal = async (
+  fn: string,
+  event: GsEvent,
+  callback?: Function
+) => {
   const allFuncs = findFn(fn, event).map((c: GsComponentHandlers) => {
     let resultOrPromise = c.f(event, callback);
     if (resultOrPromise instanceof Promise) {
@@ -539,8 +545,11 @@ const invokeInternal = async (fn: string, event: GsEvent, callback?: Function) =
 };
 
 const test = async () => {
-  const result = await invoke("test2", {cid: "",  data: "test data in create! "});
-  result.forEach((r:any) => alert(r));
+  const result = await invoke("test2", {
+    cid: "",
+    data: "test data in create! ",
+  });
+  result.forEach((r: any) => alert(r));
 };
 
 defineExpose({

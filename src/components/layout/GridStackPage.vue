@@ -27,28 +27,27 @@
 
       <a-space class="mx-3 text-2xl font-bold">
         <a-tooltip content="Page preview">
-      <button
-        v-if="pageStatic && !isPreview && userWritable"
-        @click.prevent="onEdit(pageProps.id)"
-      >
-        <span class="p-3"><icon-edit size="25" /></span>
-      </button>
-      </a-tooltip>
+          <button
+            v-if="pageStatic && !isPreview && userWritable"
+            @click.prevent="onEdit(pageProps.id)"
+          >
+            <span class="p-3"><icon-edit size="25" /></span>
+          </button>
+        </a-tooltip>
       </a-space>
 
       <a-space class="mx-3 text-2xl font-bold">
         <a-tooltip content="Go back to page design">
-      <button
-        v-if="pageStatic && isPreview"
-        @click.prevent="onHistory(-1)"
-        class="text-stone-200 font-bold py-2 px-4 rounded hover:text-white"
-      >
-        <!-- <span class="p-3"><icon-arrow-left size="25" /></span> -->
-        <i class="fa fa-arrow-circle-left text-2xl" aria-hidden="true"></i>
-      </button>
-      </a-tooltip>
+          <button
+            v-if="pageStatic && isPreview"
+            @click.prevent="onHistory(-1)"
+            class="text-stone-200 font-bold py-2 px-4 rounded hover:text-white"
+          >
+            <!-- <span class="p-3"><icon-arrow-left size="25" /></span> -->
+            <i class="fa fa-arrow-circle-left text-2xl" aria-hidden="true"></i>
+          </button>
+        </a-tooltip>
       </a-space>
-
     </div>
   </div>
 
@@ -56,12 +55,12 @@
   <div class="page-show">
     <div v-for="(id, index) in gridStacks">
       <suspense>
-        <grid-stack-layout
-          :id="id"
-          :ref="setGridStackRef(index)"
-          :pageProps="pageProps"
-          :pageStatic="pageStatic"
-        ></grid-stack-layout>
+          <grid-stack-layout
+            :id="id"
+            :ref="setGridStackRef(index)"
+            :pageProps="pageProps"
+            :pageStatic="pageStatic"
+          ></grid-stack-layout>
       </suspense>
     </div>
     <div class="flex flex-col justify-end align-items-center mb-5">
@@ -81,12 +80,21 @@ import {
   GridOptions,
   PageProps,
   GsComponentHandlers,
-  GsEvent
+  GsEvent,
 } from "@/components/layout/GridEvent";
 import { useDefaultLayoutStore } from "@/components/dynamic/store/DefaultLayoutStore";
 import { Base64 } from "js-base64";
-import { useDefaultHandlers } from "@/components/dynamic/handlers/DefaultHandler"
+import { useDefaultHandler } from "@/components/dynamic/handlers/DefaultHandler";
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
+import { Notification } from "@arco-design/web-vue";
+import { GridConfigLoader } from "@/components/layout/GridLayoutConfig";
+
+const props = defineProps({
+  id: {
+    type: String,
+    default: "",
+  },
+});
 
 //grid id
 const gridStacks = ref<string[]>([]);
@@ -118,14 +126,17 @@ const setGridStackRef = (index: number) => {
 };
 
 // invoke function call of component
-const invoke = async (fn: string, event: GsEvent, callback?: Function): Promise<any[]> =>
-  await invokeInternal(fn, event, callback);
+const invoke = async (
+  fn: string,
+  event: GsEvent,
+  callback?: Function
+): Promise<any[]> => await invokeInternal(fn, event, callback);
 
 //process handler of component
 //Page data handlers register to GridStackLayout
-const pageHandlers = useDefaultHandlers()
-pageHandlers.fns.invoke = invoke
-const eventHandlers = reactive({...pageHandlers})
+const pageHandlers = useDefaultHandler();
+pageHandlers.fns.invoke = invoke;
+const eventHandlers = reactive({ ...pageHandlers });
 provide("__page_handlers", eventHandlers);
 
 const { getPageById } = useDefaultLayoutStore();
@@ -144,38 +155,45 @@ const pageDebugInfo = ref([]);
 
 onMounted(async () => {
   if (route.params.id && route.fullPath.match(/\/page\/r/)) {
-    loadStore();
+    await loadStore((route.params as any).id);
   } else if (route.params.id && route.fullPath.match(/\/page\/p/)) {
-    loadPreview();
+    await loadPreview((route.params as any).id);
+  } else if (props.id) {
+    await loadStore(props.id);
   } else {
-    noPage.value = true;
+    Notification.warning("No page id specified!");
   }
 });
 
-const loadPreview = async() =>{
-    //show preview
-    let data = localStorage.getItem((route.params as any).id);
-    if (data) {
-      pageProps.value = JSON.parse(Base64.decode(data));      
-      const grids = pageProps.value.grids;
-      gridStacks.value = grids.map((g: any) => g.id);
-      nextTick(async () => {
-        await load(grids);
-      });
-      isPreview.value = true;
-    }
-    noPage.value = false;
-}
+const loadPreview = async (id: string) => {
+  //show preview
+  let data = localStorage.getItem(id);
+  if (data) {
+    pageProps.value = JSON.parse(Base64.decode(data));
+    const grids = pageProps.value.grids;
+    gridStacks.value = grids.map((g: any) => g.id);
+    nextTick(async () => {
+      await load(grids);
+    });
+    isPreview.value = true;
+  }else{
+    Notification.warning("No page id or page data found: " + id);
+  }
+};
 
-const loadStore = async() =>{
-    //show page
-    pageProps.value = await getPageById((route.params as any).id);
+const loadStore = async (id: string) => {
+  //show page
+  const data = await getPageById(id);
+  if (data) {
+    pageProps.value = data;
     gridStacks.value = pageProps.value.grids.map((g) => g.id);
     nextTick(async () => {
       await load(pageProps.value.grids);
     });
-    noPage.value = false;
-}
+  } else {
+    Notification.warning("No page id found: " + id);
+  }
+};
 
 const load = async (_grids: Array<GridOptions>) => {
   // for each grid-stack-multi-layout
@@ -201,7 +219,7 @@ const onHistory = (n: number) => {
 /**
  * Current layout info in memory
  */
- const currentPageProps = () =>{
+const currentPageProps = () => {
   const grids = Array<GridOptions>();
   gridStackRefs.value.forEach((gridStack, index) => {
     if (gridStack) {
@@ -214,13 +232,12 @@ const onHistory = (n: number) => {
   const page = JSON.parse(JSON.stringify(pageProps.value));
   page.grids = grids;
   return page;
-}
+};
 
 const showInfo = () => {
   pageDebugInfo.value = currentPageProps();
   showInfoDialog.value = true;
 };
-
 
 const findFn = (fn: string, event: GsEvent): GsComponentHandlers[] => {
   return gridStackRefs.value
@@ -228,7 +245,11 @@ const findFn = (fn: string, event: GsEvent): GsComponentHandlers[] => {
     .flatMap((c) => c);
 };
 
-const invokeInternal = async (fn: string, event: GsEvent, callback?: Function) => {
+const invokeInternal = async (
+  fn: string,
+  event: GsEvent,
+  callback?: Function
+) => {
   const allFuncs = findFn(fn, event).map((c: GsComponentHandlers) => {
     let resultOrPromise = c.f(event, callback);
     if (resultOrPromise instanceof Promise) {
@@ -241,14 +262,14 @@ const invokeInternal = async (fn: string, event: GsEvent, callback?: Function) =
 };
 
 const test = async () => {
-  const result = await invoke("test2", {cid: "",  data: "test data in create! "});
-  result.forEach(r=>alert(r));
+  const result = await invoke("test2", {
+    cid: "",
+    data: "test data in create! ",
+  });
+  result.forEach((r) => alert(r));
 };
 
-defineExpose ({
-
-})
-
+defineExpose({});
 </script>
 
 <style scoped>
@@ -274,5 +295,4 @@ defineExpose ({
 .page .grid-stack-item-content {
   cursor: default;
 }
-
 </style>

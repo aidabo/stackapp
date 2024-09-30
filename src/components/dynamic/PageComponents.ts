@@ -99,7 +99,7 @@ export const usePageComponents = () => {
       data: {},
     },
     {
-      cname: "example",
+      cname: "formexample",
       description: "Drag me Example",
       data: {},
     },

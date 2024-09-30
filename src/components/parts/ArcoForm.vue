@@ -155,7 +155,6 @@ import {
   GsEvent,
   createGsEvent,
 } from "@/components/layout/GridEvent";
-import { v4 as uuidv4 } from "uuid";
 import { Notification } from "@arco-design/web-vue";
 
 const formRef: any = ref(null);
@@ -195,14 +194,10 @@ const registerCallback = () => {
   }
 };
 
-const setProps = () => {
+const loadInitailData = () => {  
   options.value = props.gsComponent.data.options;
   treeData.value = props.gsComponent.data.treeData;
-};
-
-onMounted(() => {
-  registerCallback();
-  setProps();
+  //option:
   props.gsLoad(
     { cid: "", data: { id: "104fcd51-b38f-4e21-bb03-4edf79a64aa6" } },
     (result: any) => {
@@ -211,6 +206,11 @@ onMounted(() => {
       }
     }
   );
+};
+
+onMounted(() => {
+  registerCallback();
+  loadInitailData();
 });
 
 const test1 = async (event: GsEvent, callback?: Function) => {

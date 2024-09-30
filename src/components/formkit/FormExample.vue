@@ -71,57 +71,66 @@ import { ref, watch, onMounted } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import { FormKit, FormKitProvider } from "@formkit/vue";
 import FormKitConfig from "@/config/FormKitConfig";
+import {
+  createGsComponentRefs,
+  GsCompProps,
+} from "@/components/layout/GridEvent";
+import { Notification } from "@arco-design/web-vue";
+
+const props = defineProps<GsCompProps>();
 
 const submitted = ref(false);
 
-const submitHandler = async () => {
-  await new Promise((r) => setTimeout(r, 1000));
-  submitted.value = true;
-};
-
 const uid = ref(uuidv4());
-
-const props = defineProps({
-  itemId: String,
-  cid: String,
-  gsProps: {
-    type: Object,
-    required: false,
-  },
-  gsInitData: Object,
-});
 
 const gsData: any = ref(null);
 
-const setInitData = () => {
-  if (props.gsInitData) {
-    gsData.value = props.gsInitData as any;
+const registerCallback = () => {
+  if (props.gsRegister) {
+    props.gsRegister(
+      props.cid,
+      createGsComponentRefs(props.gsComponent, gsData.value, {})
+    );
   }
 };
 
+const loadInitailData = () => {};
+
 onMounted(() => {
-  setInitData();
+  registerCallback();
+  loadInitailData();
 });
-
-const emit = defineEmits(["remove", "itemChanged", "submit"]);
-
-const handleRemove = () => {
-  emit("remove", props.itemId);
-};
 
 watch(
   gsData,
   (newValue, oldValue) => {
-    emit("itemChanged", props, gsData.value);
+    if (props.gsItemChanged) {
+      props.gsItemChanged({ cid: props.cid, data: gsData.value });
+    }
   },
   { deep: true }
 );
 
-const handleSubmit = (form: any) => {
+const submitHandler = async (form: any) => {
   const { values, errors } = form;
   console.log("values:", values, "\nerrors:", errors);
-  if (!errors) {
-    emit("submit", props.itemId, gsData.value);
+  if (!errors) {    
+    await props.gsSave(
+      {
+        cid: props.cid,
+        cname: props.gsComponent.cname,
+        aliasName: props.gsComponent.aliasName ?? props.gsComponent.cid,
+        data: gsData.value,
+      },
+      (result: any) => {
+        if (result === false) {
+          Notification.error("Save Arcoform Failure: " + result);
+        } else {
+          Notification.success("Save Arcoform successfully: " + result.id);
+        }
+      }
+    );
+    submitted.value = true;
   }
 };
 </script>

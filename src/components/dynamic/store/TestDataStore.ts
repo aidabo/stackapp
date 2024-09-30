@@ -1,8 +1,8 @@
-import { useDefaultComponentStore } from "@/components/dynamic/store/DefaultComponentStore"
+import { useDefaultDataStore } from "@/components/dynamic/store/DefaultDataStore"
 
 export const useTestComponentStore = () =>{
 
-    const store = {...useDefaultComponentStore()};
+    const store = {...useDefaultDataStore()};
 
     const origin = store.getDataById;
 

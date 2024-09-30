@@ -1,9 +1,9 @@
 import { GsEvent } from "@/components/layout/GridEvent";
-import { useDefaultHandlers } from "@/components/dynamic/handlers/DefaultHandler"
+import { useDefaultHandler } from "@/components/dynamic/handlers/DefaultHandler"
 
 export const useTestHandler = () =>{
 
-    const hs = {...useDefaultHandlers()};
+    const hs = {...useDefaultHandler()};
 
     const originSaveHandler = hs.saveHandler;
 

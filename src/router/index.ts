@@ -44,7 +44,7 @@ const routes = [
   {
     path: "/test",
     name: "test",
-    component: ()=>import("@/components/layout/GridStackCreate.vue"),
+    component: ()=>import("@/components/test/TestConfig.vue"),
   },
   {
     path: "/:cacheAll(.*)*",

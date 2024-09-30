@@ -1,16 +1,21 @@
-import { markRaw, defineAsyncComponent, reactive } from "vue";
-import { ComponentOption, createComponentOption } from "@/components/layout/GridEvent";
-// @ts-ignore
-import { environment } from "@/common/environment";
-const { env } = environment();
+import { markRaw, defineAsyncComponent} from "vue";
+import {
+  createComponentOption,
+} from "@/components/layout/GridEvent";
 
-export const arcoform = markRaw(defineAsyncComponent(() => import("@/components/parts/CustomForm.vue")))
+export const component = ()=>markRaw(
+  defineAsyncComponent(() => import("@/components/parts/ArcoForm.vue"))
+);
 
-export const props = withDefaults(defineProps<ComponentOption>(), 
+/**
+ * CAN NOT use withDefaults, defineProps etc. compiler-hint helper
+ * @returns 
+ */
+export const props = () =>
   createComponentOption("arcoform", "Drag me Arcoform", undefined, {
     options: [
       {
-        value: "beijing",   
+        value: "beijing",
         label: "Beijing",
         children: [
           {
@@ -80,5 +85,4 @@ export const props = withDefaults(defineProps<ComponentOption>(),
         ],
       },
     ],
-  })
-)
+  });
