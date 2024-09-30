@@ -171,7 +171,7 @@ onMounted(() => {
     no-repeat;
 }
 
-.sidebar {
+/* .sidebar {
   background: rgba(0, 255, 0, 0.1);
   padding: 25px 0;
   height: 100px;
@@ -189,10 +189,8 @@ onMounted(() => {
 }
 
 .sidebar .grid-stack-item .grid-stack-item-content {
-  /* background: none; */
   text-align: center;
-  /* background-color: #18bc9c; */
-}
+} */
 
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
@@ -216,7 +214,7 @@ onMounted(() => {
 }
 
 .grid-custom {
-  background-color: #18bc9c;
+  background-color: rgba(74, 190, 89, 0.9);
   text-align: center;
   justify-content: center;
   margin-bottom: 0.25rem;

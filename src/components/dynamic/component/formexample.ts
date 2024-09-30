@@ -5,7 +5,7 @@ import {
 
 export const component = () =>
   markRaw(
-    defineAsyncComponent(() => import("@/components/formkit/FormExample.vue"))
+    defineAsyncComponent(() => import("@/components/samples/FormExample.vue"))
   );
 
 /**

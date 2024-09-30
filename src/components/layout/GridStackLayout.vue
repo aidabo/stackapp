@@ -31,7 +31,6 @@ import "gridstack/dist/gridstack.min.css";
 import "gridstack/dist/gridstack-extra.min.css";
 import { GridStack } from "gridstack";
 import { v4 as uuidv4 } from "uuid";
-import GridStackItemWrapper from "@/components/layout/GridStackItemWrapper";
 import GridStackItemDynamic from "@/components/layout/GridStackItemDynamic";
 import {
   createGsComponentHandlers,

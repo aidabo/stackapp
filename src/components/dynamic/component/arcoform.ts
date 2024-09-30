@@ -4,7 +4,7 @@ import {
 } from "@/components/layout/GridEvent";
 
 export const component = ()=>markRaw(
-  defineAsyncComponent(() => import("@/components/parts/ArcoForm.vue"))
+  defineAsyncComponent(() => import("@/components/samples/ArcoForm.vue"))
 );
 
 /**

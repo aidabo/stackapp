@@ -74,7 +74,7 @@
       </h1>
     </div>
     <div class="flex justify-between align-items-center">
-      
+
       <!-- right -->
 
       <a-space class="mx-3 text-2xl font-bold">
@@ -182,7 +182,6 @@ import {
   PageProps,
 } from "@/components/layout/GridEvent";
 import { useDefaultLayoutStore } from "@/components/dynamic/store/DefaultLayoutStore";
-import { usePageComponents } from "@/components/dynamic/PageComponents";
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 import { Base64 } from "js-base64";
 import { Notification } from "@arco-design/web-vue";
@@ -227,8 +226,6 @@ const invoke = async (
 
 //page store
 const { savePage, getPageById } = useDefaultLayoutStore();
-//component import info
-const { gsComponentData, gsGetComponentInfo } = usePageComponents();
 //component handler for event interact
 const pageHandlers = useDefaultHandler();
 pageHandlers.fns.invoke = invoke;
@@ -278,7 +275,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   //gridStackRefs.value.splice(0, gridStackRefs.value.length);
-  console.log("unmount called when move from create...");
+  //console.log("unmount called when move from create...");
 });
 
 const open = () => {
@@ -340,11 +337,7 @@ const save = async (isPublish = false) => {
   await savePage(pageProps.value);
 
   if (!isPublish) {
-    Notification.success({
-      id: "page_create_save",
-      title: "Success",
-      content: "Saved successfully!",
-    });
+    Notification.success("Saved successfully!");
   }
 };
 
@@ -367,11 +360,7 @@ const publish = async () => {
   pageProps.value.status = "published";
   await save(true);
 
-  Notification.success({
-    id: "page_create_publish",
-    title: "Success",
-    content: "Published successfully!",
-  });
+  Notification.success("Published successfully!");
 
   setTimeout(() => {
     const id = pageProps.value["id"];
@@ -431,11 +420,7 @@ const addGrid = () => {
 
 const removeGrid = async (gridId: string) => {
   if (gridStacks.value.length == 1) {
-    Notification.error({
-      id: "delete_grid",
-      title: "Error",
-      content: "Only one grid in the layout, ignore delete!",
-    });
+    Notification.error("Only one grid in the layout, ignore delete!");
   } else if (gridStacks.value.find((i) => i == gridId)) {
     try {
       //destroy grid stack DOM
@@ -461,11 +446,7 @@ const removeGrid = async (gridId: string) => {
         });
       }
     } catch (err) {
-      Notification.error({
-        id: "delete_grid",
-        title: "Error",
-        content: "Grid deleted from layout error: " + gridId,
-      });
+      Notification.error("Grid deleted from layout error: " + gridId);
     }
   }
 };

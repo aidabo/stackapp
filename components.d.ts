@@ -7,15 +7,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    ArcoForm: typeof import('./src/components/parts/ArcoForm.vue')['default']
+    ArcoForm: typeof import('./src/components/samples/ArcoForm.vue')['default']
     ComponentATest: typeof import('./src/components/test/ComponentATest.vue')['default']
     ComponentB: typeof import('./src/components/test/ComponentB.vue')['default']
     CreatePageDialog: typeof import('./src/components/dialog/CreatePageDialog.vue')['default']
-    CustomForm: typeof import('./src/components/parts/CustomForm.vue')['default']
-    Editable: typeof import('./src/components/parts/Editable.vue')['default']
     FileUpload: typeof import('./src/components/formkit/FileUpload.vue')['default']
     Footer: typeof import('./src/components/menu/Footer.vue')['default']
-    FormExample: typeof import('./src/components/formkit/FormExample.vue')['default']
+    FormExample: typeof import('./src/components/samples/FormExample.vue')['default']
     FormKitIcon: typeof import('./src/components/formkit/FormKitIcon.vue')['default']
     FormkitInput: typeof import('./src/components/formkit/FormkitInput.vue')['default']
     GridMenu: typeof import('./src/components/layout/GridMenu.vue')['default']
@@ -23,9 +21,8 @@ declare module 'vue' {
     GridStackLayout: typeof import('./src/components/layout/GridStackLayout.vue')['default']
     GridStackNaviPanel: typeof import('./src/components/layout/GridStackNaviPanel.vue')['default']
     GridStackPage: typeof import('./src/components/layout/GridStackPage.vue')['default']
-    GridStackPageList: typeof import('./src/components/layout/GridStackPageList.vue')['default']
+    GridStackPageList: typeof import('./src/components/page/GridStackPageList.vue')['default']
     Image: typeof import('./src/components/test/Image.vue')['default']
-    LayoutParts: typeof import('./src/components/parts/LayoutParts.vue')['default']
     Menubar: typeof import('./src/components/menu/Menubar.vue')['default']
     MyPage: typeof import('./src/components/page/MyPage.vue')['default']
     PageInfoDialog: typeof import('./src/components/dialog/PageInfoDialog.vue')['default']
@@ -33,12 +30,9 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SchemaForm: typeof import('./src/components/formkit/SchemaForm.vue')['default']
     SchemaKit: typeof import('./src/components/formkit/SchemaKit.vue')['default']
-    SimpleListParts: typeof import('./src/components/layout/SimpleListParts.vue')['default']
-    Test: typeof import('./src/components/test/Test.vue')['default']
-    Test1: typeof import('./src/components/formkit/Test1.vue')['default']
+    SimpleListParts: typeof import('./src/components/parts/SimpleListParts.vue')['default']
     TestConfig: typeof import('./src/components/test/TestConfig.vue')['default']
     TestLoad: typeof import('./src/components/test/TestLoad.vue')['default']
     Top: typeof import('./src/components/page/Top.vue')['default']
-    UploadForm: typeof import('./src/components/parts/UploadForm.vue')['default']
   }
 }
