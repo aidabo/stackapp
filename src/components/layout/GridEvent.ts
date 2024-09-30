@@ -94,6 +94,9 @@ export interface ComponentOption {
   description?: string;
   dataUrl?: string;
   data?: any;
+  icon?: string;
+  image?: string;
+  
 }
 
 export interface GsEvent {

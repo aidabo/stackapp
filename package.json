@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --debug",
+    "dev": "node src/tools/watchFiles.cjs & vite --debug",
     "build": "vue-tsc -b && vite build --mode production",
     "build:staging": "vue-tsc -b && vite build --mode staging",
     "preview": "vite preview",
@@ -24,6 +24,7 @@
     "@vueuse/core": "^11.0.3",
     "axios": "^1.7.5",
     "camelcase": "^8.0.0",
+    "chokidar": "^4.0.1",
     "dir": "^0.1.2",
     "from": "^0.1.7",
     "gridstack": "^10.3.1",

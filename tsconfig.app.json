@@ -25,7 +25,7 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/**/*.js", "src/tool.cjs"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/**/*.js", "src/tool.cjs", "src/tools/watchFiles.cjs"],
   "exclude": ["node_modules"]  
 }
 

@@ -2,11 +2,6 @@
   <div class="flex flex-col mx-6">
     <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-6 dark:bg-gray-700">
     <div>
-        <div>FullExample</div>
-        <FormExample></FormExample>
-    </div>
-    <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-6 dark:bg-gray-700">
-    <div>
         <div>Dynamic Render</div>
         <DynamicRender itemId="2389434" componentName="test000"></DynamicRender>  
     </div>
@@ -17,7 +12,6 @@
 <script setup lang="ts">
 
 import DynamicRender from '../formkit/DynamicRender';
-import FormExample from '../formkit/FormExample.vue';
 
 </script>
 
