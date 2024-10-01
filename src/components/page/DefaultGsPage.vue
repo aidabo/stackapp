@@ -6,9 +6,9 @@
     </Suspense>
   </template>
   
-  <script setup lang="ts">
-  import { GridConfigLoader } from "@/components/layout/GridLayoutConfig";
-  import GridStackPage from "@/components/layout/GridStackPage.vue";
+<script setup lang="ts">
+import { GridConfigLoader } from "@/components/layout/GridLayoutConfig";
+import GridStackPage from "@/components/layout/GridStackPage.vue";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 

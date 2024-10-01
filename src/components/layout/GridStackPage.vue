@@ -55,12 +55,12 @@
   <div class="page-show">
     <div v-for="(id, index) in gridStacks">
       <suspense>
-          <grid-stack-layout
-            :id="id"
-            :ref="setGridStackRef(index)"
-            :pageProps="pageProps"
-            :pageStatic="pageStatic"
-          ></grid-stack-layout>
+        <grid-stack-layout
+          :id="id"
+          :ref="setGridStackRef(index)"
+          :pageProps="pageProps"
+          :pageStatic="pageStatic"
+        ></grid-stack-layout>
       </suspense>
     </div>
     <div class="flex flex-col justify-end align-items-center mb-5">
@@ -87,9 +87,11 @@ import { Base64 } from "js-base64";
 import { useDefaultHandler } from "@/components/dynamic/handlers/DefaultHandler";
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 import { Notification } from "@arco-design/web-vue";
-import { eventSymbol, GridLayoutOptions } from "@/components/layout/GridLayoutConfig";
+import {
+  eventSymbol,
+  GridLayoutOptions,
+} from "@/components/layout/GridLayoutConfig";
 import { useDynamicLoader } from "@/components/layout/DynamicLoader";
-
 
 const props = defineProps({
   id: {
@@ -129,22 +131,26 @@ const setGridStackRef = (index: number) => {
 
 const config: any = inject(eventSymbol.gsPageConfigOptions, false);
 
-const imports = async() =>{
+const imports = async () => {
   let dynaHandlers: any = false;
-  if(config){
-      const { importConfiged } = useDynamicLoader();
-      try{
-        dynaHandlers = await importConfiged(config) as any;
-      }catch{}
+  if (config) {
+    const { importConfiged } = useDynamicLoader();
+    try {
+      dynaHandlers = (await importConfiged(config)) as any;
+    } catch {}
   }
-}
+};
 const dynaHs: any = await imports();
 
 //page store
-const { getPageById } = dynaHs? (dynaHs as GridLayoutOptions).layoutStore() : useDefaultLayoutStore();
+const { getPageById } = dynaHs
+  ? (dynaHs as GridLayoutOptions).layoutStore()
+  : useDefaultLayoutStore();
 
 //component handler for event interact
-const pageHandlers = dynaHs? (dynaHs as GridLayoutOptions).eventHandler() : useDefaultHandler();
+const pageHandlers = dynaHs
+  ? (dynaHs as GridLayoutOptions).eventHandler()
+  : useDefaultHandler();
 
 // invoke function call of component
 const invoke = async (
@@ -156,8 +162,6 @@ const invoke = async (
 pageHandlers.fns.invoke = invoke;
 const eventHandlers = reactive({ ...pageHandlers });
 provide("__page_handlers", eventHandlers);
-
-const noPage = ref(false);
 
 const isPreview = ref(false);
 
@@ -192,7 +196,7 @@ const loadPreview = async (id: string) => {
       await load(grids);
     });
     isPreview.value = true;
-  }else{
+  } else {
     Notification.warning("No page id or page data found: " + id);
   }
 };

@@ -115,12 +115,12 @@ export default defineComponent({
       }
       return h(component.value, {
         cid: compProps.value.cid,
+        //component props
+        gsComponent: compProps.value,
         //gridstackitem
         gsItem: props.gsItem,
         //page props
         gsPage: props.gsPageProps,
-        //component props
-        gsComponent: compProps.value,
         gsLoad: props.gsLoad,
         gsSave: props.gsSave,
         gsItemChanged: props.gsItemChanged,
