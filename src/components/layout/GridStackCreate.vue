@@ -269,6 +269,16 @@ const onTitleChanged = () => {
   isTitleEditable.value = !isTitleEditable.value;
 };
 
+const pannelWidth = ref(300);
+
+const open = () => {
+  pannelWidth.value = 300;
+};
+
+const close = () => {
+  pannelWidth.value = 0;
+};
+
 //compact or float grid
 const gridOption = ref({
   float: false,
@@ -280,8 +290,6 @@ const showInfoDialog = ref(false);
 
 //debug info
 const pageDebugInfo = ref([]);
-
-const pannelWidth = ref(250);
 
 onMounted(async () => {
   if (route.params.id && route.fullPath.match(/\/page\/w/)) {
@@ -301,14 +309,6 @@ onUnmounted(() => {
   //gridStackRefs.value.splice(0, gridStackRefs.value.length);
   //console.log("unmount called when move from create...");
 });
-
-const open = () => {
-  pannelWidth.value = 250;
-};
-
-const close = () => {
-  pannelWidth.value = 0;
-};
 
 const load = async (_grids: Array<GridOptions>) => {
   // for each grid-stack-multi-layout
