@@ -233,9 +233,13 @@ const config: any = inject(eventSymbol.gsPageConfigOptions, false);
 //     } catch {}
 //   }
 // };
-
-const { imports } = useDynamicLoader();
-const dynaHs: any = await imports(config);
+let dynaHs: any = false;
+if(config){
+  const { imports } = useDynamicLoader();
+  try{
+    dynaHs = await imports(config);
+  }catch{}
+}
 
 //page store
 const { savePage, getPageById } = dynaHs

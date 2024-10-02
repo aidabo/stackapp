@@ -123,9 +123,3 @@ export const GridConfigLoader = /* #__PURE__ */ defineComponent(
   }
 );
 
-
-/*
-  const json = await import(filename, {
-    with: { type: 'json' },
-  });
-*/
