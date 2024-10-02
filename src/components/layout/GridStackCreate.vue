@@ -224,17 +224,18 @@ const setGridStackRef = (index: number) => {
 
 const config: any = inject(eventSymbol.gsPageConfigOptions, false);
 
-const imports = async () => {
-  let dynaHandlers: any = false;
-  if (config) {
-    const { importConfiged } = useDynamicLoader();
-    try {
-      dynaHandlers = (await importConfiged(config)) as any;
-    } catch {}
-  }
-};
+// const imports = async () => {
+//   let dynaHandlers: any = false;
+//   if (config) {
+//     const { importConfiged } = useDynamicLoader();
+//     try {
+//       dynaHandlers = (await importConfiged(config)) as any;
+//     } catch {}
+//   }
+// };
 
-const dynaHs: any = await imports();
+const { imports } = useDynamicLoader();
+const dynaHs: any = await imports(config);
 
 //page store
 const { savePage, getPageById } = dynaHs

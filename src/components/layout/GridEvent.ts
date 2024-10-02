@@ -20,18 +20,41 @@ export interface PageProps {
   grids: Array<GridOptions>;
 }
 
+/**
+ * Grid stack options
+ */
 export interface GridOptions extends GridStackOptions {
   //grid id
   id: string;
   items?: Array<GridItemOptions>;
 }
 
+/**
+ * Grid stack item options
+ */
 export interface GridItemOptions extends GridStackPosition {
   //grid item id
   id: string;
   gscomponent?: Array<CompProps>;
 }
 
+/**
+ * Define component default props
+ */
+export interface ComponentOption {
+  cid?: string; //component id, generated when in create page
+  cname: string;
+  aliasName?: string; //user specified unique name for component
+  description?: string;
+  dataUrl?: string;
+  data?: any;
+  icon?: string;
+  image?: string;
+}
+
+/**
+ * Component options and props
+ */
 export interface CompProps extends ComponentOption {
   //component id
   cid: string; //required
@@ -43,6 +66,11 @@ export interface CompProps extends ComponentOption {
   title?: string;
 }
 
+/**
+ * Create default grid options
+ * @param opt 
+ * @returns 
+ */
 export const createGridOptions = (opt?: Partial<GridOptions>): GridOptions => {
   return {
     id: opt?.id ?? `grid_${uuidv4()}`,
@@ -85,20 +113,31 @@ export const createNewGrid = (): GridOptions => {
 };
 
 /**
- * Define component default props
+ * Create a default component props
+ * @param name
+ * @param description
+ * @param data
+ * @param dataUrl
+ * @returns
  */
-export interface ComponentOption {
-  cid?: string; //component id, generated when in create page
-  cname: string;
-  aliasName?: string; //user specified unique name for component
-  description?: string;
-  dataUrl?: string;
-  data?: any;
-  icon?: string;
-  image?: string;
-  
-}
+export const createComponentOption = (
+  cname: string,
+  description?: string,
+  dataUrl?: string,
+  data?: any
+): ComponentOption => {
+  return {
+    cname: cname,
+    description: description,
+    dataUrl: dataUrl,
+    data: data,
+  } as ComponentOption;
+};
 
+
+/**
+ * Component interactive event with page handler and other components
+ */
 export interface GsEvent {
   cid: string;
   data: any;
@@ -107,6 +146,15 @@ export interface GsEvent {
   eventType?: string;
 }
 
+/**
+ * Create a GsEvent 
+ * @param cid 
+ * @param data 
+ * @param aliasName 
+ * @param cname 
+ * @param eventType 
+ * @returns 
+ */
 export const createGsEvent = (
   cid: string,
   data: any,
@@ -154,28 +202,6 @@ export interface GsCompProps {
 }
 
 /**
- * Create a default component props
- * @param name
- * @param description
- * @param data
- * @param dataUrl
- * @returns
- */
-export const createComponentOption = (
-  cname: string,
-  description?: string,
-  dataUrl?: string,
-  data?: any
-): ComponentOption => {
-  return {
-    cname: cname,
-    description: description,
-    dataUrl: dataUrl,
-    data: data,
-  } as ComponentOption;
-};
-
-/**
  * Provider informaiton in gridstacklayout
  */
 export interface GsComponentRefs {
@@ -183,7 +209,8 @@ export interface GsComponentRefs {
   props: CompProps;
   //component data or settings
   data: any;
-  //component handlers if neccessary
+  //Component callback functions registered by gsRegister function in component props, 
+  //This callback called by page handler invoke
   handlers: any;
 }
 
@@ -199,6 +226,9 @@ export const createGsComponentRefs = (
   } as GsComponentRefs;
 };
 
+/**
+ * Find and resolve function 
+ */
 export interface GsComponentHandlers {
   fn: String;
   f: (event: GsEvent, callback?: Function) => any;
@@ -222,3 +252,33 @@ export const createGsComponentHandlers = (
     aliasName: aliasName,
   };
 };
+
+//for Auto-generated source's interface
+//-------------------------------------
+
+/**
+ * Dynamic import component information
+ */
+export interface PageCompnent {
+  props: ComponentOption;
+  component: any;
+}
+
+/**
+ * Dynamic import page handler
+ */
+export interface PageHandler {
+  name: string,
+  handler: any
+}
+
+/**
+ * Dynamic store
+ */
+export interface PageStore {
+  name: string,
+  store: any
+}
+
+
+

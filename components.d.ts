@@ -10,8 +10,6 @@ declare module 'vue' {
     ArcoForm: typeof import('./src/components/samples/ArcoForm.vue')['default']
     ComponentATest: typeof import('./src/components/test/ComponentATest.vue')['default']
     ComponentB: typeof import('./src/components/test/ComponentB.vue')['default']
-    ComponentTitle: typeof import('./src/components/layout/ComponentTitle.vue')['default']
-    copy: typeof import('./src/components/layout/GridMenu copy.vue')['default']
     CreatePageDialog: typeof import('./src/components/dialog/CreatePageDialog.vue')['default']
     DefaultGsPage: typeof import('./src/components/page/DefaultGsPage.vue')['default']
     DefaultGsPageCreate: typeof import('./src/components/page/DefaultGsPageCreate.vue')['default']
