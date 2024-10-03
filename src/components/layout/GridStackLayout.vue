@@ -121,18 +121,17 @@ onMounted(async () => {
       //remove dragitem custom class to remove drag item background style
       itemEl.className = itemEl.className.replace(/grid\-custom/, "");
 
+      const {gsLoad, gsSave, gsItemChanged, gsAny, gsDelete, gsUpload, gsDownload, gsInvoke, ...options  } = handlers;
+
       //const itemContentVNode: any = h(GridStackItem, { item: item });
       const itemContentVNode: any = h(GridStackItemDynamic, {
         gsItem: item,
-        gsPageProps: props.pageProps,
-        gsLoad: handlers.loadHandler,
-        gsSave: handlers.saveHandler,
-        gsItemChanged: handlers.itemChangedHandler,
-        gsUpload: handlers.uploadHandler,
-        gsDelete: handlers.deleteHandler,
-        gsCall: handlers.callHandler,
+        gsPageProps: props.pageProps,        
         gsRegister: onCompRegister,
-        gsRemove: removeWidget,        
+        gsRemove: removeWidget,      
+        gsHandlers: { gsLoad, gsSave, gsItemChanged, gsAny, gsDelete, gsUpload, gsDownload },
+        gsInvoke: gsInvoke,
+        gsOptions: options
       });
   
       //clear dragged element content from .grid-stack-item-content div
@@ -211,16 +210,22 @@ const onCompRegister = (cid: string, data: GsComponentRefs) => {
   console.log(`Component ${cid} registered}`)
 };
 
+/**
+ * Find Object component to invoke function calling which
+ * props' cid, cname, aliasName is consistent with  targetId, or target.cname, target.aliasName
+ * @param fn 
+ * @param event 
+ */
 const findCompFn = (fn: string, event: GsEvent): GsComponentHandlers[] => {
   let funcs = Object.keys(components)
     .map((key) => {
       const { ...fns } = components[key].handlers || {};
        return createGsComponentHandlers(fn, fns[fn], key, components[key].props.cname, components[key].props.aliasName)
     })
-    .filter((c) => c.f != undefined);
-    if(event.cid) funcs = funcs.filter(c=>c.cid == event.cid);
-    if(event.aliasName) funcs = funcs.filter(c=>c.aliasName == event.aliasName);
-    if(event.cname) funcs = funcs.filter(c=>c.cname == event.cname);
+    .filter((c) => c.f != undefined);    
+    if(event.targetId) funcs = funcs.filter(c=>c.cid == event.targetId);
+    if(event.target?.aliasName) funcs = funcs.filter(c=>c.aliasName == event.target?.aliasName);
+    if(event.target?.cname) funcs = funcs.filter(c=>c.cname == event.target?.cname);
     return funcs;
 };
 

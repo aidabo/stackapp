@@ -82,9 +82,9 @@ import {
   GsComponentHandlers,
   GsEvent,
 } from "@/components/layout/GridEvent";
-import { useDefaultLayoutStore } from "@/components/dynamic/store/DefaultLayoutStore";
+import { useDefaultLayoutStore } from "@/store/DefaultLayoutStore";
 import { Base64 } from "js-base64";
-import { useDefaultHandler } from "@/components/dynamic/handlers/DefaultHandler";
+import { useDefaultHandler } from "@/handlers/DefaultHandler"
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 import { Notification } from "@arco-design/web-vue";
 import {
@@ -130,17 +130,6 @@ const setGridStackRef = (index: number) => {
 };
 
 const config: any = inject(eventSymbol.gsPageConfigOptions, false);
-
-// const imports = async () => {
-//   let dynaHandlers: any = false;
-//   if (config) {
-//     const { importConfiged } = useDynamicLoader();
-//     try {
-//       dynaHandlers = (await importConfiged(config)) as any;
-//     } catch {}
-//   }
-// };
-// const dynaHs: any = await imports();
 
 let dynaHs: any = false;
 if(config){
@@ -291,7 +280,8 @@ const invokeInternal = async (
 
 const test = async () => {
   const result = await invoke("test2", {
-    cid: "",
+    srcId: "",
+    targetId: "",
     data: "test data in create! ",
   });
   result.forEach((r) => alert(r));

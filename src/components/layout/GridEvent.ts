@@ -134,16 +134,29 @@ export const createComponentOption = (
   } as ComponentOption;
 };
 
+export interface GsEventSourceOrTarget {
+  cid: string;        //component id in page
+  cname?: string;     //component
+  aliasName?: string; //unique name used specified
+}
+
+export interface GsEventExt {
+  eventType?: string;
+  source: GsEventSourceOrTarget | string | undefined,
+  target: GsEventSourceOrTarget | string | undefined,
+  data: any
+}
 
 /**
  * Component interactive event with page handler and other components
  */
 export interface GsEvent {
-  cid: string;
-  data: any;
-  cname?: string; //component
-  aliasName?: string;
   eventType?: string;
+  data: any
+  srcId: string;  
+  targetId?: string;
+  source?: GsEventSourceOrTarget | undefined,
+  target?: GsEventSourceOrTarget | undefined,
 }
 
 /**
@@ -171,10 +184,27 @@ export const createGsEvent = (
   };
 };
 
+export interface GsCompPropsHandlers {
+  //load data
+  gsLoad: (event: GsEvent, callback?: Function) => any;
+  //save data
+  gsSave: (event: GsEvent, callback?: Function) => any;
+  //item changed
+  gsItemChanged: (event: GsEvent, callback?: Function) => any;
+  //other event
+  gsAny: (event: GsEvent, callback?: Function) => any;
+  //delete data
+  gsDelete?: (event: GsEvent, callback?: Function) => any;
+  //file upload
+  gsUpload?: (event: GsEvent, callback?: Function) => any;
+  //file download
+  gsDownload?: (event: GsEvent, callback?: Function) => any;
+}
+
 /**
  * Binding props when component render
  */
-export interface GsCompProps {
+export interface GsCompProps extends GsCompPropsHandlers {
   //component id = gsComponent.cid
   cid: string;
   //grid-stack-item
@@ -183,22 +213,12 @@ export interface GsCompProps {
   gsComponent: CompProps;
   //page props
   gsPage?: PageProps;
-  //load data
-  gsLoad: (event: GsEvent, callback?: Function) => any;
-  //save data
-  gsSave: (event: GsEvent, callback?: Function) => any;
-  //delete data
-  gsDelete: (event: GsEvent, callback?: Function) => any;
-  //item changed
-  gsItemChanged: (event: GsEvent, callback?: Function) => any;
-  //other event
-  gsCall: (event: GsEvent, callback?: Function) => any;
-  //file upload
-  gsUpload?: (event: GsEvent, callback?: Function) => any;
-  //register component information for page
+  //register callback
   gsRegister: (cid: string, data: GsComponentRefs) => void;
   //when component removed, notify grid-stack
-  gsRemove: (itemId: string) => void;
+  gsRemove: (itemId: string) => void;  
+  gsInvoke: (event: GsEvent, callback?: Function) => any;
+  gsOptions?: Object;
 }
 
 /**

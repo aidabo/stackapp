@@ -180,13 +180,13 @@ import {
   GsEvent,
   PageProps,
 } from "@/components/layout/GridEvent";
-import { useDefaultLayoutStore } from "@/components/dynamic/store/DefaultLayoutStore";
+import { useDefaultLayoutStore } from "@/store/DefaultLayoutStore";
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 import { Base64 } from "js-base64";
 import { Notification } from "@arco-design/web-vue";
 import GridMenu from "@/components/layout/GridMenu.vue";
 import GridStackNaviPanel from "@/components/layout/GridStackNaviPanel.vue";
-import { useDefaultHandler } from "@/components/dynamic/handlers/DefaultHandler";
+import { useDefaultHandler } from "@/handlers/DefaultHandler"
 import {
   eventSymbol,
   GridLayoutOptions,
@@ -504,7 +504,8 @@ const invokeInternal = async (
 
 const test = async () => {
   const result = await invoke("test2", {
-    cid: "",
+    srcId: "",
+    //targetId:"comp_e1f4a7be-dd72-471d-b83e-bcad15db3afb",
     data: "test data in create! ",
   });
   result.forEach((r: any) => alert(r));

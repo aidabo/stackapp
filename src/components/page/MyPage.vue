@@ -50,7 +50,7 @@ import {
   GridOptions,
   PageProps,
 } from "@/components/layout/GridEvent";
-import { useDefaultLayoutStore } from "@/components/dynamic/store/DefaultLayoutStore";
+import { useDefaultLayoutStore } from "@/store/DefaultLayoutStore";
 import { Base64 } from "js-base64";
 
 //grid id

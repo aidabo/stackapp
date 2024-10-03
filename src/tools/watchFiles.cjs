@@ -98,7 +98,7 @@ autoGenerateComponent();
 
 //auto generate GsStores.ts
 function autoGenerateStore() {
-  const watchedDir = path.join(__dirname, "../components/dynamic/store");
+  const watchedDir = path.join(__dirname, "../store");
   const outputFilePath = path.join(
     __dirname,
     `../components/dynamic/${generatedDir}/GsStores.ts`
@@ -117,23 +117,24 @@ import { PageStore } from "@/components/layout/GridEvent";
     return files
       .map((file) => {
         const name = path.basename(file, path.extname(file));
-        return `import { use${name} } from "@/components/dynamic/store/${name}";`;
+        return `import { use${name} } from "@/store/${name}";`;
       })
       .join("\n");
   }
 
   function generate3() {
-    return `\n\nexport const gsStores = reactive<PageStore[]>([`;
+    return `\n\nexport const gsStores = reactive<PageStore[]>([\n`;
   }
 
   function generate4(files) {
     return files
       .map((file) => {
         const name = path.basename(file, path.extname(file));
-        return `{
+        return `
+  {
         name: "${name}",
         store: use${name},
-      },`;
+  },`;
       })
       .join("\n");
   }
@@ -180,11 +181,11 @@ import { PageStore } from "@/components/layout/GridEvent";
   generateFileList();
 } //autoGenerateStore
 
-autoGenerateStore();
+//autoGenerateStore();
 
 //auto generate GsHandlers.ts
 function autoGenerateHandlers() {
-  const watchedDir = path.join(__dirname, "../components/dynamic/handlers");
+  const watchedDir = path.join(__dirname, "../handlers");
   const outputFilePath = path.join(
     __dirname,
     `../components/dynamic/${generatedDir}/GsHandlers.ts`
@@ -203,23 +204,24 @@ import { PageHandler } from "@/components/layout/GridEvent";
     return files
       .map((file) => {
         const name = path.basename(file, path.extname(file));
-        return `import { use${name} } from "@/components/dynamic/handlers/${name}";`;
+        return `import { use${name} } from "@/handlers/${name}";`;
       })
       .join("\n");
   }
 
   function generate3() {
-    return `\n\nexport const gsHandlers = reactive<PageHandler[]>([`;
+    return `\n\nexport const gsHandlers = reactive<PageHandler[]>([\n`;
   }
 
   function generate4(files) {
     return files
       .map((file) => {
         const name = path.basename(file, path.extname(file));
-        return `{
+        return  `
+  {
         name: "${name}",
         handler: use${name},
-      },`;
+  },`;
       })
       .join("\n");
   }
@@ -262,4 +264,4 @@ import { PageHandler } from "@/components/layout/GridEvent";
   generateFileList();
 }
 
-autoGenerateHandlers();
+//autoGenerateHandlers();

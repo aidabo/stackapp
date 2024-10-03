@@ -199,7 +199,7 @@ const loadInitailData = () => {
   treeData.value = props.gsComponent.data.treeData;
   //option:
   props.gsLoad(
-    { cid: "", data: { id: "104fcd51-b38f-4e21-bb03-4edf79a64aa6" } },
+    { srcId: props.cid, data: { id: "104fcd51-b38f-4e21-bb03-4edf79a64aa6" } },
     (result: any) => {
       if (result) {
         gsData.value = result;
@@ -232,7 +232,7 @@ watch(
   gsData,
   (newValue, oldValue) => {
     if (props.gsItemChanged) {
-      props.gsItemChanged({ cid: props.cid, data: gsData.value });
+      props.gsItemChanged({ srcId: props.cid, data: gsData.value });
     }
   },
   { deep: true }
@@ -244,9 +244,7 @@ const handleSubmit = async (form: any) => {
   if (!errors || errors.length == 0) {
     await props.gsSave(
       {
-        cid: props.cid,
-        cname: props.gsComponent.cname,
-        aliasName: props.gsComponent.aliasName ?? props.gsComponent.cid,
+        srcId: props.cid,        
         data: gsData.value,
       },
       (result: any) => {

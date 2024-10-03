@@ -50,7 +50,7 @@
 
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router"
-import { useDefaultLayoutStore } from "@/components/dynamic/store/DefaultLayoutStore";
+import { useDefaultLayoutStore } from "@/store/DefaultLayoutStore";
 import { createPageProps, PageProps } from "@/components/layout/GridEvent";
 import CreatePageDialog from "@/components/dialog/CreatePageDialog.vue"
 

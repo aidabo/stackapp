@@ -1,20 +1,20 @@
 import { reactive } from "vue";
-import { useDefaultDataStore } from "@/components/dynamic/store/DefaultDataStore";
+import { useDefaultDataStore } from "@/store/DefaultDataStore";
 import { GsEvent } from "@/components/layout/GridEvent";
-import { useTestDataStore } from "../store/TestDataStore";
+import { useTestDataStore } from "@/store/TestDataStore";
 
 export const useDefaultHandler = (
-  loadHandler?: (event: GsEvent, callback?: Function) => any,
-  saveHandler?: (event: GsEvent, callback?: Function) => any,
-  itemChangedHandler?: (event: GsEvent, callback?: Function) => any,
-  deleteHandler?: (event: GsEvent, callback?: Function) => any,
-  uploadHandler?: (event: GsEvent, callback?: Function) => any,
-  callHandler?: (event: GsEvent, callback?: Function) => any
+  gsLoad?: (event: GsEvent, callback?: Function) => any,
+  gsSave?: (event: GsEvent, callback?: Function) => any,
+  gsItemChanged?: (event: GsEvent, callback?: Function) => any,
+  gsDelete?: (event: GsEvent, callback?: Function) => any,
+  gsUpload?: (event: GsEvent, callback?: Function) => any,
+  gsDownload?: (event: GsEvent, callback?: Function) => any,
+  gsAny?: (event: GsEvent, callback?: Function) => any
 ) => {
 
   const { getDataById, getDataByName, getDataByCid, getDataList, saveData, deleteData  } = useTestDataStore()
-  //useDefaultComponentStore();
-
+  
   const fns = reactive({
     invoke: (fn: string, event: GsEvent, callback?: Function):any => {},
   })
@@ -23,10 +23,12 @@ export const useDefaultHandler = (
    * Callback provided by parent to load data
    * @param event
    */
-  const customLoadHandler =
-    loadHandler ||
+  const customGsLoad =
+    gsLoad ||
     (async(event: GsEvent, callback?: Function) => {
+      
       console.log("default loadHandler event called", event.data);
+      
       if(event.data.id){
         const result = await getDataById(event.data.id);
         if(callback){
@@ -39,13 +41,15 @@ export const useDefaultHandler = (
    * Callback provided by parent to save data to store
    * @param event
    */
-  const customSaveHandler =
-    saveHandler ||
+  const customGsSave =
+    gsSave ||
     (async(event: GsEvent, callback?: any) => {
+      
       console.log("default saveHandler event called", event.data);
-        event.data["cname"] = event.cname;
-        event.data["aliasName"] = event.aliasName;
-        const result = await saveData(event.data, event.cid)
+
+        event.data["cname"] = event.source?.cname;
+        event.data["aliasName"] = event.source?.aliasName;
+        const result = await saveData(event.data, event.srcId)
         if(callback){
             callback(result);
         }
@@ -55,17 +59,17 @@ export const useDefaultHandler = (
    * emited by gscomponent when data changed
    * @param event
    */
-  const customItemChangedHandler =
-    itemChangedHandler ||
+  const customGsItemChanged =
+    gsItemChanged ||
     (async(event: GsEvent, callback?: Function) => {
-      console.log("default itemChangedHandler event received: ", event.cid, event.data);
+      console.log("default itemChangedHandler event received: ", event.srcId, event.data);
       if(callback){
         callback(true)
       }
     });
 
-  const customDeleteHandler =
-    deleteHandler ||
+  const customGsDelete =
+    gsDelete ||
     (async(event: GsEvent, callback?: Function) => {
       console.log("default deleteHandler event called", event.data);
       const result = await deleteData(event.data.id);
@@ -74,8 +78,8 @@ export const useDefaultHandler = (
       }
     });
 
-  const customUploadHandler =
-    uploadHandler ||
+  const customGsUpload =
+    gsUpload ||
     ((event: GsEvent, callback?: Function) => {
       console.log("default uploadHandler event called", event.data);
       //TODO
@@ -84,8 +88,18 @@ export const useDefaultHandler = (
       }
     });
 
-  const customCallHandler =
-    callHandler ||
+    const customGsDownload =
+    gsDownload ||
+    ((event: GsEvent, callback?: Function) => {
+      console.log("default uploadHandler event called", event.data);
+      //TODO
+      if(callback){
+        callback(true)
+      }
+    });
+
+  const customGsAny =
+    gsAny ||
     ((event: GsEvent, callback?: Function) => {
       console.log("default optionHandler event called", event.data);
       //TODO
@@ -101,7 +115,7 @@ export const useDefaultHandler = (
    * @param callback 
    * @returns 
    */
-  const invoke = async (
+  const gsInvoke = async (
     fn: string,
     event: GsEvent,
     callback?: Function
@@ -113,13 +127,14 @@ export const useDefaultHandler = (
 
 
   return {
-    loadHandler: customLoadHandler,
-    saveHandler: customSaveHandler,
-    itemChangedHandler: customItemChangedHandler,
-    deleteHandler: customDeleteHandler,
-    uploadHandler: customUploadHandler,
-    callHandler: customCallHandler,
-    invoke,
+    gsLoad: customGsLoad,
+    gsSave: customGsSave,
+    gsItemChanged: customGsItemChanged,
+    gsDelete: customGsDelete,
+    gsUpload: customGsUpload,
+    gsDownload: customGsDownload,
+    gsAny: customGsAny,
+    gsInvoke,
     fns,
   };
 };

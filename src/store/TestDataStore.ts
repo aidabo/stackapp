@@ -1,4 +1,4 @@
-import { useDefaultDataStore } from "@/components/dynamic/store/DefaultDataStore"
+import { useDefaultDataStore } from "@/store/DefaultDataStore"
 
 export const useTestDataStore = () =>{
 

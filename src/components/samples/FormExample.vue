@@ -105,7 +105,7 @@ watch(
   gsData,
   (newValue, oldValue) => {
     if (props.gsItemChanged) {
-      props.gsItemChanged({ cid: props.cid, data: gsData.value });
+      props.gsItemChanged({ srcId: props.cid, data: gsData.value });
     }
   },
   { deep: true }
@@ -117,9 +117,7 @@ const submitHandler = async (form: any) => {
   if (!errors) {    
     await props.gsSave(
       {
-        cid: props.cid,
-        cname: props.gsComponent.cname,
-        aliasName: props.gsComponent.aliasName ?? props.gsComponent.cid,
+        srcId: props.cid,
         data: gsData.value,
       },
       (result: any) => {
