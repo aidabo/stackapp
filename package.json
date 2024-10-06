@@ -1,8 +1,30 @@
 {
   "name": "stackapp",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
+  "description": "A draggable and resizable layout for Vue component to create page",
+  "keywords": [
+    "grid",
+    "vuejs",
+    "drag",
+    "draggable",
+    "resize",
+    "resizable",
+    "fluid",
+    "responsive",
+    "page layout",
+    "component reusable"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aidabo/stackapp.git"
+  },
+  "author": "",
+  "homepage": "https://github.com/aidabo/stackapp.git",
+  "main": "dist/stack-app.js",
+  "unpkg": "dist/stack-app.umd.cjs",
+  "typings": "dist/components/layout/index.d.ts",
   "scripts": {
     "dev": "vite --debug",
     "build": "vue-tsc -b && vite build --mode production",

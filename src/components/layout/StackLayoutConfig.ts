@@ -1,4 +1,3 @@
-import { defaultConfig } from "@/components/layout/defaultConfig"
 import { defineComponent, SetupContext, provide } from "vue";
 import { h } from "vue";
 
@@ -20,11 +19,21 @@ export interface StackLayoutOptions {
   dataStore:    string | any;
 }
 
+export const createDefaultConfig = (config?: StackLayoutOptions )=>{
+  const options = {
+      eventHandler: config?.eventHandler?? "DefaultHandler",
+      layoutStore: config?.layoutStore?? "DefaultLayoutStore",
+      dataStore:  config?.dataStore?? "DefaultDataStore",
+    } as StackLayoutOptions
+    
+  return { options }
+}
+
 /**
  * A composable to provide a given configuration to all children.
  * @param config - A FormKit configuration object or a function
  */
-export function useConfig(
+function useConfig(
   config?: StackLayoutOptions | ((...args: any[]) => StackLayoutOptions)
 ) {
   const options = Object.assign(
@@ -39,7 +48,7 @@ export function useConfig(
   /**
    * The root configuration options.
    */
-  const rootConfig = (defaultConfig(options.config || {}) as any).options;
+  const rootConfig = (createDefaultConfig(options.config || {}) as any).options;
 
   /**
    * We dont want to explicitly provide any "config" options, only a root
