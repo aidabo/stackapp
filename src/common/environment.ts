@@ -8,8 +8,8 @@ import.meta.env.DEV: {boolean} アプリが開発で動作しているかどう�
 import.meta.env.SSR: {boolean} アプリがサーバで動作しているかどうか
 */
 
-const getEnvironment = () => {
-        var env = {
+export const environment = () => {
+    const env = {
             "env": import.meta.env.MODE,
             "base_url": import.meta.env.BASE_URL,
             "prod": import.meta.env.PROD,
@@ -17,11 +17,9 @@ const getEnvironment = () => {
             "ssr": import.meta.env.SSR,
             "web_api_url": import.meta.env.VITE_WEB_API_URL,
             "db_api_url": import.meta.env.VITE_PG_API_URL,
-            "upload_api_url": `${import.meta.env.VITE_WEB_API_URL}/upload`,
-            "download_api_url": `${import.meta.env.VITE_WEB_API_URL}/download`,
-            "sendmail_api_url": `${import.meta.env.VITE_WEB_API_URL}/sendmail`,
-        };
-        return env;
-}
+    };
 
-export default getEnvironment;
+    return  { env }
+};
+
+

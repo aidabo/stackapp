@@ -1,13 +1,16 @@
 <template>
    <div class="topnav">
   <router-link :to="{ name: 'home' }">Home</router-link>
-  <a href="#news">News</a>
+  <router-link :to="{ name: 'mypage' }">MyPage</router-link>
+  <router-link :to="{ name: 'createpage' }">CreatePage</router-link>
+  <router-link :to="{ name: 'pagelist' }">PageList</router-link>
+  <!-- <router-link :to="{ name: 'test' }">Test</router-link> -->
   <a href="#contact">Contact</a>
-  <a href="#about" class="split">Help</a>
+  <a href="#about" class="split"><i class="font-bold text-lg fa fa-question-circle" aria-hidden="true"></i></a>
 </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 </script>
 
 <style scoped>
@@ -36,7 +39,7 @@
 /* Create a right-aligned (split) link inside the navigation bar */
 .topnav a.split {
   float: right;
-  background-color: #04AA6D;
+  /* background-color: #04AA6D; */
   color: white;
 }
 </style>
