@@ -27,7 +27,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SchemaForm: typeof import('./src/components/formkit/SchemaForm.vue')['default']
     SchemaKit: typeof import('./src/components/formkit/SchemaKit.vue')['default']
-    SimpleListParts: typeof import('./src/components/parts/SimpleListParts.vue')['default']
     StackLayout: typeof import('./src/components/layout/StackLayout.vue')['default']
     StackMenu: typeof import('./src/components/layout/StackMenu.vue')['default']
     StackNaviPanel: typeof import('./src/components/layout/StackNaviPanel.vue')['default']
