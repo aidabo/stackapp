@@ -4,7 +4,7 @@
   <router-link :to="{ name: 'mypage' }">MyPage</router-link>
   <router-link :to="{ name: 'createpage' }">CreatePage</router-link>
   <router-link :to="{ name: 'pagelist' }">PageList</router-link>
-  <router-link :to="{ name: 'test' }">Test</router-link>
+  <!-- <router-link :to="{ name: 'test' }">Test</router-link> -->
   <a href="#contact">Contact</a>
   <a href="#about" class="split"><i class="font-bold text-lg fa fa-question-circle" aria-hidden="true"></i></a>
 </div>

@@ -20,6 +20,11 @@
     "type": "git",
     "url": "https://github.com/aidabo/stackapp.git"
   },
+  "author": "",
+  "homepage": "https://github.com/aidabo/stackapp.git",
+  "main": "dist/stack-app-layout.js",
+  "unpkg": "dist/stack-app-layout.umd.cjs",
+  "typings": "dist/components/index.d.ts",
   "scripts": {
     "dev": "vite --debug",
     "build": "vue-tsc -b && vite build --mode production",

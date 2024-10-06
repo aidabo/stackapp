@@ -27,13 +27,13 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SchemaForm: typeof import('./src/components/formkit/SchemaForm.vue')['default']
     SchemaKit: typeof import('./src/components/formkit/SchemaKit.vue')['default']
+    StackComponentTitle: typeof import('./src/components/parts/StackComponentTitle.vue')['default']
     StackLayout: typeof import('./src/components/layout/StackLayout.vue')['default']
     StackMenu: typeof import('./src/components/layout/StackMenu.vue')['default']
     StackNaviPanel: typeof import('./src/components/layout/StackNaviPanel.vue')['default']
     StackPage: typeof import('./src/components/layout/StackPage.vue')['default']
     StackPageCreate: typeof import('./src/components/layout/StackPageCreate.vue')['default']
-    TestConfig: typeof import('./src/components/test/TestConfig.vue')['default']
-    TestLoad: typeof import('./src/components/test/TestLoad.vue')['default']
+    StackTitle: typeof import('./src/components/parts/StackTitle.vue')['default']
     Top: typeof import('./src/components/page/Top.vue')['default']
   }
 }

@@ -41,11 +41,11 @@ const routes = [
     name: "preview",
     component: ()=>import("@/components/page/DefaultStackPage.vue"),
   },
-  {
-    path: "/test",
-    name: "test",
-    component: ()=>import("@/components/test/TestConfig.vue"),
-  },
+  // {
+  //   path: "/test",
+  //   name: "test",
+  //   component: ()=>import("@/components/test/TestConfig.vue"),
+  // },
   {
     path: "/:cacheAll(.*)*",
     redirect: { name: "top" },

@@ -203,7 +203,7 @@ export interface StackCompProps extends StackCompPropsHandlers {
   //grid-stack-item
   gsItem: { [key: string]: any };
   //component props
-  StackComponent: CompProps;
+  gsComponent: CompProps;
   //page props
   gsPage?: PageProps;
   //register callback

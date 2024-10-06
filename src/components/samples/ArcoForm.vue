@@ -1,5 +1,5 @@
 <template>
-  <slot name="stack"></slot>
+  <slot name="title" v-bind="props"></slot>
   <a-form
     ref="formRef"
     :size="gsData.size"
@@ -168,7 +168,7 @@ const options = ref<any>();
 const gsData: any = ref({
   id: "",
   cid: props.cid,
-  cname: props.StackComponent.cname,
+  cname: props.gsComponent.cname,
   size: "medium",
   name: "",
   age: undefined,
@@ -189,14 +189,14 @@ const registerCallback = () => {
   if (props.gsRegister) {
     props.gsRegister(
       props.cid,
-      createStackComponentRefs(props.StackComponent, gsData.value, { test1, test2 })
+      createStackComponentRefs(props.gsComponent, gsData.value, { test1, test2 })
     );
   }
 };
 
 const loadInitailData = () => {  
-  options.value = props.StackComponent.data.options;
-  treeData.value = props.StackComponent.data.treeData;
+  options.value = props.gsComponent.data.options;
+  treeData.value = props.gsComponent.data.treeData;
   //option:
   props.gsLoad(
     { srcId: props.cid, data: { id: "104fcd51-b38f-4e21-bb03-4edf79a64aa6" } },

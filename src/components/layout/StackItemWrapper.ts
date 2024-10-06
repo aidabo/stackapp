@@ -20,20 +20,10 @@ export default defineComponent({
   },
 
   setup(props, { slots, emit }) {
-    /**
-     * StackComponent reactive props
-     */
+
     const compProps = ref<CompProps>();
 
     const component = ref<Component>();
-
-    //const config: any = inject(eventSymbol.gsPageConfigOptions, false);
-    //console.log("inject config in item: ", config);
-
-    /**
-     * get StackComponent
-     */
-    //const { gsGetItemCompnent, gsGetComponentInfo } = usePageComponents();
 
     onMounted(async () => {
       await addWidgetComponentCB(props.gsItem);
@@ -106,15 +96,21 @@ export default defineComponent({
       console.log("component data changed: ", compProps.value);
     });
 
-    return () => {
-      console;
+    return () => {      
       if (!component.value || !compProps.value || !compProps.value.cid) {
         return null;
       }
+
+      // const scopedSlots = {  
+      //   default: () => h('div', slots.default?.({ props })),  
+      //   title: () => (slots.title ? h('div', slots.title({ props })) : null),  
+      //   stack: () => (slots.stack ? h('div', slots.stack({ props })) : null),  
+      // };  
+  
       return h(component.value, {
         cid: compProps.value.cid,
         //component props
-        StackComponent: compProps.value,
+        gsComponent: compProps.value,
         //gridstackitem
         gsItem: props.gsItem,
         //page props
@@ -124,7 +120,37 @@ export default defineComponent({
         ...props.gsHandlers,
         gsInvoke: props.gsInvoke,
         gsOptions: props.gsOptions,
-      });
+      }/*, scopedSlots*/);
     };
   },
 });
+
+
+// <script setup>  
+// import { h, defineComponent } from 'vue';  
+// import MyComponent from './MyComponent.vue';  
+  
+// // 假设你有一些数据和方法想要传递给插槽  
+// const stackData = { /* ... */ };  
+// const handleStackAction = () => { /* ... */ };  
+  
+// export default defineComponent({  
+//   name: 'ParentComponent',  
+//   setup(_, { slots }) {  
+//     // 渲染函数  
+//     return () => {  
+//       // 渲染 MyComponent 并传递一个名为 'stack' 的作用域插槽  
+//       // 注意：slots.stack 是一个函数，它接受一个对象作为参数并返回 VNode 或 VNode 数组  
+//       const stackSlotContent = slots.stack?.({ stackData, handleStackAction });  
+  
+//       // 创建一个包含插槽内容的 div  
+//       return h('div', { class: 'justify-center m-5' }, [  
+//         // 如果 stackSlotContent 存在，则渲染它  
+//         stackSlotContent ? stackSlotContent : null,  
+//         // 其他内容，比如你的 span  
+//         h('span', { class: 'text-red-400 font-bold' }, 'this is slot stack outside scoped content')  
+//       ]);  
+//     };  
+//   }  
+// });  
+// </script>

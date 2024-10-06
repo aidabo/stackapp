@@ -62,10 +62,8 @@ export const useDefaultHandler = (
    */
   const customGsSave =
     gsSave ||
-    (async(event: StackEvent, callback?: any) => {
-      
-      console.log("default saveHandler event called", event.data);
-
+    (async(event: StackEvent, callback?: any) => {      
+      console.log("default saveHandler event called", event);
         event.data["cname"] = event.source?.cname;
         event.data["aliasName"] = event.source?.aliasName;
         const result = await saveData(event.data, event.srcId)

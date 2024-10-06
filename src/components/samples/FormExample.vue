@@ -83,13 +83,15 @@ const submitted = ref(false);
 
 const uid = ref(uuidv4());
 
-const gsData: any = ref(null);
+const myform = ref(null);
+
+const gsData: any = ref();
 
 const registerCallback = () => {
   if (props.gsRegister) {
     props.gsRegister(
       props.cid,
-      createStackComponentRefs(props.StackComponent, gsData.value, {})
+      createStackComponentRefs(props.gsComponent, gsData.value, {})
     );
   }
 };
@@ -118,7 +120,8 @@ const submitHandler = async (form: any) => {
     await props.gsSave(
       {
         srcId: props.cid,
-        data: gsData.value,
+        source: {cid: props.cid, cname: props.gsComponent.cname, aliasName: props.gsComponent.aliasName},
+        data: form || {},
       },
       (result: any) => {
         if (result === false) {
@@ -128,7 +131,7 @@ const submitHandler = async (form: any) => {
         }
       }
     );
-    submitted.value = true;
+    //submitted.value = true;
   }
 };
 </script>

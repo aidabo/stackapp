@@ -10,8 +10,8 @@ const config = {
 
   resources: {
     components: PageComponents,
-    // handlers: PageHandlers,
-    // stores: PageStores,
+     //handlers: PageHandlers,
+     //stores: PageStores,
   } as PageResources,
 };
 

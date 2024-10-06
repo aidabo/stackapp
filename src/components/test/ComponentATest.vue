@@ -14,7 +14,7 @@
         :on-save="onSave"
         @griditem:item-changed="onItemChanged"
       >
-        <template #stack>
+        <template #stack v-slot="compProps">
           <div class="justify-center m-5">
             <span class="text-red-400 font-bold">this is slot stack</span>
           </div>
