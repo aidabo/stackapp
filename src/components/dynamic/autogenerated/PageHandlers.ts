@@ -1,8 +1,8 @@
 
-// auto-generated: GsHandlers.ts: Thu Oct 03 2024 19:14:05 GMT+0900 (Japan Standard Time)
+// auto-generated: GsHandlers.ts: Sun Oct 06 2024 09:49:38 GMT+0900 (Japan Standard Time)
 //
 import { reactive } from "vue";
-import { PageHandler } from "@/components/layout/GridEvent";
+import { PageHandler } from "@/components/layout/StackEvent";
 import { useDefaultHandler } from "@/handlers/DefaultHandler";
 import { useTestHandler } from "@/handlers/TestHandler";
 

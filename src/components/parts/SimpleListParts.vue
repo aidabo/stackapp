@@ -51,7 +51,7 @@
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router"
 import { useDefaultLayoutStore } from "@/store/DefaultLayoutStore";
-import { createPageProps, PageProps } from "@/components/layout/GridEvent";
+import { createPageProps, PageProps } from "@/components/layout/StackEvent";
 import CreatePageDialog from "@/components/dialog/CreatePageDialog.vue"
 
 const { getPageList, savePage, getPageById, deletePage } = useDefaultLayoutStore();

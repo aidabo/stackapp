@@ -31,14 +31,14 @@ import "gridstack/dist/gridstack.min.css";
 import "gridstack/dist/gridstack-extra.min.css";
 import { GridStack } from "gridstack";
 import { v4 as uuidv4 } from "uuid";
-import GridStackItemDynamic from "@/components/layout/GridStackItemDynamic";
+import GridStackItemDynamic from "@/components/layout/StackItemWrapper";
 import {
-  createGsComponentHandlers,
-  GsComponentHandlers,
-  GsComponentRefs,
-  GsEvent,
+  createStackComponentHandlers,
+  StackComponentHandlers,
+  StackComponentRefs,
+  StackEvent,
   PageProps,
-} from "@/components/layout/GridEvent";
+} from "@/components/layout/StackEvent";
 
 const gsLayoutRef = ref(null);
 
@@ -60,7 +60,7 @@ const props = defineProps({
 const handlers: any = inject("__page_handlers");
 console.log("injected", handlers);
 
-const components = reactive<{ [key: string]: GsComponentRefs }>({});
+const components = reactive<{ [key: string]: StackComponentRefs }>({});
 
 var grid: any = null; // DO NOT use ref(null) as proxies GS will break all logic when comparing structures... see https://github.com/gridstack/gridstack.js/issues/2115
 
@@ -205,7 +205,7 @@ const compact = (value: boolean) => {
   }
 };
 
-const onCompRegister = (cid: string, data: GsComponentRefs) => {
+const onCompRegister = (cid: string, data: StackComponentRefs) => {
   components[cid] = data;
   console.log(`Component ${cid} registered}`)
 };
@@ -216,11 +216,11 @@ const onCompRegister = (cid: string, data: GsComponentRefs) => {
  * @param fn 
  * @param event 
  */
-const findCompFn = (fn: string, event: GsEvent): GsComponentHandlers[] => {
+const findCompFn = (fn: string, event: StackEvent): StackComponentHandlers[] => {
   let funcs = Object.keys(components)
     .map((key) => {
       const { ...fns } = components[key].handlers || {};
-       return createGsComponentHandlers(fn, fns[fn], key, components[key].props.cname, components[key].props.aliasName)
+       return createStackComponentHandlers(fn, fns[fn], key, components[key].props.cname, components[key].props.aliasName)
     })
     .filter((c) => c.f != undefined);    
     if(event.targetId) funcs = funcs.filter(c=>c.cid == event.targetId);

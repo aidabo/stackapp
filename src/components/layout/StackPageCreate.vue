@@ -1,13 +1,13 @@
 <template>
   <!-- navi panel -->
-  <grid-stack-navi-panel
+  <stack-navi-panel
     :pannel-width="pannelWidth"
     :publish="publish"
     :save="save"
     :load="loadStore"
     :clear="clear"
     :close="close"
-  ></grid-stack-navi-panel>
+  ></stack-navi-panel>
 
   <!-- Show create page time and menu -->
   <div class="flex justify-between align-items-center bg-blue-600 text-white">
@@ -128,7 +128,7 @@
   <div class="page-create" :style="{ marginLeft: pannelWidth + 'px' }">
     <div v-for="(id, index) in gridStacks">
       <suspense>
-        <grid-stack-layout
+        <stack-layout
           :id="id"
           :ref="setGridStackRef(index)"
           :pageProps="pageProps"
@@ -136,16 +136,16 @@
           :key="id"
         >
           <template #menu>
-            <grid-menu
+            <stack-menu
               :grid-id="id"
               :last-grid="
                 index == gridStacks.length - 1 && gridStacks.length > 1
               "
               v-if="!pageStatic"
               @grid:remove="removeGrid"
-            ></grid-menu>
+            ></stack-menu>
           </template>
-        </grid-stack-layout>
+        </stack-layout>
         <template #fallback>
           <div>Loading...</div>
         </template>
@@ -171,27 +171,27 @@ import {
   inject,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import GridStackLayout from "@/components/layout/GridStackLayout.vue";
+import StackLayout from "@/components/layout/StackLayout.vue";
+import StackMenu from "@/components/layout/StackMenu.vue";
+import StackNaviPanel from "@/components/layout/StackNaviPanel.vue";
 import {
   createNewGrid,
   createPageProps,
   GridOptions,
-  GsComponentHandlers,
-  GsEvent,
+  StackComponentHandlers,
+  StackEvent,
   PageProps,
-} from "@/components/layout/GridEvent";
-import { useDefaultLayoutStore } from "@/store/DefaultLayoutStore";
+} from "@/components/layout/StackEvent";
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 import { Base64 } from "js-base64";
 import { Notification } from "@arco-design/web-vue";
-import GridMenu from "@/components/layout/GridMenu.vue";
-import GridStackNaviPanel from "@/components/layout/GridStackNaviPanel.vue";
+import { useDefaultLayoutStore } from "@/store/DefaultLayoutStore";
 import { useDefaultHandler } from "@/handlers/DefaultHandler"
 import {
   eventSymbol,
-  GridLayoutOptions,
-} from "@/components/layout/GridLayoutConfig";
-import { useDynamicLoader } from "@/components/layout/DynamicLoader";
+  StackLayoutOptions,
+} from "@/components/layout/StackLayoutConfig";
+import { useDynamicLoader } from "@/components/layout/StackDynamicLoader";
 
 //grid id
 const gridStacks = ref<string[]>([]);
@@ -243,17 +243,17 @@ if(config){
 
 //page store
 const { savePage, getPageById } = dynaHs
-  ? (dynaHs as GridLayoutOptions).layoutStore()
+  ? (dynaHs as StackLayoutOptions).layoutStore()
   : useDefaultLayoutStore();
 
 //component handler for event interact
 const pageHandlers = dynaHs
-  ? (dynaHs as GridLayoutOptions).eventHandler()
+  ? (dynaHs as StackLayoutOptions).eventHandler()
   : useDefaultHandler();
 
 const invoke = async (
   fn: string,
-  event: GsEvent,
+  event: StackEvent,
   callback?: Function
 ): Promise<any[]> => await invokeInternal(fn, event, callback);
 
@@ -480,7 +480,7 @@ const removeGrid = async (gridId: string) => {
   }
 };
 
-const findFn = (fn: string, event: GsEvent): GsComponentHandlers[] => {
+const findFn = (fn: string, event: StackEvent): StackComponentHandlers[] => {
   return gridStackRefs.value
     .map((g) => g.findCompFn(fn, event))
     .flatMap((c) => c);
@@ -488,10 +488,10 @@ const findFn = (fn: string, event: GsEvent): GsComponentHandlers[] => {
 
 const invokeInternal = async (
   fn: string,
-  event: GsEvent,
+  event: StackEvent,
   callback?: Function
 ) => {
-  const allFuncs = findFn(fn, event).map((c: GsComponentHandlers) => {
+  const allFuncs = findFn(fn, event).map((c: StackComponentHandlers) => {
     let resultOrPromise = c.f(event, callback);
     if (resultOrPromise instanceof Promise) {
       return resultOrPromise;
@@ -519,57 +519,10 @@ defineExpose({
   preview,
   publish,
   invoke,
-  //invokeByName,
 });
 </script>
 
 <style scoped>
-/* The side navigation menu */
-/* .sidenav {
-  height: 100%;
-  width: 0;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  background-color: black;
-  overflow-x: hidden;
-  overflow-y: auto;
-  transition: 0.5s;
-} */
-
-/* The navigation menu links */
-/* .sidenav a {
-  padding: 8px 8px 8px 16px;
-  text-decoration: none;
-  font-size: 25px;
-  color: rgb(29, 31, 31, 0.1);
-  display: block;
-  transition: 0.3s;
-} */
-
-/* When you mouse over the navigation links, change their color */
-/* .sidenav a:hover {
-  color: #f1f1f1;
-} */
-
-/* Position and style the close button (top right corner) */
-/* .sidenav .closebtn {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 1.5rem;
-  margin-left: 50px;
-  color: #b1b1b1;
-} */
-
-/* Position and style the close button (top right corner) */
-/* .sidenav .mybtn {
-  top: 0;
-  font-size: 1.5rem;
-  color: #b1b1b1;
-  padding-top: 0.9rem;
-  padding-bottom: 0.9rem;
-} */
 
 .openbtn {
   font-size: 1.5rem;
@@ -591,61 +544,9 @@ defineExpose({
   padding: 0.75rem;
 }
 
-/* .trash {
-  height: 120px;
-  background: rgba(255, 0, 0, 0.1) center center
-    url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTYuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjY0cHgiIGhlaWdodD0iNjRweCIgdmlld0JveD0iMCAwIDQzOC41MjkgNDM4LjUyOSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDM4LjUyOSA0MzguNTI5OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTQxNy42ODksNzUuNjU0Yy0xLjcxMS0xLjcwOS0zLjkwMS0yLjU2OC02LjU2My0yLjU2OGgtODguMjI0TDMwMi45MTcsMjUuNDFjLTIuODU0LTcuMDQ0LTcuOTk0LTEzLjA0LTE1LjQxMy0xNy45ODkgICAgQzI4MC4wNzgsMi40NzMsMjcyLjU1NiwwLDI2NC45NDUsMGgtOTEuMzYzYy03LjYxMSwwLTE1LjEzMSwyLjQ3My0yMi41NTQsNy40MjFjLTcuNDI0LDQuOTQ5LTEyLjU2MywxMC45NDQtMTUuNDE5LDE3Ljk4OSAgICBsLTE5Ljk4NSw0Ny42NzZoLTg4LjIyYy0yLjY2NywwLTQuODUzLDAuODU5LTYuNTY3LDIuNTY4Yy0xLjcwOSwxLjcxMy0yLjU2OCwzLjkwMy0yLjU2OCw2LjU2N3YxOC4yNzQgICAgYzAsMi42NjQsMC44NTUsNC44NTQsMi41NjgsNi41NjRjMS43MTQsMS43MTIsMy45MDQsMi41NjgsNi41NjcsMi41NjhoMjcuNDA2djI3MS44YzAsMTUuODAzLDQuNDczLDI5LjI2NiwxMy40MTgsNDAuMzk4ICAgIGM4Ljk0NywxMS4xMzksMTkuNzAxLDE2LjcwMywzMi4yNjQsMTYuNzAzaDIzNy41NDJjMTIuNTY2LDAsMjMuMzE5LTUuNzU2LDMyLjI2NS0xNy4yNjhjOC45NDUtMTEuNTIsMTMuNDE1LTI1LjE3NCwxMy40MTUtNDAuOTcxICAgIFYxMDkuNjI3aDI3LjQxMWMyLjY2MiwwLDQuODUzLTAuODU2LDYuNTYzLTIuNTY4YzEuNzA4LTEuNzA5LDIuNTctMy45LDIuNTctNi41NjRWODIuMjIxICAgIEM0MjAuMjYsNzkuNTU3LDQxOS4zOTcsNzcuMzY3LDQxNy42ODksNzUuNjU0eiBNMTY5LjMwMSwzOS42NzhjMS4zMzEtMS43MTIsMi45NS0yLjc2Miw0Ljg1My0zLjE0aDkwLjUwNCAgICBjMS45MDMsMC4zODEsMy41MjUsMS40Myw0Ljg1NCwzLjE0bDEzLjcwOSwzMy40MDRIMTU1LjMxMUwxNjkuMzAxLDM5LjY3OHogTTM0Ny4xNzMsMzgwLjI5MWMwLDQuMTg2LTAuNjY0LDguMDQyLTEuOTk5LDExLjU2MSAgICBjLTEuMzM0LDMuNTE4LTIuNzE3LDYuMDg4LTQuMTQxLDcuNzA2Yy0xLjQzMSwxLjYyMi0yLjQyMywyLjQyNy0yLjk5OCwyLjQyN0gxMDAuNDkzYy0wLjU3MSwwLTEuNTY1LTAuODA1LTIuOTk2LTIuNDI3ICAgIGMtMS40MjktMS42MTgtMi44MS00LjE4OC00LjE0My03LjcwNmMtMS4zMzEtMy41MTktMS45OTctNy4zNzktMS45OTctMTEuNTYxVjEwOS42MjdoMjU1LjgxNVYzODAuMjkxeiIgZmlsbD0iI2ZmOWNhZSIvPgoJCTxwYXRoIGQ9Ik0xMzcuMDQsMzQ3LjE3MmgxOC4yNzFjMi42NjcsMCw0Ljg1OC0wLjg1NSw2LjU2Ny0yLjU2N2MxLjcwOS0xLjcxOCwyLjU2OC0zLjkwMSwyLjU2OC02LjU3VjE3My41ODEgICAgYzAtMi42NjMtMC44NTktNC44NTMtMi41NjgtNi41NjdjLTEuNzE0LTEuNzA5LTMuODk5LTIuNTY1LTYuNTY3LTIuNTY1SDEzNy4wNGMtMi42NjcsMC00Ljg1NCwwLjg1NS02LjU2NywyLjU2NSAgICBjLTEuNzExLDEuNzE0LTIuNTY4LDMuOTA0LTIuNTY4LDYuNTY3djE2NC40NTRjMCwyLjY2OSwwLjg1NCw0Ljg1MywyLjU2OCw2LjU3QzEzMi4xODYsMzQ2LjMxNiwxMzQuMzczLDM0Ny4xNzIsMTM3LjA0LDM0Ny4xNzJ6IiBmaWxsPSIjZmY5Y2FlIi8+CgkJPHBhdGggZD0iTTIxMC4xMjksMzQ3LjE3MmgxOC4yNzFjMi42NjYsMCw0Ljg1Ni0wLjg1NSw2LjU2NC0yLjU2N2MxLjcxOC0xLjcxOCwyLjU2OS0zLjkwMSwyLjU2OS02LjU3VjE3My41ODEgICAgYzAtMi42NjMtMC44NTItNC44NTMtMi41NjktNi41NjdjLTEuNzA4LTEuNzA5LTMuODk4LTIuNTY1LTYuNTY0LTIuNTY1aC0xOC4yNzFjLTIuNjY0LDAtNC44NTQsMC44NTUtNi41NjcsMi41NjUgICAgYy0xLjcxNCwxLjcxNC0yLjU2OCwzLjkwNC0yLjU2OCw2LjU2N3YxNjQuNDU0YzAsMi42NjksMC44NTQsNC44NTMsMi41NjgsNi41N0MyMDUuMjc0LDM0Ni4zMTYsMjA3LjQ2NSwzNDcuMTcyLDIxMC4xMjksMzQ3LjE3MnogICAgIiBmaWxsPSIjZmY5Y2FlIi8+CgkJPHBhdGggZD0iTTI4My4yMiwzNDcuMTcyaDE4LjI2OGMyLjY2OSwwLDQuODU5LTAuODU1LDYuNTctMi41NjdjMS43MTEtMS43MTgsMi41NjItMy45MDEsMi41NjItNi41N1YxNzMuNTgxICAgIGMwLTIuNjYzLTAuODUyLTQuODUzLTIuNTYyLTYuNTY3Yy0xLjcxMS0xLjcwOS0zLjkwMS0yLjU2NS02LjU3LTIuNTY1SDI4My4yMmMtMi42NywwLTQuODUzLDAuODU1LTYuNTcxLDIuNTY1ICAgIGMtMS43MTEsMS43MTQtMi41NjYsMy45MDQtMi41NjYsNi41Njd2MTY0LjQ1NGMwLDIuNjY5LDAuODU1LDQuODUzLDIuNTY2LDYuNTdDMjc4LjM2NywzNDYuMzE2LDI4MC41NSwzNDcuMTcyLDI4My4yMiwzNDcuMTcyeiIgZmlsbD0iI2ZmOWNhZSIvPgoJPC9nPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=)
-    no-repeat;
-} */
-
-/* .sidebar {
-  background: rgba(0, 255, 0, 0.1);
-  padding: 25px 0;
-  height: 100px;
-  text-align: center;
-}
-
-.sidebar .grid-stack-item {
-  width: 120px;
-  height: 50px;
-  text-align: center;
-  line-height: 35px;
-  background: rgba(0, 255, 0, 0.1);
-  cursor: default;
-  display: inline-block;
-}
-
-.sidebar .grid-stack-item .grid-stack-item-content {
-  text-align: center;
-} */
-
-/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-/* @media screen and (max-height: 450px) {
-  .sidenav {
-    padding-top: 15px;
-  }
-
-  .sidenav a {
-    font-size: 18px;
-  }
-} */
-
 .grid-stack-item-removing {
   opacity: 0.8;
   filter: blur(5px);
 }
-
-/* #trash {
-  background: rgba(255, 0, 0, 0.4);
-  padding: 15px;
-} */
-
-/* .grid-custom {
-  background-color: #18bc9c;
-  text-align: center;
-  justify-content: center;
-  margin-bottom: 0.25rem;
-} */
-
 
 </style>

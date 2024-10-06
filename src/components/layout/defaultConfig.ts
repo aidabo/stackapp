@@ -1,11 +1,11 @@
-import { GridLayoutOptions } from "./GridLayoutConfig";
+import { StackLayoutOptions } from "./StackLayoutConfig";
 
-const defaultConfig = (config?: GridLayoutOptions )=>{
+const defaultConfig = (config?: StackLayoutOptions )=>{
     const options = {
         eventHandler: config?.eventHandler?? "DefaultHandler",
         layoutStore: config?.layoutStore?? "DefaultLayoutStore",
         dataStore:  config?.dataStore?? "DefaultDataStore",
-      } as GridLayoutOptions
+      } as StackLayoutOptions
       
     return { options }
 }

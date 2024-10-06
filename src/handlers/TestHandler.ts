@@ -1,4 +1,4 @@
-import { GsEvent } from "@/components/layout/GridEvent";
+import { StackEvent } from "@/components/layout/StackEvent";
 import { useDefaultHandler } from "@/handlers/DefaultHandler";
 
 export const useTestHandler = () =>{
@@ -7,7 +7,7 @@ export const useTestHandler = () =>{
 
     const originSave = hs.gsSave;
 
-    hs.gsSave = (event: GsEvent, callback?: Function) =>{
+    hs.gsSave = (event: StackEvent, callback?: Function) =>{
         console.log("****This is a override save handler");
         originSave(event, callback)
     }

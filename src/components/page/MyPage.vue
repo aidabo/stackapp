@@ -44,12 +44,12 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import GridStackLayout from "@/components/layout/GridStackLayout.vue";
+import GridStackLayout from "@/components/layout/StackLayout.vue";
 import {
   createPageProps,
   GridOptions,
   PageProps,
-} from "@/components/layout/GridEvent";
+} from "@/components/layout/StackEvent";
 import { useDefaultLayoutStore } from "@/store/DefaultLayoutStore";
 import { Base64 } from "js-base64";
 

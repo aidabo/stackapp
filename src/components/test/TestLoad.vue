@@ -14,8 +14,8 @@
 
 <script setup lang="ts">
 import { ref, inject } from "vue";
-import { eventSymbol } from "../layout/GridLayoutConfig";
-import { useDynamicLoader } from "../layout/DynamicLoader";
+import { eventSymbol } from "../layout/StackLayoutConfig";
+import { useDynamicLoader } from "../layout/StackDynamicLoader";
 import camelCase from 'camelcase';
 
 const config: any = inject(eventSymbol.gsPageConfigOptions, {

@@ -19,27 +19,27 @@ const routes = [
   {
     path: "/pagelist",
     name: "pagelist",
-    component: ()=>import("@/components/page/GridStackPageList.vue"),
+    component: ()=>import("@/components/page/DefaultStackPageList.vue"),
   },  
   {
     path: "/page/w/:id?",
     name: "createpage",
-    component: ()=>import("@/components/page/DefaultGsPageCreate.vue"),
+    component: ()=>import("@/components/page/DefaultStackPageCreate.vue"),
   },
   {
     path: "/page/b/w/:id",
     name: "createpageback",
-    component: ()=>import("@/components/page/DefaultGsPageCreate.vue"),
+    component: ()=>import("@/components/page/DefaultStackPageCreate.vue"),
   },
   {
     path: "/page/r/:id",
     name: "page",
-    component: ()=>import("@/components/page/DefaultGsPage.vue"),
+    component: ()=>import("@/components/page/DefaultStackPage.vue"),
   },
   {
     path: "/page/p/:id",
     name: "preview",
-    component: ()=>import("@/components/page/DefaultGsPage.vue"),
+    component: ()=>import("@/components/page/DefaultStackPage.vue"),
   },
   {
     path: "/test",

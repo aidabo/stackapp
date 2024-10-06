@@ -55,12 +55,12 @@
   <div class="page-show">
     <div v-for="(id, index) in gridStacks">
       <suspense>
-        <grid-stack-layout
+        <stack-layout
           :id="id"
           :ref="setGridStackRef(index)"
           :pageProps="pageProps"
           :pageStatic="pageStatic"
-        ></grid-stack-layout>
+        ></stack-layout>
       </suspense>
     </div>
     <div class="flex flex-col justify-end align-items-center mb-5">
@@ -74,24 +74,24 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick, reactive, provide, inject } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import GridStackLayout from "@/components/layout/GridStackLayout.vue";
+import StackLayout from "@/components/layout/StackLayout.vue";
 import {
   createPageProps,
   GridOptions,
   PageProps,
-  GsComponentHandlers,
-  GsEvent,
-} from "@/components/layout/GridEvent";
+  StackComponentHandlers,
+  StackEvent,
+} from "@/components/layout/StackEvent";
 import { useDefaultLayoutStore } from "@/store/DefaultLayoutStore";
-import { Base64 } from "js-base64";
 import { useDefaultHandler } from "@/handlers/DefaultHandler"
+import { Base64 } from "js-base64";
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 import { Notification } from "@arco-design/web-vue";
 import {
   eventSymbol,
-  GridLayoutOptions,
-} from "@/components/layout/GridLayoutConfig";
-import { useDynamicLoader } from "@/components/layout/DynamicLoader";
+  StackLayoutOptions,
+} from "@/components/layout/StackLayoutConfig";
+import { useDynamicLoader } from "@/components/layout/StackDynamicLoader";
 
 const props = defineProps({
   id: {
@@ -141,18 +141,18 @@ if(config){
 
 //page store
 const { getPageById } = dynaHs
-  ? (dynaHs as GridLayoutOptions).layoutStore()
+  ? (dynaHs as StackLayoutOptions).layoutStore()
   : useDefaultLayoutStore();
 
 //component handler for event interact
 const pageHandlers = dynaHs
-  ? (dynaHs as GridLayoutOptions).eventHandler()
+  ? (dynaHs as StackLayoutOptions).eventHandler()
   : useDefaultHandler();
 
 // invoke function call of component
 const invoke = async (
   fn: string,
-  event: GsEvent,
+  event: StackEvent,
   callback?: Function
 ): Promise<any[]> => await invokeInternal(fn, event, callback);
 
@@ -256,7 +256,7 @@ const showInfo = () => {
   showInfoDialog.value = true;
 };
 
-const findFn = (fn: string, event: GsEvent): GsComponentHandlers[] => {
+const findFn = (fn: string, event: StackEvent): StackComponentHandlers[] => {
   return gridStackRefs.value
     .map((g) => g.findCompFn(fn, event))
     .flatMap((c) => c);
@@ -264,10 +264,10 @@ const findFn = (fn: string, event: GsEvent): GsComponentHandlers[] => {
 
 const invokeInternal = async (
   fn: string,
-  event: GsEvent,
+  event: StackEvent,
   callback?: Function
 ) => {
-  const allFuncs = findFn(fn, event).map((c: GsComponentHandlers) => {
+  const allFuncs = findFn(fn, event).map((c: StackComponentHandlers) => {
     let resultOrPromise = c.f(event, callback);
     if (resultOrPromise instanceof Promise) {
       return resultOrPromise;

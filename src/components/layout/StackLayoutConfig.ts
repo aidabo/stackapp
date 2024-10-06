@@ -14,7 +14,7 @@ export const eventSymbol = {
 /**
  * Specify custom event handler, page store, component store
  */
-export interface GridLayoutOptions {
+export interface StackLayoutOptions {
   eventHandler: string | any;
   layoutStore:  string | any;
   dataStore:    string | any;
@@ -25,11 +25,11 @@ export interface GridLayoutOptions {
  * @param config - A FormKit configuration object or a function
  */
 export function useConfig(
-  config?: GridLayoutOptions | ((...args: any[]) => GridLayoutOptions)
+  config?: StackLayoutOptions | ((...args: any[]) => StackLayoutOptions)
 ) {
   const options = Object.assign(
     {
-      alias: "GridLayoutConfig",
+      alias: "StackLayoutConfig",
     },
     typeof config === "function" ? config() : config
   ) as any;
@@ -58,16 +58,16 @@ export function useConfig(
   provide(eventSymbol.gsPageConfig, rootConfig);
 }
 
-export interface GridLayoutProviderProps {
-  config?: GridLayoutOptions | ((...args: any[]) => GridLayoutOptions);
+export interface StackLayoutProviderProps {
+  config?: StackLayoutOptions | ((...args: any[]) => StackLayoutOptions);
 }
 
-export const GridLayoutProvider = /* #__PURE__ */ defineComponent(
-  function GridLayoutProvider<
-    P extends GridLayoutProviderProps,
-    S extends { default: GridLayoutOptions }
+export const StackLayoutProvider = /* #__PURE__ */ defineComponent(
+  function StackLayoutProvider<
+    P extends StackLayoutProviderProps,
+    S extends { default: StackLayoutOptions }
   >(props: P, { slots, attrs }: SetupContext<S>) {
-    const options: GridLayoutOptions = {} as any;
+    const options: StackLayoutOptions = {} as any;
 
     if (props.config) {
       useConfig(props.config);
@@ -83,7 +83,7 @@ export const GridLayoutProvider = /* #__PURE__ */ defineComponent(
           })
         : null;
   },
-  { props: ["config"], name: "GridLayoutProvider", inheritAttrs: false }
+  { props: ["config"], name: "StackLayoutProvider", inheritAttrs: false }
 );
 
 export interface ConfigLoaderProps {
@@ -91,8 +91,8 @@ export interface ConfigLoaderProps {
   configFile?: string;
 }
 
-export const GridConfigLoader = /* #__PURE__ */ defineComponent(
-  async function GridConfigLoader(props: ConfigLoaderProps, context) {
+export const StackConfigLoader = /* #__PURE__ */ defineComponent(
+  async function StackConfigLoader(props: ConfigLoaderProps, context) {
     let config = {};
     if (props.configFile) {
       const configFile = await import(
@@ -115,7 +115,7 @@ export const GridConfigLoader = /* #__PURE__ */ defineComponent(
     console.log("now config", config);
     /* @__default-config__ */
     return () =>
-      h(GridLayoutProvider, { ...context.attrs, config }, context.slots);
+      h(StackLayoutProvider, { ...context.attrs, config }, context.slots);
   },
   {
     props: ["defaultConfig", "configFile"],

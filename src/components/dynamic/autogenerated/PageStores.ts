@@ -1,8 +1,8 @@
 
-// auto-generated: GsStores.ts: Thu Oct 03 2024 19:14:05 GMT+0900 (Japan Standard Time)
+// auto-generated: GsStores.ts: Sun Oct 06 2024 09:49:38 GMT+0900 (Japan Standard Time)
 //
 import { reactive } from "vue";
-import { PageStore } from "@/components/layout/GridEvent";
+import { PageStore } from "@/components/layout/StackEvent";
 import { useDefaultDataStore } from "@/store/DefaultDataStore";
 import { useDefaultLayoutStore } from "@/store/DefaultLayoutStore";
 import { useTestDataStore } from "@/store/TestDataStore";

@@ -1,17 +1,17 @@
 <template>
   <Suspense>
-  <GridConfigLoader :config-file="`../dynamic/stack.config`" :default-config="false">
+  <StackConfigLoader :config-file="`../dynamic/stack.config`" :default-config="false">
     <TestLoad></TestLoad>
   <GridStackPage id="page_8ac5643a-8a52-4976-9686-efcebc325b1f"></GridStackPage>
-</GridConfigLoader>
+</StackConfigLoader>
 </Suspense>
 </template>
 
 <script setup lang="ts">
 import { ref, inject } from "vue"
 import TestLoad from "@/components/test/TestLoad.vue"
-import { GridConfigLoader } from '../layout/GridLayoutConfig';
-import GridStackPage from "../layout/GridStackPage.vue";
+import { StackConfigLoader } from '../layout/StackLayoutConfig';
+import GridStackPage from "../layout/StackPage.vue";
 
 </script>
 

@@ -150,16 +150,16 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, inject } from "vue";
 import {
-  createGsComponentRefs,
-  GsCompProps,
-  GsEvent,
-  createGsEvent,
-} from "@/components/layout/GridEvent";
+  createStackComponentRefs,
+  StackCompProps,
+  StackEvent,
+  createStackEvent,
+} from "@/components/layout/StackEvent";
 import { Notification } from "@arco-design/web-vue";
 
 const formRef: any = ref(null);
 
-const props = defineProps<GsCompProps>();
+const props = defineProps<StackCompProps>();
 
 const treeData = ref<any>();
 
@@ -168,7 +168,7 @@ const options = ref<any>();
 const gsData: any = ref({
   id: "",
   cid: props.cid,
-  cname: props.gsComponent.cname,
+  cname: props.StackComponent.cname,
   size: "medium",
   name: "",
   age: undefined,
@@ -189,14 +189,14 @@ const registerCallback = () => {
   if (props.gsRegister) {
     props.gsRegister(
       props.cid,
-      createGsComponentRefs(props.gsComponent, gsData.value, { test1, test2 })
+      createStackComponentRefs(props.StackComponent, gsData.value, { test1, test2 })
     );
   }
 };
 
 const loadInitailData = () => {  
-  options.value = props.gsComponent.data.options;
-  treeData.value = props.gsComponent.data.treeData;
+  options.value = props.StackComponent.data.options;
+  treeData.value = props.StackComponent.data.treeData;
   //option:
   props.gsLoad(
     { srcId: props.cid, data: { id: "104fcd51-b38f-4e21-bb03-4edf79a64aa6" } },
@@ -213,7 +213,7 @@ onMounted(() => {
   loadInitailData();
 });
 
-const test1 = async (event: GsEvent, callback?: Function) => {
+const test1 = async (event: StackEvent, callback?: Function) => {
   alert("test1 called ArcoForm");
   return await new Promise((resolve) =>
     setTimeout(
@@ -223,7 +223,7 @@ const test1 = async (event: GsEvent, callback?: Function) => {
   );
 };
 
-const test2 = (event: GsEvent, callback?: Function) => {
+const test2 = (event: StackEvent, callback?: Function) => {
   alert("test2 called ArcoForm");
   return event.data + " !! test2 result " + props.cid;
 };

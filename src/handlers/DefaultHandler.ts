@@ -1,22 +1,41 @@
 import { reactive } from "vue";
 import { useDefaultDataStore } from "@/store/DefaultDataStore";
-import { GsEvent } from "@/components/layout/GridEvent";
+import { StackEvent } from "@/components/layout/StackEvent";
 import { useTestDataStore } from "@/store/TestDataStore";
 
+/**
+ * Handler function will be injected into component's props.
+ * Keep following function name. Other functions exported 
+ * will also injected as gsOptions in props
+ * 
+ * File name and export name rule: exported name with prefix "use"
+ * 
+ * filename: myFileName.ts
+ * export name useMyFileName
+ * 
+ * @param gsLoad 
+ * @param gsSave 
+ * @param gsItemChanged 
+ * @param gsDelete 
+ * @param gsUpload 
+ * @param gsDownload 
+ * @param gsAny 
+ * @returns 
+ */
 export const useDefaultHandler = (
-  gsLoad?: (event: GsEvent, callback?: Function) => any,
-  gsSave?: (event: GsEvent, callback?: Function) => any,
-  gsItemChanged?: (event: GsEvent, callback?: Function) => any,
-  gsDelete?: (event: GsEvent, callback?: Function) => any,
-  gsUpload?: (event: GsEvent, callback?: Function) => any,
-  gsDownload?: (event: GsEvent, callback?: Function) => any,
-  gsAny?: (event: GsEvent, callback?: Function) => any
+  gsLoad?: (event: StackEvent, callback?: Function) => any,
+  gsSave?: (event: StackEvent, callback?: Function) => any,
+  gsItemChanged?: (event: StackEvent, callback?: Function) => any,
+  gsDelete?: (event: StackEvent, callback?: Function) => any,
+  gsUpload?: (event: StackEvent, callback?: Function) => any,
+  gsDownload?: (event: StackEvent, callback?: Function) => any,
+  gsAny?: (event: StackEvent, callback?: Function) => any
 ) => {
 
   const { getDataById, getDataByName, getDataByCid, getDataList, saveData, deleteData  } = useTestDataStore()
   
   const fns = reactive({
-    invoke: (fn: string, event: GsEvent, callback?: Function):any => {},
+    invoke: (fn: string, event: StackEvent, callback?: Function):any => {},
   })
 
   /**
@@ -25,7 +44,7 @@ export const useDefaultHandler = (
    */
   const customGsLoad =
     gsLoad ||
-    (async(event: GsEvent, callback?: Function) => {
+    (async(event: StackEvent, callback?: Function) => {
       
       console.log("default loadHandler event called", event.data);
       
@@ -43,7 +62,7 @@ export const useDefaultHandler = (
    */
   const customGsSave =
     gsSave ||
-    (async(event: GsEvent, callback?: any) => {
+    (async(event: StackEvent, callback?: any) => {
       
       console.log("default saveHandler event called", event.data);
 
@@ -56,12 +75,12 @@ export const useDefaultHandler = (
     });
 
   /**
-   * emited by gscomponent when data changed
+   * emited by StackComponent when data changed
    * @param event
    */
   const customGsItemChanged =
     gsItemChanged ||
-    (async(event: GsEvent, callback?: Function) => {
+    (async(event: StackEvent, callback?: Function) => {
       console.log("default itemChangedHandler event received: ", event.srcId, event.data);
       if(callback){
         callback(true)
@@ -70,7 +89,7 @@ export const useDefaultHandler = (
 
   const customGsDelete =
     gsDelete ||
-    (async(event: GsEvent, callback?: Function) => {
+    (async(event: StackEvent, callback?: Function) => {
       console.log("default deleteHandler event called", event.data);
       const result = await deleteData(event.data.id);
       if(callback){
@@ -80,7 +99,7 @@ export const useDefaultHandler = (
 
   const customGsUpload =
     gsUpload ||
-    ((event: GsEvent, callback?: Function) => {
+    ((event: StackEvent, callback?: Function) => {
       console.log("default uploadHandler event called", event.data);
       //TODO
       if(callback){
@@ -90,7 +109,7 @@ export const useDefaultHandler = (
 
     const customGsDownload =
     gsDownload ||
-    ((event: GsEvent, callback?: Function) => {
+    ((event: StackEvent, callback?: Function) => {
       console.log("default uploadHandler event called", event.data);
       //TODO
       if(callback){
@@ -100,7 +119,7 @@ export const useDefaultHandler = (
 
   const customGsAny =
     gsAny ||
-    ((event: GsEvent, callback?: Function) => {
+    ((event: StackEvent, callback?: Function) => {
       console.log("default optionHandler event called", event.data);
       //TODO
       if(callback){
@@ -117,7 +136,7 @@ export const useDefaultHandler = (
    */
   const gsInvoke = async (
     fn: string,
-    event: GsEvent,
+    event: StackEvent,
     callback?: Function
   ) => {
     if(fns.invoke){

@@ -1,8 +1,8 @@
 <template>
   <Suspense>
-    <GridLayoutProvider :config="config">
+    <StackLayoutProvider :config="config">
       <GridStackPage :id="pageId"></GridStackPage>
-    </GridLayoutProvider>
+    </StackLayoutProvider>
   </Suspense>
 </template>
 
@@ -10,11 +10,10 @@
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import {
-  GridConfigLoader,
-  GridLayoutProvider,
-} from "@/components/layout/GridLayoutConfig";
+  StackLayoutProvider,
+} from "@/components/layout/StackLayoutConfig";
 import config from "@/components/dynamic/stack.config";
-import GridStackPage from "@/components/layout/GridStackPage.vue";
+import GridStackPage from "@/components/layout/StackPage.vue";
 
 const props = defineProps({
   id: {

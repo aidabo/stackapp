@@ -72,12 +72,12 @@ import { v4 as uuidv4 } from "uuid";
 import { FormKit, FormKitProvider } from "@formkit/vue";
 import FormKitConfig from "@/config/FormKitConfig";
 import {
-  createGsComponentRefs,
-  GsCompProps,
-} from "@/components/layout/GridEvent";
+  createStackComponentRefs,
+  StackCompProps,
+} from "@/components/layout/StackEvent";
 import { Notification } from "@arco-design/web-vue";
 
-const props = defineProps<GsCompProps>();
+const props = defineProps<StackCompProps>();
 
 const submitted = ref(false);
 
@@ -89,7 +89,7 @@ const registerCallback = () => {
   if (props.gsRegister) {
     props.gsRegister(
       props.cid,
-      createGsComponentRefs(props.gsComponent, gsData.value, {})
+      createStackComponentRefs(props.StackComponent, gsData.value, {})
     );
   }
 };

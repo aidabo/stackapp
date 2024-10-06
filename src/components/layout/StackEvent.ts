@@ -35,7 +35,7 @@ export interface GridOptions extends GridStackOptions {
 export interface GridItemOptions extends GridStackPosition {
   //grid item id
   id: string;
-  gscomponent?: Array<CompProps>;
+  stackComponent?: Array<CompProps>;
 }
 
 /**
@@ -134,33 +134,33 @@ export const createComponentOption = (
   } as ComponentOption;
 };
 
-export interface GsEventSourceOrTarget {
+export interface StackEventSourceOrTarget {
   cid: string;        //component id in page
   cname?: string;     //component
   aliasName?: string; //unique name used specified
 }
 
-export interface GsEventExt {
+export interface StackEventExt {
   eventType?: string;
-  source: GsEventSourceOrTarget | string | undefined,
-  target: GsEventSourceOrTarget | string | undefined,
+  source: StackEventSourceOrTarget | string | undefined,
+  target: StackEventSourceOrTarget | string | undefined,
   data: any
 }
 
 /**
  * Component interactive event with page handler and other components
  */
-export interface GsEvent {
+export interface StackEvent {
   eventType?: string;
   data: any
   srcId: string;  
   targetId?: string;
-  source?: GsEventSourceOrTarget | undefined,
-  target?: GsEventSourceOrTarget | undefined,
+  source?: StackEventSourceOrTarget | undefined,
+  target?: StackEventSourceOrTarget | undefined,
 }
 
 /**
- * Create a GsEvent 
+ * Create a StackEvent 
  * @param cid 
  * @param data 
  * @param aliasName 
@@ -168,7 +168,7 @@ export interface GsEvent {
  * @param eventType 
  * @returns 
  */
-export const createGsEvent = (
+export const createStackEvent = (
   cid: string,
   data: any,
   aliasName?: string,
@@ -184,47 +184,49 @@ export const createGsEvent = (
   };
 };
 
-export interface GsCompPropsHandlers {
+export interface StackCompPropsHandlers {
   //load data
-  gsLoad: (event: GsEvent, callback?: Function) => any;
+  gsLoad: (event: StackEvent, callback?: Function) => any;
   //save data
-  gsSave: (event: GsEvent, callback?: Function) => any;
+  gsSave: (event: StackEvent, callback?: Function) => any;
   //item changed
-  gsItemChanged: (event: GsEvent, callback?: Function) => any;
+  gsItemChanged: (event: StackEvent, callback?: Function) => any;
   //other event
-  gsAny: (event: GsEvent, callback?: Function) => any;
+  gsAny: (event: StackEvent, callback?: Function) => any;
   //delete data
-  gsDelete?: (event: GsEvent, callback?: Function) => any;
+  gsDelete?: (event: StackEvent, callback?: Function) => any;
   //file upload
-  gsUpload?: (event: GsEvent, callback?: Function) => any;
+  gsUpload?: (event: StackEvent, callback?: Function) => any;
   //file download
-  gsDownload?: (event: GsEvent, callback?: Function) => any;
+  gsDownload?: (event: StackEvent, callback?: Function) => any;
 }
 
 /**
  * Binding props when component render
  */
-export interface GsCompProps extends GsCompPropsHandlers {
-  //component id = gsComponent.cid
+export interface StackCompProps extends StackCompPropsHandlers {
+  //component id = StackComponent.cid
   cid: string;
   //grid-stack-item
   gsItem: { [key: string]: any };
   //component props
-  gsComponent: CompProps;
+  StackComponent: CompProps;
   //page props
   gsPage?: PageProps;
   //register callback
-  gsRegister: (cid: string, data: GsComponentRefs) => void;
+  gsRegister: (cid: string, data: StackComponentRefs) => void;
   //when component removed, notify grid-stack
-  gsRemove: (itemId: string) => void;  
-  gsInvoke: (event: GsEvent, callback?: Function) => any;
+  gsRemove: (itemId: string) => void; 
+  //invoke function in component 
+  gsInvoke: (event: StackEvent, callback?: Function) => any;
+  //other objects in PageHandler excluded StackCompPropsHandlers
   gsOptions?: Object;
 }
 
 /**
  * Provider informaiton in gridstacklayout
  */
-export interface GsComponentRefs {
+export interface StackComponentRefs {
   //component props
   props: CompProps;
   //component data or settings
@@ -234,7 +236,7 @@ export interface GsComponentRefs {
   handlers: any;
 }
 
-export const createGsComponentRefs = (
+export const createStackComponentRefs = (
   props: CompProps,
   data?: any,
   handlers?: any
@@ -243,27 +245,27 @@ export const createGsComponentRefs = (
     props: props,
     data: data,
     handlers: handlers,
-  } as GsComponentRefs;
+  } as StackComponentRefs;
 };
 
 /**
  * Find and resolve function 
  */
-export interface GsComponentHandlers {
+export interface StackComponentHandlers {
   fn: String;
-  f: (event: GsEvent, callback?: Function) => any;
+  f: (event: StackEvent, callback?: Function) => any;
   cid: string;
   cname: string;
   aliasName: string | undefined;
 }
 
-export const createGsComponentHandlers = (
+export const createStackComponentHandlers = (
   fn: String,
   f: Function | undefined,
   cid: string,  
   cname: string,
   aliasName: string | undefined,
-): GsComponentHandlers => {
+): StackComponentHandlers => {
   return {
     fn: fn,
     f: f as any,
@@ -279,7 +281,7 @@ export const createGsComponentHandlers = (
 /**
  * Dynamic import component information
  */
-export interface PageCompnent {
+export interface PageComponent {
   props: ComponentOption;
   component: any;
 }

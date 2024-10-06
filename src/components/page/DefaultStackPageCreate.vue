@@ -1,19 +1,18 @@
 <template>
   <Suspense>
     <!-- <GridConfigLoader :config-file="`../dynamic/stack.config`"> -->
-    <GridLayoutProvider :config="config">
+    <StackLayoutProvider :config="config">
       <GridStackCreate></GridStackCreate>
-    </GridLayoutProvider>
+    </StackLayoutProvider>
     <!-- </GridConfigLoader> -->
   </Suspense>
 </template>
 
 <script setup lang="ts">
 import {
-  GridConfigLoader,
-  GridLayoutProvider,
-} from "@/components/layout/GridLayoutConfig";
-import GridStackCreate from "@/components/layout/GridStackCreate.vue";
+  StackLayoutProvider,
+} from "@/components/layout/StackLayoutConfig";
+import GridStackCreate from "@/components/layout/StackPageCreate.vue";
 import config from "@/components/dynamic/stack.config";
 </script>
 

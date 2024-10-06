@@ -1,7 +1,7 @@
 import { markRaw, defineAsyncComponent} from "vue";
 import {
   createComponentOption,
-} from "@/components/layout/GridEvent";
+} from "@/components/layout/StackEvent";
 
 export const component = ()=>markRaw(
   defineAsyncComponent(() => import("@/components/samples/ArcoForm.vue"))
