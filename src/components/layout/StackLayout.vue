@@ -60,6 +60,7 @@ const props = defineProps({
 const handlers: any = inject("__page_handlers");
 console.log("injected", handlers);
 
+//components in grid layout
 const components = reactive<{ [key: string]: StackComponentRefs }>({});
 
 var grid: any = null; // DO NOT use ref(null) as proxies GS will break all logic when comparing structures... see https://github.com/gridstack/gridstack.js/issues/2115
@@ -121,7 +122,7 @@ onMounted(async () => {
       //remove dragitem custom class to remove drag item background style
       itemEl.className = itemEl.className.replace(/grid\-custom/, "");
 
-      const {gsLoad, gsSave, gsItemChanged, gsAny, gsDelete, gsUpload, gsDownload, gsInvoke, ...options  } = handlers;
+      const {gsLoad, gsSave, gsItemChanged, gsAny, gsDelete, gsUpload, gsDownload, gsInvoke, ...options  } = handlers.pageHandlers
 
       //const itemContentVNode: any = h(GridStackItem, { item: item });
       const itemContentVNode: any = h(GridStackItemDynamic, {
@@ -131,7 +132,9 @@ onMounted(async () => {
         gsRemove: removeWidget,      
         gsHandlers: { gsLoad, gsSave, gsItemChanged, gsAny, gsDelete, gsUpload, gsDownload },
         gsInvoke: gsInvoke,
-        gsOptions: options
+        gsOptions: options,
+        //Possible list of components for page
+        components: handlers.componentList
       });
   
       //clear dragged element content from .grid-stack-item-content div

@@ -1,6 +1,10 @@
-import { defineComponent, SetupContext, provide } from "vue";
-import { h } from "vue";
 
+import { defineComponent, SetupContext, provide } from "vue";
+import { h, reactive } from "vue";
+import { PageResources, PageStore, PageHandler } from "@/components/layout/StackEvent";
+import { useDefaultDataStore } from "./config/DefaultDataStore";
+import { useDefaultLayoutStore } from "./config/DefaultLayoutStore";
+import { useDefaultHandler } from "./config/DefaultHandler";
 /**
  * Inject event name
  */
@@ -14,16 +18,41 @@ export const eventSymbol = {
  * Specify custom event handler, page store, component store
  */
 export interface StackLayoutOptions {
-  eventHandler: string | any;
   layoutStore:  string | any;
+  eventHandler: string | any;
   dataStore:    string | any;
+  resources:    PageResources | undefined;
 }
 
+/**
+ * Default config for page handler, layout store and data store
+ * 
+ * @param config 
+ * @returns 
+ */
 export const createDefaultConfig = (config?: StackLayoutOptions )=>{
   const options = {
-      eventHandler: config?.eventHandler?? "DefaultHandler",
       layoutStore: config?.layoutStore?? "DefaultLayoutStore",
+      eventHandler: config?.eventHandler?? "DefaultHandler",
       dataStore:  config?.dataStore?? "DefaultDataStore",
+      resources: config?.resources?? {
+          handlers: reactive<PageHandler[]>([
+            {
+                  name: "DefaultHandler",
+                  handler: useDefaultHandler,
+            },
+          ]),
+          stores: reactive<PageStore[]>([
+            {
+                  name: "DefaultDataStore",
+                  store: useDefaultDataStore,
+            },          
+            {
+                  name: "DefaultLayoutStore",
+                  store: useDefaultLayoutStore,
+            },
+          ])
+        }      
     } as StackLayoutOptions
     
   return { options }
@@ -118,7 +147,7 @@ export const StackConfigLoader = /* #__PURE__ */ defineComponent(
     /* @__default-config__ */
     const useDefaultConfig = props.defaultConfig ?? true;
     if (useDefaultConfig) {
-      const { defaultConfig } = await import("./defaultConfig");
+      const { defaultConfig } = await import("./config/defaultConfig");
       config = /* @__PURE__ */ defaultConfig(config as any).options;
     }
     console.log("now config", config);

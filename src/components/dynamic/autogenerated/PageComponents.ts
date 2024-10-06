@@ -1,5 +1,5 @@
 
-// auto-generated: StackComponents.ts: Sun Oct 06 2024 09:49:38 GMT+0900 (Japan Standard Time)
+// auto-generated: PageComponents.ts: Sun Oct 06 2024 15:37:42 GMT+0900 (Japan Standard Time)
 //
 import { reactive } from "vue";
 import { PageComponent } from "@/components/layout/StackEvent";
@@ -12,7 +12,7 @@ import {
         props as formexample_props,
 } from "@/components/dynamic/component/formexample";
 
-export const StackComponents = reactive<PageComponent[]>([
+export const PageComponents = reactive<PageComponent[]>([
   {
     props:
       typeof arcoform_props === "function" ? arcoform_props() : arcoform_props,

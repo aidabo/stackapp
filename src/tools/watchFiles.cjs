@@ -17,7 +17,7 @@ function autoGenerateComponent() {
 
   function generate1() {
     return `
-// auto-generated: StackComponents.ts: ${Date()}
+// auto-generated: PageComponents.ts: ${Date()}
 //
 import { reactive } from "vue";
 import { PageComponent } from "@/components/layout/StackEvent";
@@ -37,7 +37,7 @@ import { PageComponent } from "@/components/layout/StackEvent";
   }
 
   function generate3() {
-    return `\n\nexport const StackComponents = reactive<PageComponent[]>([`;
+    return `\n\nexport const PageComponents = reactive<PageComponent[]>([`;
   }
 
   function generate4(files) {
@@ -96,7 +96,7 @@ import { PageComponent } from "@/components/layout/StackEvent";
 
 autoGenerateComponent();
 
-//auto generate GsStores.ts
+//auto generate PageStores.ts
 function autoGenerateStore() {
   const watchedDir = path.join(__dirname, "../store");
   const outputFilePath = path.join(
@@ -106,7 +106,7 @@ function autoGenerateStore() {
 
   function generate1() {
     return `
-// auto-generated: GsStores.ts: ${Date()}
+// auto-generated: PageStores.ts: ${Date()}
 //
 import { reactive } from "vue";
 import { PageStore } from "@/components/layout/StackEvent";
@@ -123,7 +123,7 @@ import { PageStore } from "@/components/layout/StackEvent";
   }
 
   function generate3() {
-    return `\n\nexport const gsStores = reactive<PageStore[]>([\n`;
+    return `\n\nexport const PageStores = reactive<PageStore[]>([\n`;
   }
 
   function generate4(files) {
@@ -183,7 +183,7 @@ import { PageStore } from "@/components/layout/StackEvent";
 
 autoGenerateStore();
 
-//auto generate GsHandlers.ts
+//auto generate PageHandlers.ts
 function autoGenerateHandlers() {
   const watchedDir = path.join(__dirname, "../handlers");
   const outputFilePath = path.join(
@@ -193,7 +193,7 @@ function autoGenerateHandlers() {
 
   function generate1() {
     return `
-// auto-generated: GsHandlers.ts: ${Date()}
+// auto-generated: PageHandlers.ts: ${Date()}
 //
 import { reactive } from "vue";
 import { PageHandler } from "@/components/layout/StackEvent";
@@ -210,7 +210,7 @@ import { PageHandler } from "@/components/layout/StackEvent";
   }
 
   function generate3() {
-    return `\n\nexport const gsHandlers = reactive<PageHandler[]>([\n`;
+    return `\n\nexport const PageHandlers = reactive<PageHandler[]>([\n`;
   }
 
   function generate4(files) {

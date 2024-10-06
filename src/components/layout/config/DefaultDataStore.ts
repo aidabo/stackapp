@@ -1,7 +1,16 @@
 import { defineStore } from "pinia";
-import axios from "axios";
-import { apiJsonHeaders, webApiUrl } from "./storeConstants";
 import { v4 as uuidv4 } from "uuid";
+import { environment } from "@/common/environment";
+import axios from "axios";
+
+const { env } = environment();
+
+const webApiUrl = env.web_api_url;
+
+const apiJsonHeaders = {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json'
+};
 
 export const dataUrl = `${webApiUrl}/comp_data`;
 

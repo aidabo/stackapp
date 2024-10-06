@@ -1,7 +1,6 @@
 import { reactive } from "vue";
-import { useDefaultDataStore } from "@/store/DefaultDataStore";
+import { useDefaultDataStore } from "@/components/layout/config/DefaultDataStore";
 import { StackEvent } from "@/components/layout/StackEvent";
-import { useTestDataStore } from "@/store/TestDataStore";
 
 /**
  * Handler function will be injected into component's props.
@@ -32,12 +31,13 @@ export const useDefaultHandler = (
   gsAny?: (event: StackEvent, callback?: Function) => any
 ) => {
 
-  const { getDataById, getDataByName, getDataByCid, getDataList, saveData, deleteData  } = useTestDataStore()
-  
+ 
   const fns = reactive({
     invoke: (fn: string, event: StackEvent, callback?: Function):any => {},
   })
 
+  const { getDataById, getDataByName, getDataByCid, getDataList, saveData, deleteData  } = useDefaultDataStore()
+ 
   /**
    * Callback provided by parent to load data
    * @param event

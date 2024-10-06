@@ -185,8 +185,8 @@ import {
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 import { Base64 } from "js-base64";
 import { Notification } from "@arco-design/web-vue";
-import { useDefaultLayoutStore } from "@/store/DefaultLayoutStore";
-import { useDefaultHandler } from "@/handlers/DefaultHandler"
+import { useDefaultLayoutStore } from "@/components/layout/config/DefaultLayoutStore";
+import { useDefaultHandler } from "@/components/layout/config/DefaultHandler";
 import {
   eventSymbol,
   StackLayoutOptions,
@@ -223,22 +223,14 @@ const setGridStackRef = (index: number) => {
 };
 
 const config: any = inject(eventSymbol.gsPageConfigOptions, false);
+console.log("inject config in create: ", config);
 
-// const imports = async () => {
-//   let dynaHandlers: any = false;
-//   if (config) {
-//     const { importConfiged } = useDynamicLoader();
-//     try {
-//       dynaHandlers = (await importConfiged(config)) as any;
-//     } catch {}
-//   }
-// };
 let dynaHs: any = false;
-if(config){
+if (config) {
   const { imports } = useDynamicLoader();
-  try{
+  try {
     dynaHs = await imports(config);
-  }catch{}
+  } catch {}
 }
 
 //page store
@@ -246,10 +238,13 @@ const { savePage, getPageById } = dynaHs
   ? (dynaHs as StackLayoutOptions).layoutStore()
   : useDefaultLayoutStore();
 
-//component handler for event interact
+//component handler
 const pageHandlers = dynaHs
   ? (dynaHs as StackLayoutOptions).eventHandler()
   : useDefaultHandler();
+
+//Component list can be selected in page
+const componentList = config ? config.resources.components : [];
 
 const invoke = async (
   fn: string,
@@ -258,8 +253,7 @@ const invoke = async (
 ): Promise<any[]> => await invokeInternal(fn, event, callback);
 
 pageHandlers.fns.invoke = invoke;
-const eventHandlers = reactive({ ...pageHandlers });
-provide("__page_handlers", eventHandlers);
+provide("__page_handlers", { pageHandlers, componentList });
 
 //title edit status
 const isTitleEditable = ref(false);
@@ -523,7 +517,6 @@ defineExpose({
 </script>
 
 <style scoped>
-
 .openbtn {
   font-size: 1.5rem;
   margin-left: 15px;
@@ -548,5 +541,4 @@ defineExpose({
   opacity: 0.8;
   filter: blur(5px);
 }
-
 </style>

@@ -1,4 +1,4 @@
-import { createDefaultConfig, StackLayoutOptions } from "./StackLayoutConfig";
+import { createDefaultConfig, StackLayoutOptions } from "@/components/layout/StackLayoutConfig";
 
 const defaultConfig = (config?: StackLayoutOptions )=>{
   return createDefaultConfig(config);

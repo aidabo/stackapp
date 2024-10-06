@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { apiJsonHeaders, webApiUrl } from "./storeConstants";
+import { apiJsonHeaders, webApiUrl } from "../../../store/storeConstants";
 import { PageProps } from "@/components/layout/StackEvent";
 
 const dataUrl = `${webApiUrl}/pages`;
@@ -38,7 +38,7 @@ export const useDefaultLayoutStore = defineStore("defaultLayout", {
     },
 
     async exists(pageId: string) {
-      return await this.getPageById(pageId) != null;
+      return (await this.getPageById(pageId)) != null;
     },
 
     async savePage(data: PageProps) {

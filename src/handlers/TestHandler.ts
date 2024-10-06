@@ -1,5 +1,5 @@
 import { StackEvent } from "@/components/layout/StackEvent";
-import { useDefaultHandler } from "@/handlers/DefaultHandler";
+import { useDefaultHandler } from "@/components/layout/config/DefaultHandler";
 
 export const useTestHandler = () =>{
 

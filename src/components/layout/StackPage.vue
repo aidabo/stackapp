@@ -82,8 +82,8 @@ import {
   StackComponentHandlers,
   StackEvent,
 } from "@/components/layout/StackEvent";
-import { useDefaultLayoutStore } from "@/store/DefaultLayoutStore";
-import { useDefaultHandler } from "@/handlers/DefaultHandler"
+import { useDefaultLayoutStore } from "@/components/layout/config/DefaultLayoutStore";
+import { useDefaultHandler } from "@/components/layout/config/DefaultHandler";
 import { Base64 } from "js-base64";
 import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
 import { Notification } from "@arco-design/web-vue";
@@ -130,13 +130,14 @@ const setGridStackRef = (index: number) => {
 };
 
 const config: any = inject(eventSymbol.gsPageConfigOptions, false);
+//console.log("inject config in page: ", config);
 
 let dynaHs: any = false;
-if(config){
+if (config) {
   const { imports } = useDynamicLoader();
-  try{
+  try {
     dynaHs = await imports(config);
-  }catch{}
+  } catch {}
 }
 
 //page store
@@ -149,6 +150,9 @@ const pageHandlers = dynaHs
   ? (dynaHs as StackLayoutOptions).eventHandler()
   : useDefaultHandler();
 
+//Component list can be selected in page
+const componentList = config ? config.resources.components : [];
+
 // invoke function call of component
 const invoke = async (
   fn: string,
@@ -157,8 +161,8 @@ const invoke = async (
 ): Promise<any[]> => await invokeInternal(fn, event, callback);
 
 pageHandlers.fns.invoke = invoke;
-const eventHandlers = reactive({ ...pageHandlers });
-provide("__page_handlers", eventHandlers);
+//const eventHandlers = reactive({ ...pageHandlers });
+provide("__page_handlers", { pageHandlers, componentList });
 
 const isPreview = ref(false);
 

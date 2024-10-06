@@ -140,13 +140,6 @@ export interface StackEventSourceOrTarget {
   aliasName?: string; //unique name used specified
 }
 
-export interface StackEventExt {
-  eventType?: string;
-  source: StackEventSourceOrTarget | string | undefined,
-  target: StackEventSourceOrTarget | string | undefined,
-  data: any
-}
-
 /**
  * Component interactive event with page handler and other components
  */
@@ -300,6 +293,12 @@ export interface PageHandler {
 export interface PageStore {
   name: string,
   store: any
+}
+
+export interface PageResources {
+  components: Array<PageComponent>,
+  handlers: Array<PageHandler>,
+  stores: Array<PageStore>,
 }
 
 
