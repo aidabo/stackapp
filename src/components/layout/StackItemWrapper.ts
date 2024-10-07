@@ -41,7 +41,7 @@ export default defineComponent({
       //if widget added by drag or add new create button
       const newWidget = itemEl.className.match(/newWidget\s/);
       if (newWidget) {
-        const componentName = itemElContent.getAttribute("StackComponent");
+        const componentName = itemElContent.getAttribute("stackComponent");
         if (!componentName) {
           throw "No componnent info found!, newWidget must set StackComponent attrbute as component info\n <div class='newWidget ...' StackComponent=xxx>...</div>";
         }

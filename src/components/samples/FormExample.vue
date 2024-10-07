@@ -3,6 +3,7 @@
     <Suspense>
       <FormKitProvider :config="FormKitConfig">
         <FormKit
+          v-model="gsData"
           type="form"
           :id="uid"
           :form-class="submitted ? 'hide' : 'show'"
@@ -83,9 +84,12 @@ const submitted = ref(false);
 
 const uid = ref(uuidv4());
 
-const myform = ref(null);
-
-const gsData: any = ref();
+const gsData: any = ref({
+  name: "",
+  email: "",
+  password: "",
+  password_confirm: ""
+});
 
 const registerCallback = () => {
   if (props.gsRegister) {
@@ -128,10 +132,10 @@ const submitHandler = async (form: any) => {
           Notification.error("Save Arcoform Failure: " + result);
         } else {
           Notification.success("Save Arcoform successfully: " + result.id);
+          submitted.value = true;
         }
       }
     );
-    //submitted.value = true;
   }
 };
 </script>

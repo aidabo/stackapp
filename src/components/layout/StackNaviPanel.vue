@@ -43,25 +43,35 @@
       </div>
     </div>
 
-    <div
+    <!-- <div
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 overflow-y-auto"
-    >
-      <div
-        v-for="(item, index) in components"
-        :key="index"
-        class="newWidget grid-stack-item grid-custom"
-      >
-        <div class="grid-stack-item-content drag" :StackComponent="item.cname">
-          <div>
-            <i class="fa fa-solid fa-plus" style="font-size: 200%"></i>
-          </div>
-          <div class="h-10">
-            <span class="size-8 my-4">{{ item.description || item.cname }}</span>
+    > -->
+    <div class="container mx-auto p-2">
+      <div class="flex flex-wrap -m-4">
+        <div
+          class="p-1 w-full md:w-1/3"
+          v-for="(item, index) in components"
+          :key="index"
+        >
+          <div class="newWidget grid-stack-item grid-custom">
+            <div
+              class="grid-stack-item-content drag"
+              :stackComponent="item.cname"
+            >
+              <div>
+                <i class="fa fa-solid fa-plus" style="font-size: 200%"></i>
+              </div>
+              <div class="h-10">
+                <span class="size-8 my-4">{{
+                  item.description || item.cname
+                }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
+    <!-- </div> -->
   </div>
 </template>
 
@@ -102,7 +112,9 @@ const config: any = inject(eventSymbol.gsPageConfigOptions, false);
 const components = ref<ComponentOption[]>([]);
 
 onMounted(() => {
-  components.value = (config? config.resources.components : []).map((gs:any)=>gs.props);
+  components.value = (config ? config.resources.components : []).map(
+    (gs: any) => gs.props
+  );
 });
 </script>
 
@@ -200,9 +212,6 @@ onMounted(() => {
   text-align: center;
   justify-content: center;
   margin-bottom: 0.25rem;
-}
-
-.component-list-height {
-  height: 80lvh;
+  min-height: 80px;
 }
 </style>
