@@ -1,8 +1,7 @@
 import StackLayout from "./StackLayout.vue";
 import StackPage from "./StackPage.vue";
 import StackPageCreate from "./StackPageCreate.vue";
-//import StackItemWrapper from "./StackItemWrapper"
-//import StackNaviPanel from "./StackNaviPanel.vue"
+import StackMenu from "./StackMenu.vue";
 import {
   StackEvent,
   PageProps,
@@ -22,8 +21,6 @@ import {
   defaultConfig,
   ConfigLoaderProps,
 } from "./StackLayoutConfig";
-import StackMenu from "./StackMenu.vue";
-//import * as defaultConfig from "./config/defaultConfig";
 import { useDefaultDataStore } from "./DefaultDataStore";
 import { useDefaultHandler } from "./DefaultHandler";
 import { useDefaultLayoutStore } from "./DefaultLayoutStore";
