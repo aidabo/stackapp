@@ -1,4 +1,4 @@
-import { useDefaultLayoutStore } from "@/components/layout/config/DefaultLayoutStore";
+import { useDefaultLayoutStore } from "@/components/layout/DefaultLayoutStore";
 
 export const useTestLayoutStore = () =>{
 

@@ -23,14 +23,15 @@
   "author": "",
   "homepage": "https://github.com/aidabo/stackapp.git",
   "main": "dist/stack-app-layout.js",
-  "unpkg": "dist/stack-app-layout.umd.cjs",
-  "typings": "dist/components/index.d.ts",
+  "unpkg": "dist/stack-app-layout.umd.js",
+  "typings": "types/index.d.ts",
   "scripts": {
     "dev": "vite --debug",
     "build": "vue-tsc -b && vite build --mode production",
     "build:staging": "vue-tsc -b && vite build --mode staging",
     "preview": "vite preview",
     "deploy": "vue-tsc -b && vite build --mode production && cp -Rf ./dist/* ../nginx/html",
+    "lib": "vite build --mode production --config vite.config.lib.mts && vue-tsc --declaration --project tsconfig.lib.json ",
     "generate": "node src/tools/watchFiles.cjs"
   },
   "dependencies": {
@@ -65,7 +66,7 @@
     "uuid": "^10.0.0",
     "vee-validate": "^4.13.2",
     "vue": "^3.4.37",
-    "vue-router": "^4.4.3",
+    "vue-router": "^4.4.5",
     "vue3-grid-layout-next": "^1.0.7"
   },
   "devDependencies": {
@@ -76,6 +77,7 @@
     "@rollup/plugin-url": "^8.0.2",
     "@types/nprogress": "^0.2.3",
     "@types/uuid": "^10.0.0",
+    "@types/vue-router": "^2.0.0",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vue/babel-plugin-jsx": "^1.2.2",
     "autoprefixer": "^10.4.20",

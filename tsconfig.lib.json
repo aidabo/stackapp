@@ -2,17 +2,18 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "useDefineForClassFields": true,
+    "declaration": true,   
+    "emitDeclarationOnly": true,
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
     "skipLibCheck": true,
-    "outDir": "./dist",
-
+    "declarationDir": "./types",
+    
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noEmit": true,
+    //"noEmit": true,
     "jsx": "preserve",
     "sourceMap": true,
     "baseUrl": ".",
@@ -26,13 +27,14 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "src/**/*.js",
-    "src/**/*.cjs"
+  "include": [    
+    "src/components/layout/**/*.ts",    
+    "src/components/layout/**/*.d.ts",
+    "src/components/layout/**/*.tsx",
+    "src/components/layout/**/*.vue",
+    "src/components/layout/**/*.js",
+    "src/components/layout/**/*.cjs",
+    "src/vite-env.d.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"]  
 }

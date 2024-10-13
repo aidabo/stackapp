@@ -1,8 +1,8 @@
-import { StackLayoutOptions } from "@/components/layout/StackLayoutConfig";
+import { StackLayoutOptions } from "./StackLayoutConfig";
 import camelcase from "camelcase";
-import { useDefaultHandler } from "@/components/layout/config/DefaultHandler";
-import { useDefaultLayoutStore } from "@/components/layout/config/DefaultLayoutStore";
-import { useDefaultDataStore } from "@/components/layout/config/DefaultDataStore";
+import { useDefaultHandler } from "./DefaultHandler";
+import { useDefaultLayoutStore } from "./DefaultLayoutStore";
+import { useDefaultDataStore } from "./DefaultDataStore";
 
 export function useDynamicLoader() {
 /*

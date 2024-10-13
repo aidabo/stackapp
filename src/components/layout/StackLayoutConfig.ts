@@ -1,10 +1,15 @@
 
 import { defineComponent, SetupContext, provide } from "vue";
 import { h, reactive } from "vue";
-import { PageResources, PageStore, PageHandler } from "@/components/layout/StackEvent";
-import { useDefaultDataStore } from "./config/DefaultDataStore";
-import { useDefaultLayoutStore } from "./config/DefaultLayoutStore";
-import { useDefaultHandler } from "./config/DefaultHandler";
+import { PageResources, PageStore, PageHandler } from "./StackEvent";
+import { useDefaultDataStore } from "./DefaultDataStore";
+import { useDefaultLayoutStore } from "./DefaultLayoutStore";
+import { useDefaultHandler } from "./DefaultHandler";
+
+export const defaultConfig = (config?: StackLayoutOptions )=>{
+  return createDefaultConfig(config);
+}
+
 /**
  * Inject event name
  */
@@ -147,7 +152,7 @@ export const StackConfigLoader = /* #__PURE__ */ defineComponent(
     /* @__default-config__ */
     const useDefaultConfig = props.defaultConfig ?? true;
     if (useDefaultConfig) {
-      const { defaultConfig } = await import("./config/defaultConfig");
+      //const { defaultConfig } = await import("./config/defaultConfig");
       config = /* @__PURE__ */ defaultConfig(config as any).options;
     }
     console.log("now config", config);

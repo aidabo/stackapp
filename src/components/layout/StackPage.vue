@@ -74,24 +74,24 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick, reactive, provide, inject } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import StackLayout from "@/components/layout/StackLayout.vue";
+import StackLayout from "./StackLayout.vue";
 import {
   createPageProps,
   GridOptions,
   PageProps,
   StackComponentHandlers,
   StackEvent,
-} from "@/components/layout/StackEvent";
-import { useDefaultLayoutStore } from "@/components/layout/config/DefaultLayoutStore";
-import { useDefaultHandler } from "@/components/layout/config/DefaultHandler";
+} from "./StackEvent";
+import { useDefaultLayoutStore } from "./DefaultLayoutStore";
+import { useDefaultHandler } from "./DefaultHandler";
 import { Base64 } from "js-base64";
-import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
+import PageInfoDialog from "./PageInfoDialog.vue";
 import { Notification } from "@arco-design/web-vue";
 import {
   eventSymbol,
   StackLayoutOptions,
 } from "@/components/layout/StackLayoutConfig";
-import { useDynamicLoader } from "@/components/layout/StackDynamicLoader";
+import { useDynamicLoader } from "./StackDynamicLoader";
 
 const props = defineProps({
   id: {
