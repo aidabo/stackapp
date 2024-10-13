@@ -181,12 +181,12 @@ import {
   StackComponentHandlers,
   StackEvent,
   PageProps,
-} from "@/components/layout/StackEvent";
-import PageInfoDialog from "@/components/dialog/PageInfoDialog.vue";
+} from "./StackEvent";
+import PageInfoDialog from "@/components/layout/PageInfoDialog.vue";
 import { Base64 } from "js-base64";
 import { Notification } from "@arco-design/web-vue";
-import { useDefaultLayoutStore } from "@/components/layout/config/DefaultLayoutStore";
-import { useDefaultHandler } from "@/components/layout/config/DefaultHandler";
+import { useDefaultLayoutStore } from "@/components/layout/DefaultLayoutStore";
+import { useDefaultHandler } from "@/components/layout/DefaultHandler";
 import {
   eventSymbol,
   StackLayoutOptions,

@@ -1,4 +1,4 @@
-import { useDefaultDataStore } from "@/components/layout/config/DefaultDataStore"
+import { useDefaultDataStore } from "@/components/layout/DefaultDataStore"
 
 export const useTestDataStore = () =>{
 

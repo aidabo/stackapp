@@ -50,7 +50,7 @@ import {
   GridOptions,
   PageProps,
 } from "@/components/layout/StackEvent";
-import { useDefaultLayoutStore } from "@/components/layout/config/DefaultLayoutStore";
+import { useDefaultLayoutStore } from "@/components/layout/DefaultLayoutStore";
 import { Base64 } from "js-base64";
 
 //grid id

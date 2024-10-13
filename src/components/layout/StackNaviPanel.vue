@@ -77,7 +77,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, inject } from "vue";
-import { ComponentOption } from "@/components/layout/StackEvent";
+import { ComponentOption } from "./StackEvent";
 import { eventSymbol } from "@/components/layout/StackLayoutConfig";
 
 const props = defineProps({

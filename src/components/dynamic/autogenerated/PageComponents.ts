@@ -1,5 +1,5 @@
 
-// auto-generated: PageComponents.ts: Mon Oct 07 2024 11:44:07 GMT+0900 (Japan Standard Time)
+// auto-generated: PageComponents.ts: Sun Oct 13 2024 15:27:54 GMT+0900 (Japan Standard Time)
 //
 import { reactive } from "vue";
 import { PageComponent } from "@/components/layout/StackEvent";

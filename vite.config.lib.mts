@@ -48,23 +48,25 @@ export default defineConfig(({ /*command,*/ mode }) => {
         filename: "stats.html",
       }) as PluginOption,      
     ], //plugins
-    // build: {  
-    //   lib: {  
-    //     entry: 'src/components/layout/index.ts', // 指定入口文件  
-    //     name: 'StackAppLayout', // 库的全局变量名  
-    //     fileName: (format) => `stack-app-layout.${format}.js`, // 输出文件名格式  
-    //   },  
-    //   rollupOptions: {  
-    //     // 确保外部化 Vue，以便库用户能够自行提供 Vue 版本  
-    //     external: ['vue'],  
-    //     output: {  
-    //       globals: {  
-    //         vue: 'Vue',  
-    //       },  
-    //       exports: 'named', // 将所有导出视为命名导出  
-    //     },  
-    //   },  
-    // },  
+
+    build: {  
+      lib: {  
+        entry: 'src/components/layout/index.ts', // 指定入口文件  
+        name: 'StackAppLayout', // 库的全局变量名  
+        fileName: (format) => `stack-app-layout.${format}.js`, // 输出文件名格式  
+      },  
+      rollupOptions: {  
+        // 确保外部化 Vue，以便库用户能够自行提供 Vue 版本  
+        external: ['vue'],  
+        output: {  
+          globals: {  
+            vue: 'Vue',  
+          },  
+          exports: 'named', // 将所有导出视为命名导出  
+        },  
+      },  
+    },  
+
     resolve: {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),

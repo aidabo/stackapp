@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { apiJsonHeaders, webApiUrl } from "../../../store/storeConstants";
-import { PageProps } from "@/components/layout/StackEvent";
+import { apiJsonHeaders, webApiUrl } from "../../store/storeConstants";
+import { PageProps } from "./StackEvent";
 
 const dataUrl = `${webApiUrl}/pages`;
 

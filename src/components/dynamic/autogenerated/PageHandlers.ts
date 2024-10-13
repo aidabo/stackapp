@@ -1,5 +1,5 @@
 
-// auto-generated: PageHandlers.ts: Mon Oct 07 2024 11:21:21 GMT+0900 (Japan Standard Time)
+// auto-generated: PageHandlers.ts: Sun Oct 13 2024 15:27:54 GMT+0900 (Japan Standard Time)
 //
 import { reactive } from "vue";
 import { PageHandler } from "@/components/layout/StackEvent";

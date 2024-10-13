@@ -1,6 +1,6 @@
 import { reactive } from "vue";
-import { useDefaultDataStore } from "@/components/layout/config/DefaultDataStore";
-import { StackEvent } from "@/components/layout/StackEvent";
+import { useDefaultDataStore } from "./DefaultDataStore";
+import { StackEvent } from "./StackEvent";
 
 /**
  * Handler function will be injected into component's props.
