@@ -28,7 +28,7 @@ export default defineConfig(({ /*command,*/ mode }) => {
       }),
       vueJsx({
         // options are passed on to @vue/babel-plugin-jsx
-      }),       
+      }),
       AutoImport({
         resolvers: [ArcoResolver()],
       }),     
@@ -52,7 +52,8 @@ export default defineConfig(({ /*command,*/ mode }) => {
     build: {  
       lib: {  
         entry: 'src/components/layout/index.ts', // 指定入口文件  
-        name: 'StackAppLayout', // 库的全局变量名  
+        formats: ["es", "umd"],
+        name: 'stack-app-layout', //库的全局变量名: Global variable name, must be the same as name in package.json  
         fileName: (format) => `stack-app-layout.${format}.js`, // 输出文件名格式  
       },  
       rollupOptions: {  
