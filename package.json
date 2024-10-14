@@ -27,7 +27,7 @@
   ],
   "main": "dist/stack-app-layout.js",
   "module": "dist/stack-app-layout.umd.js",
-  "typings": "dist/types/*.d.ts",
+  "typings": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/stack-app-layout.js",
@@ -39,7 +39,7 @@
     "dev": "vite --debug",
     "build": "vue-tsc -b && vite build --mode production",
     "build:staging": "vue-tsc -b && vite build --mode staging",
-    "build:lib": "vite build --config vite.config.lib.mts && vue-tsc --project tsconfig.lib.json",
+    "lib": "vue-tsc --project tsconfig.lib.json && vite build --config vite.config.lib.mts",
     "preview": "vite preview",
     "deploy": "vue-tsc -b && vite build --mode production && cp -Rf ./dist/* ../nginx/html",
     "generate": "node src/tools/watchFiles.cjs"
@@ -73,6 +73,7 @@
     "url": "^0.11.4",
     "uuid": "^10.0.0",
     "vee-validate": "^4.13.2",
+    "vite-plugin-dts": "^4.2.4",
     "vue": "^3.4.37",
     "vue-router": "^4.4.5"
   },

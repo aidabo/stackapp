@@ -8,6 +8,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite';
 import { ArcoResolver } from 'unplugin-vue-components/resolvers';
 import { vitePluginForArco } from '@arco-plugins/vite-vue'
+import dts from 'vite-plugin-dts'
 
 export default defineConfig(({ /*command,*/ mode }) => {
   Object.assign(process.env, loadEnv(mode, process.cwd()))
@@ -29,6 +30,7 @@ export default defineConfig(({ /*command,*/ mode }) => {
       vueJsx({
         // options are passed on to @vue/babel-plugin-jsx
       }),
+      dts({rollupTypes: true, tsconfigPath: "tsconfig.lib.json"}),
       AutoImport({
         resolvers: [ArcoResolver()],
       }),     
@@ -73,7 +75,7 @@ export default defineConfig(({ /*command,*/ mode }) => {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
         /** 在 Vue 3 中，默认情况下，Vue 打包为只包含运行时版本的代码，这意味着它不包含模板编译器。
          * 你可以通过配置别名来确保 import Vue from 'vue' 导入的是包含编译器的 Vue 版本。 */
-        'vue': 'vue/dist/vue.esm-bundler.js'  
+        //'vue': 'vue/dist/vue.esm-bundler.js'  
       },
       dedupe: [
         'vue'
