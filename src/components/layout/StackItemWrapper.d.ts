@@ -1,5 +1,5 @@
 import { PageComponent } from "./StackEvent";
-declare const _default: import("vue").DefineComponent<{
+declare const _default: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     gsItem: ObjectConstructor;
     gsPageProps: ObjectConstructor;
     gsRegister: FunctionConstructor;
@@ -23,9 +23,9 @@ declare const _default: import("vue").DefineComponent<{
         fromAsync<T, U>(iterableOrArrayLike: AsyncIterable<T> | Iterable<T> | ArrayLike<T>, mapFn: (value: Awaited<T>) => U, thisArg?: any): Promise<Awaited<U>[]>;
         readonly [Symbol.species]: ArrayConstructor;
     };
-}, () => import("vue").VNode<import("vue").RendererNode, import("vue").RendererElement, {
+}>, () => import("vue").VNode<import("vue").RendererNode, import("vue").RendererElement, {
     [key: string]: any;
-}> | null, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+}> | null, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     gsItem: ObjectConstructor;
     gsPageProps: ObjectConstructor;
     gsRegister: FunctionConstructor;
@@ -49,5 +49,5 @@ declare const _default: import("vue").DefineComponent<{
         fromAsync<T, U>(iterableOrArrayLike: AsyncIterable<T> | Iterable<T> | ArrayLike<T>, mapFn: (value: Awaited<T>) => U, thisArg?: any): Promise<Awaited<U>[]>;
         readonly [Symbol.species]: ArrayConstructor;
     };
-}>>, {}, {}>;
+}>> & Readonly<{}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _default;

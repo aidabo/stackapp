@@ -8,6 +8,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite';
 import { ArcoResolver } from 'unplugin-vue-components/resolvers';
 import { vitePluginForArco } from '@arco-plugins/vite-vue'
+import dts from 'vite-plugin-dts'
 
 export default defineConfig(({ /*command,*/ mode }) => {
   Object.assign(process.env, loadEnv(mode, process.cwd()))
@@ -28,7 +29,8 @@ export default defineConfig(({ /*command,*/ mode }) => {
       }),
       vueJsx({
         // options are passed on to @vue/babel-plugin-jsx
-      }),       
+      }),
+      dts({rollupTypes: true, tsconfigPath: "tsconfig.lib.json"}),
       AutoImport({
         resolvers: [ArcoResolver()],
       }),     
@@ -52,8 +54,9 @@ export default defineConfig(({ /*command,*/ mode }) => {
     build: {  
       lib: {  
         entry: 'src/components/layout/index.ts', // 指定入口文件  
-        name: 'StackAppLayout', // 库的全局变量名  
-        fileName: (format) => `stack-app-layout.${format}.js`, // 输出文件名格式  
+        formats: ["es", "umd"],
+        name: 'stackapp', //库的全局变量名: Global variable name, must be the same as name in package.json  
+        fileName: (format) => `stackapp.${format}.js`, // 输出文件名格式  
       },  
       rollupOptions: {  
         // 确保外部化 Vue，以便库用户能够自行提供 Vue 版本  
@@ -72,7 +75,7 @@ export default defineConfig(({ /*command,*/ mode }) => {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
         /** 在 Vue 3 中，默认情况下，Vue 打包为只包含运行时版本的代码，这意味着它不包含模板编译器。
          * 你可以通过配置别名来确保 import Vue from 'vue' 导入的是包含编译器的 Vue 版本。 */
-        'vue': 'vue/dist/vue.esm-bundler.js'  
+        //'vue': 'vue/dist/vue.esm-bundler.js'  
       },
       dedupe: [
         'vue'

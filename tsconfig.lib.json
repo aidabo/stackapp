@@ -6,8 +6,7 @@
     "emitDeclarationOnly": true,
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
     "skipLibCheck": true,
-    "declarationDir": "./types",
-    
+        
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
