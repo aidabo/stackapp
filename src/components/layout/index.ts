@@ -13,6 +13,12 @@ import {
   PageResources,
   PageHandler,
   PageStore,
+  createComponentOption,
+  createPageProps,
+  createStackEvent,
+  createGridOptions,
+  createStackComponentHandlers,
+  createNewGrid,
 } from "./StackEvent";
 import {
   StackLayoutProvider,
@@ -35,6 +41,12 @@ export {
   useDefaultLayoutStore,
   useDefaultHandler,
   useDefaultDataStore,
+  createComponentOption,
+  createPageProps,
+  createStackEvent,
+  createGridOptions,
+  createStackComponentHandlers,
+  createNewGrid,
 };
 
 export type {
