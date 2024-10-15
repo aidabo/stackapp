@@ -55,8 +55,8 @@ export default defineConfig(({ /*command,*/ mode }) => {
       lib: {  
         entry: 'src/components/layout/index.ts', // 指定入口文件  
         formats: ["es", "umd"],
-        name: 'stack-app-layout', //库的全局变量名: Global variable name, must be the same as name in package.json  
-        fileName: (format) => `stack-app-layout.${format}.js`, // 输出文件名格式  
+        name: 'stackapp', //库的全局变量名: Global variable name, must be the same as name in package.json  
+        fileName: (format) => `stackapp.${format}.js`, // 输出文件名格式  
       },  
       rollupOptions: {  
         // 确保外部化 Vue，以便库用户能够自行提供 Vue 版本  

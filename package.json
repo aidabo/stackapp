@@ -1,5 +1,5 @@
 {
-  "name": "stack-app-layout",
+  "name": "stackapp",
   "version": "0.0.1",
   "type": "module",
   "description": "A draggable and resizable layout for Vue component to create page",
@@ -24,14 +24,18 @@
   "homepage": "https://github.com/aidabo/stackapp.git",
   "files": [
     "dist"
-  ],
-  "main": "dist/stack-app-layout.js",
-  "module": "dist/stack-app-layout.umd.js",
-  "typings": "dist/index.d.ts",
+  ],  
+  "typings": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/stack-app-layout.js",
-      "require": "./dist/stack-app-layout.umd.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/stackapp.es.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/stackapp.umd.js"
+      }
     },
     "./dist/style.css": "./dist/style.css"
   },

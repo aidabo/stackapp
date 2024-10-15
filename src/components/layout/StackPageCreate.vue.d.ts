@@ -7,5 +7,5 @@ declare const _default: import("vue").DefineComponent<{}, {
     preview: () => Promise<void>;
     publish: () => Promise<void>;
     invoke: (fn: string, event: StackEvent, callback?: Function) => Promise<any[]>;
-}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{}>>, {}, {}>;
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _default;
