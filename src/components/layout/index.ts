@@ -6,6 +6,8 @@ import {
   StackEvent,
   PageProps,
   CompProps,
+  GridOptions,
+  GridItemOptions,
   ComponentOption,
   StackCompPropsHandlers,
   StackCompProps,
@@ -19,6 +21,7 @@ import {
   createGridOptions,
   createStackComponentHandlers,
   createNewGrid,
+  createStackComponentRefs,
 } from "./StackEvent";
 import {
   StackLayoutProvider,
@@ -46,6 +49,7 @@ export {
   createStackEvent,
   createGridOptions,
   createStackComponentHandlers,
+  createStackComponentRefs,
   createNewGrid,
 };
 
@@ -53,6 +57,8 @@ export type {
   StackEvent,
   PageProps,
   CompProps,
+  GridOptions,
+  GridItemOptions,
   ComponentOption,
   StackCompPropsHandlers,
   StackCompProps,
