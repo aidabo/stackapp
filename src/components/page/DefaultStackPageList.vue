@@ -54,7 +54,7 @@ import { useDefaultLayoutStore } from "@/components/layout/DefaultLayoutStore";
 import { createPageProps, PageProps } from "@/components/layout/StackEvent";
 import CreatePageDialog from "@/components/layout/CreatePageDialog.vue"
 
-const { getPageList, savePage, getPageById, deletePage } = useDefaultLayoutStore();
+const { getPageList, savePage, getPageById, deletePage } =  useDefaultLayoutStore();
 
 const pages = ref(Array<PageProps>());
 
@@ -67,7 +67,7 @@ const dialogRef = ref(null);
 const router = useRouter();
 
 const loadList = async()=> {
-  pages.value = await getPageList();  
+  pages.value = await getPageList() as any;  
   editables.value = pages.value.map((c:any) => {
       return { "id": c.id, "editable": false }
   })
@@ -99,7 +99,7 @@ const onEnableEditable = (pageid: string) => {
 const onChangeTitle = async (value: string, event: any) => {
   let editedPage = editables.value.find((c: any) => c.editable);
   if (editedPage) {
-      let pageData: PageProps = await getPageById(editedPage.id);
+      let pageData: PageProps = await getPageById(editedPage.id) as any;
       pageData.title = value;
       await savePage(pageData);
   }

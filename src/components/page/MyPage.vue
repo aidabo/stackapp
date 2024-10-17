@@ -93,7 +93,7 @@ const userWritable = ref(true);
 onMounted(async () => {
   if (route.params.id && route.fullPath.match(/\/page\/r/)) {
     //show page
-    pageProps.value = await getPageById((route.params as any).id);
+    pageProps.value = await getPageById((route.params as any).id) as any;
     gridStacks.value = pageProps.value.grids.map((g) => g.id);
     nextTick(async () => {
       await load(pageProps.value.grids);

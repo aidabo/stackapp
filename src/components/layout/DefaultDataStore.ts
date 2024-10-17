@@ -1,166 +1,175 @@
-import { defineStore } from "pinia";
 import { v4 as uuidv4 } from "uuid";
-import { environment } from "@/common/environment";
-import axios from "axios";
+import { apiJsonHeaders, webApiUrl } from "../../store/storeConstants";
 
-const { env } = environment();
+export const useDefaultDataStore = () => {
+  const dataUrl = `${webApiUrl}/comp_data`;
 
-const webApiUrl = env.web_api_url;
-
-const apiJsonHeaders = {
-  'Accept': 'application/json',
-  'Content-Type': 'application/json'
-};
-
-export const dataUrl = `${webApiUrl}/comp_data`;
-
-export const useDefaultDataStore = defineStore("defaultDataStore", {
-  state: () => ({
-    dataList: [] as any[],
-  }),
-
-  getters: {
-    get: (state) => {
-      return (id: string) => state.dataList.find((d) => d.id === id);
-    },
-  },
-
-  actions: {
-    async getDataList() {
-      return await axios
-        .get(`${dataUrl}`)
-        .then((response) => {
-          this.dataList = response.data;
-          return response.data;
-        })
-        .catch((err) => {
-          console.log(err);
-          return false;
-        });
-    },
-
-    async getDataById(id: string) {
-      return await axios
-        .get(`${dataUrl}/${id}`)
-        .then((response) => {
-          return response.data;
-        })
-        .catch((err) => {
-          console.log(err);
-          return false;
-        });
-    },
-
-    async getDataByName(cname: string) {
-      return await axios
-        .get(`${dataUrl}?cname=${cname}`)
-        .then((response) => {
-          return response.data;
-        })
-        .catch((err) => {
-          console.log(err);
-          return false;
-        });
-    },
-
-    async getDataByCid(cid: string) {
-      return await axios
-        .get(`${dataUrl}?cid=${cid}`)
-        .then((response) => {
-          return response.data;
-        })
-        .catch((err) => {
-          console.log(err);
-          return false;
-        });
-    },
-
-    async getDataByAliasName(aliasName: string) {
-      return await axios
-        .get(`${dataUrl}?cname=${aliasName}`)
-        .then((response) => {
-          return response.data;
-        })
-        .catch((err) => {
-          console.log(err);
-          return false;
-        });
-    },
-
-    async exists(id: string) {
-      return (await this.getDataById(id)) != null;
-    },
-
-    async saveData(data: any, cid: string, cname?: string) {
-      try {
-        if (!data.id || !(await this.exists(data.id))) {
-          return await this.insertData(data, cid, cname);
-        } else {
-          return await this.updateData(data, cid, cname);
-        }
-      } catch {
-        return false;
+  async function getDataList(): Promise<any> {
+    console.log("useSimpleDataStore...");
+    try {
+      const response = await fetch(`${dataUrl}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    },
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("fetchDataList error:", error);
+      return false;
+    }
+  }
 
-    async insertData(data: any, cid: string, cname?: string) {
-      const method = "POST";
+  async function getDataById(id: string): Promise<any> {
+    try {
+      const response = await fetch(`${dataUrl}/${id}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("getDataById error:", error);
+      return false;
+    }
+  }
+
+  async function getDataByCid(cid: string) {
+    try {
+      const response = await fetch(`${dataUrl}?cid=${cid}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("getDataByCid error:", error);
+      return false;
+    }
+  }
+
+  async function getDataByName(cname: string) {
+    try {
+      const response = await fetch(`${dataUrl}?cname=${cname}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("getDataByName error:", error);
+      return false;
+    }
+  }
+
+  async function getDataByAliasName(aliasName: string) {
+    try {
+      const response = await fetch(`${dataUrl}?aliasName=${aliasName}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("getDataByAliasName error:", error);
+      return false;
+    }
+  }
+
+  async function exists(id: string): Promise<boolean> {
+    const result = await getDataById(id);
+    return result != null && result !== false;
+  }
+
+  async function saveData(data: any, cid: string, cname?: string) {
+    try {
+      if (!data.id || !(await exists(data.id))) {
+        return await insertData(data, cid, cname);
+      } else {
+        return await updateData(data, cid, cname);
+      }
+    } catch (error) {
+      console.error("saveData error:", error);
+      return false;
+    }
+  }
+
+  async function insertData(
+    data: any,
+    cid: string,
+    cname?: string
+  ): Promise<any> {
+    try {
       if (!data.id) {
         data.id = uuidv4();
       }
       if (cname) data["cname"] = cname;
       if (cid) data["cid"] = cid;
-      const body = JSON.stringify(data);
-      const headers = apiJsonHeaders;
-      return await axios
-        .post(`${dataUrl}`, body, {
-          method,
-          headers,
-        })
-        .then((response) => {
-          return response.data;
-        })
-        .catch((err) => {
-          console.log(err);
-          return false;
-        });
-    },
+      const response = await fetch(`${dataUrl}`, {
+        method: "POST",
+        headers: apiJsonHeaders,
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error("insertData error:", error);
+      return false;
+    }
+  }
 
-    async updateData(data: any, cid: string, cname?: string) {
-      const method = "PUT";
+  async function updateData(
+    data: any,
+    cid: string,
+    cname?: string
+  ): Promise<any> {
+    try {
       if (cname) data["cname"] = cname;
       if (cid) data["cid"] = cid;
-      const body = JSON.stringify(data);
-      const headers = apiJsonHeaders;
-      return await axios
-        .patch(`${dataUrl}/${data.id}`, body, {
-          method,
-          headers,
-        })
-        .then((response) => {
-          return response.data;
-        })
-        .catch((err) => {
-          console.log(err);
-          return false;
-        });
-    },
+      const response = await fetch(`${dataUrl}/${data.id}`, {
+        method: "PUT",
+        headers: apiJsonHeaders,
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error("updateData error:", error);
+      return false;
+    }
+  }
 
-    async deleteData(id: string) {
-      const method = "DELETE";
-      const headers = apiJsonHeaders;
-      return await axios
-        .delete(`${dataUrl}/${id}`, {
-          method,
-          headers,
-        })
-        .then((response) => {
-          return response.data;
-        })
-        .catch((err) => {
-          console.log(err);
-          return false;
-        });
-    },
-  }, //actions
-});
+  async function deleteData(id: string): Promise<any> {
+    try {
+      const response = await fetch(`${dataUrl}/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error("deleteData error:", error);
+      return false;
+    }
+  }
+
+  return {
+    getDataList,
+    getDataById,
+    getDataByCid,
+    getDataByAliasName,
+    getDataByName,
+    saveData,
+    exists,
+    insertData,
+    updateData,
+    deleteData,
+  };
+};

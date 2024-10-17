@@ -1,94 +1,109 @@
-import { defineStore } from "pinia";
-import axios from "axios";
+import { PageProps } from "@/components/layout/StackEvent";
 import { apiJsonHeaders, webApiUrl } from "../../store/storeConstants";
-import { PageProps } from "./StackEvent";
 
-const dataUrl = `${webApiUrl}/pages`;
+export const useDefaultLayoutStore = () => {
+  const dataUrl = `${webApiUrl}/pages`;
 
-export const useDefaultLayoutStore = defineStore("defaultLayout", {
-  state: () => ({
-    pageList: [] as PageProps[],
-  }),
-
-  getters: {
-    category: (state) => {
-      return (pageId: string) =>
-        state.pageList.find((page) => page.id === pageId);
-    },
-  },
-
-  actions: {
-    async getPageList() {
-      return await axios.get(`${dataUrl}`).then((response) => {
-        this.pageList = response.data;
-        return response.data;
-      });
-    },
-
-    async getPageById(pageId: string) {
-      return await axios
-        .get(`${dataUrl}/${pageId}`)
-        .then((response) => {
-          return response.data;
-        })
-        .catch((err) => {
-          console.log(err.message);
-          return null;
-        });
-    },
-
-    async exists(pageId: string) {
-      return (await this.getPageById(pageId)) != null;
-    },
-
-    async savePage(data: PageProps) {
-      if (!(await this.exists(data.id))) {
-        return await this.insertPage(data);
-      } else {
-        return await this.updatePage(data);
+  async function getPageList(): Promise<PageProps[] | boolean> {
+    console.log("useSimpleLayoutStore...");
+    try {
+      const response = await fetch(`${dataUrl}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    },
+      const data = (await response.json()) as PageProps[];
+      return data;
+    } catch (error) {
+      console.error("fetchPageList error:", error);
+      return false;
+    }
+  }
 
-    async insertPage(data: PageProps) {
-      const method = "POST";
+  async function getPageById(pageId: string): Promise<PageProps | boolean> {
+    try {
+      const response = await fetch(`${dataUrl}/${pageId}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = (await response.json()) as PageProps;
+      return data;
+    } catch (error) {
+      console.error("getPageById error:", error);
+      return false;
+    }
+  }
 
-      const body = JSON.stringify(data);
-      const headers = apiJsonHeaders;
-      return await axios
-        .post(`${dataUrl}`, body, {
-          method,
-          headers,
-        })
-        .then((response) => {
-          return response.data;
-        });
-    },
+  async function exists(pageId: string): Promise<boolean> {
+    const result = await getPageById(pageId);
+    return result != null && result !== false;
+  }
 
-    async updatePage(data: PageProps) {
-      const method = "PUT";
-      const body = JSON.stringify(data);
-      const headers = apiJsonHeaders;
-      return await axios
-        .patch(`${dataUrl}/${data.id}`, body, {
-          method,
-          headers,
-        })
-        .then((response) => {
-          return response.data;
-        });
-    },
+  async function savePage(data: PageProps): Promise<PageProps | boolean> {
+    if (!(await exists(data.id))) {
+      return await insertPage(data);
+    } else {
+      return await updatePage(data);
+    }
+  }
 
-    async deletePage(pageId: string) {
-      const method = "DELETE";
-      const headers = apiJsonHeaders;
-      return await axios
-        .delete(`${dataUrl}/${pageId}`, {
-          method,
-          headers,
-        })
-        .then((response) => {
-          return response.data;
-        });
-    },
-  }, //actions
-});
+  async function insertPage(data: PageProps): Promise<PageProps | boolean> {
+    try {
+      const response = await fetch(`${dataUrl}`, {
+        method: "POST",
+        headers: apiJsonHeaders,
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const result = (await response.json()) as PageProps;
+      return result;
+    } catch (error) {
+      console.error("insertPage error:", error);
+      return false;
+    }
+  }
+
+  async function updatePage(data: PageProps): Promise<PageProps | boolean> {
+    try {
+      const response = await fetch(`${dataUrl}/${data.id}`, {
+        method: "PUT",
+        headers: apiJsonHeaders,
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const result = (await response.json()) as PageProps;
+      return result;
+    } catch (error) {
+      console.error("updatePage error:", error);
+      return false;
+    }
+  }
+
+  async function deletePage(pageId: string): Promise<PageProps | boolean> {
+    try {
+      const response = await fetch(`${dataUrl}/${pageId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const result = (await response.json()) as PageProps;
+      return result;
+    } catch (error) {
+      console.error("deletePage error:", error);
+      return false;
+    }
+  }
+
+  return {
+    getPageList,
+    getPageById,
+    savePage,
+    insertPage,
+    updatePage,
+    deletePage,
+  };
+};
