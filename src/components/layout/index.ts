@@ -1,7 +1,11 @@
+import "gridstack/dist/gridstack.min.css";
+import "gridstack/dist/gridstack-extra.min.css";
+import "@/assets/tailwind.css"
+
 import StackLayout from "./StackLayout.vue";
 import StackPage from "./StackPage.vue";
 import StackPageCreate from "./StackPageCreate.vue";
-import StackMenu from "./StackMenu.vue";
+
 import {
   StackEvent,
   PageProps,
@@ -69,14 +73,18 @@ export type {
   ConfigLoaderProps,
 };
 
-const components = [StackLayout, StackPage, StackPageCreate, StackMenu];
+const components = { 
+  StackLayout: StackLayout, 
+  StackPage: StackPage, 
+  StackPageCreate: StackPageCreate
+ };
 
-const StackAppLayout = {
-  install(App: App) {
-    components.forEach((item: any) => {
-      App.component(item.name, item);
+const stackapp = {
+  install(app: App) {
+    Object.keys(components).forEach((name: any) => {
+      app.component(name, (components as any)[name]);
     });
   },
 };
 
-export default StackAppLayout;
+export default stackapp;

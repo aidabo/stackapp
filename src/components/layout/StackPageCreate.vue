@@ -1,162 +1,168 @@
 <template>
-  <!-- navi panel -->
-  <stack-navi-panel
-    :pannel-width="pannelWidth"
-    :publish="publish"
-    :save="save"
-    :load="loadStore"
-    :clear="clear"
-    :close="close"
-  ></stack-navi-panel>
 
-  <!-- Show create page time and menu -->
-  <div class="flex justify-between align-items-center bg-blue-600 text-white">
-    <div class="ml-4 flex-1">
-      <h1 class="m-1">
-        <button
-          class="text-stone-200 font-bold py-2 px-4 rounded hover:text-white"
-          @click.prevent="open"
-        >
-          <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
-        </button>
+    <!-- navi panel -->
+    <stack-navi-panel
+      :pannel-width="pannelWidth"
+      :publish="publish"
+      :save="save"
+      :load="loadStore"
+      :clear="clear"
+      :close="close"
+    ></stack-navi-panel>
 
-        <a-space class="ml-64 text-lg font-bold">
-          <span v-if="!isTitleEditable">{{ pageProps.title }}</span>
-          <a-input
-            v-else
-            @change="onTitleChanged"
-            :style="{ width: '320px' }"
-            v-model="pageProps.title"
-          />
-          <!-- <a-button style="background-color: transparent;color: white;" @click.prevent="onTitleEditable"><icon-edit /></a-button> -->
-          <icon-edit
-            class="size-5 cursor-pointer"
-            @click.prevent="onTitleEditable"
-          />
-        </a-space>
+    <!-- Show create page time and menu -->
+    <div class="flex justify-between align-items-center bg-blue-600 text-white">
+      <div class="ml-4 flex-1">
+        <h1 class="m-1">
+          <button
+            class="text-stone-200 font-bold py-2 px-4 rounded hover:text-white"
+            @click.prevent="open"
+          >
+            <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+          </button>
 
-        <a-space class="mx-8 text-lg">
-          <!-- Float
+          <a-space class="ml-64 text-lg font-bold">
+            <span v-if="!isTitleEditable">{{ pageProps.title }}</span>
+            <a-input
+              v-else
+              @change="onTitleChanged"
+              :style="{ width: '320px' }"
+              v-model="pageProps.title"
+            />
+            <!-- <a-button style="background-color: transparent;color: white;" @click.prevent="onTitleEditable"><icon-edit /></a-button> -->
+            <icon-edit
+              class="size-5 cursor-pointer"
+              @click.prevent="onTitleEditable"
+            />
+          </a-space>
+
+          <a-space class="mx-8 text-lg">
+            <!-- Float
           <a-switch
             class="mx-3"
             v-model="gridOption.float"
             checked-color="#14C9C9"
             unchecked-color="lightgray"
           ></a-switch> -->
-          Compact
-          <a-switch
-            class="mx-3"
-            v-model="gridOption.compact"
-            checked-color="#14C9C9"
-            unchecked-color="lightgray"
-          ></a-switch>
-        </a-space>
+            Compact
+            <a-switch
+              class="mx-3"
+              v-model="gridOption.compact"
+              checked-color="#14C9C9"
+              unchecked-color="lightgray"
+            ></a-switch>
+          </a-space>
 
-        <a-space
-          class="mx-3 text-2xl font-bold"
-          v-if="!pageStatic"
-          @click.prevent="addGrid()"
-        >
-          <a-tooltip content="Add a grid into layout">
-            <a-button type="outline">
-              <template #icon>
-                <i
-                  class="fa fa-solid fa-plus text-white size-6 justify-center mt-2"
-                ></i>
-              </template>
-              <!-- Use the default slot to avoid extra spaces -->
-              <template #default
-                ><span class="text-white">Increase Grid</span></template
-              >
-            </a-button>
+          <a-space
+            class="mx-3 text-2xl font-bold"
+            v-if="!pageStatic"
+            @click.prevent="addGrid()"
+          >
+            <a-tooltip content="Add a grid into layout">
+              <a-button type="outline">
+                <template #icon>
+                  <i
+                    class="fa fa-solid fa-plus text-white size-6 justify-center mt-2"
+                  ></i>
+                </template>
+                <!-- Use the default slot to avoid extra spaces -->
+                <template #default
+                  ><span class="text-white">Increase Grid</span></template
+                >
+              </a-button>
+            </a-tooltip>
+          </a-space>
+        </h1>
+      </div>
+      <div class="flex justify-between align-items-center">
+        <!-- right -->
+
+        <a-space class="mx-3 text-2xl font-bold">
+          <a-tooltip content="just for test">
+            <button @click.prevent="test()">
+              <span><i class="fa-solid fa-fire"></i></span>
+            </button>
           </a-tooltip>
         </a-space>
-      </h1>
-    </div>
-    <div class="flex justify-between align-items-center">
-      <!-- right -->
 
-      <a-space class="mx-3 text-2xl font-bold">
-        <a-tooltip content="just for test">
-          <button @click.prevent="test()">
-            <span><i class="fa-solid fa-fire"></i></span>
-          </button>
-        </a-tooltip>
-      </a-space>
+        <a-space class="mx-3 text-2xl font-bold">
+          <a-tooltip content="Show page info">
+            <button @click.prevent="showInfo">
+              <span><i class="fa-solid fa-circle-info"></i></span>
+            </button>
+          </a-tooltip>
+          <page-info-dialog
+            :show="showInfoDialog"
+            :items="pageDebugInfo"
+          ></page-info-dialog>
+        </a-space>
 
-      <a-space class="mx-3 text-2xl font-bold">
-        <a-tooltip content="Show page info">
-          <button @click.prevent="showInfo">
-            <span><i class="fa-solid fa-circle-info"></i></span>
-          </button>
-        </a-tooltip>
-        <page-info-dialog
-          :show="showInfoDialog"
-          :items="pageDebugInfo"
-        ></page-info-dialog>
-      </a-space>
+        <a-space class="mx-3 text-2xl font-bold">
+          <a-tooltip content="Page Preview">
+            <button v-if="!pageStatic" @click.prevent="preview()">
+              <span><i class="fa-solid fa-eye"></i></span>
+            </button>
+          </a-tooltip>
+        </a-space>
 
-      <a-space class="mx-3 text-2xl font-bold">
-        <a-tooltip content="Page Preview">
-          <button v-if="!pageStatic" @click.prevent="preview()">
-            <span><i class="fa-solid fa-eye"></i></span>
-          </button>
-        </a-tooltip>
-      </a-space>
-
-      <a-space class="mx-3 text-2xl font-bold" v-if="!pageStatic">
-        <a-tooltip content="Exit page design">
-          <a-popconfirm
-            content="Are you sure you want to exit "
-            type="info"
-            @ok="closeDesign"
-          >
-            <a-button type="outline" status="warning" style="font-weight: 600">
-              <template #icon>
-                <icon-close size="18" />
-              </template>
-              <!-- Use the default slot to avoid extra spaces -->
-              <template #default>Exit Design</template>
-            </a-button>
-          </a-popconfirm>
-        </a-tooltip>
-      </a-space>
-    </div>
-  </div>
-
-  <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
-  <div class="page-create" :style="{ marginLeft: pannelWidth + 'px' }">
-    <div v-for="(id, index) in gridStacks">
-      <suspense>
-        <stack-layout
-          :id="id"
-          :ref="setGridStackRef(index)"
-          :pageProps="pageProps"
-          :pageStatic="pageStatic"
-          :key="id"
-        >
-          <template #menu>
-            <stack-menu
-              :grid-id="id"
-              :last-grid="
-                index == gridStacks.length - 1 && gridStacks.length > 1
-              "
-              v-if="!pageStatic"
-              @grid:remove="removeGrid"
-            ></stack-menu>
-          </template>
-        </stack-layout>
-        <template #fallback>
-          <div>Loading...</div>
-        </template>
-      </suspense>
-    </div>
-    <div class="flex flex-col justify-end align-items-center mb-5">
-      <div>
-        <!-- bottom  -->
+        <a-space class="mx-3 text-2xl font-bold" v-if="!pageStatic">
+          <a-tooltip content="Exit page design">
+            <a-popconfirm
+              content="Are you sure you want to exit "
+              type="info"
+              @ok="closeDesign"
+            >
+              <a-button
+                type="outline"
+                status="warning"
+                style="font-weight: 600"
+              >
+                <template #icon>
+                  <icon-close size="18" />
+                </template>
+                <!-- Use the default slot to avoid extra spaces -->
+                <template #default>Exit Design</template>
+              </a-button>
+            </a-popconfirm>
+          </a-tooltip>
+        </a-space>
       </div>
     </div>
-  </div>
+
+    <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+    <div class="page-create" :style="{ marginLeft: pannelWidth + 'px' }">
+      <div v-for="(id, index) in gridStacks">
+        <suspense>
+          <stack-layout
+            :id="id"
+            :ref="setGridStackRef(index)"
+            :pageProps="pageProps"
+            :pageStatic="pageStatic"
+            :key="id"
+          >
+            <template #menu>
+              <stack-menu
+                :grid-id="id"
+                :last-grid="
+                  index == gridStacks.length - 1 && gridStacks.length > 1
+                "
+                v-if="!pageStatic"
+                @grid:remove="removeGrid"
+              ></stack-menu>
+            </template>
+          </stack-layout>
+          <template #fallback>
+            <div>Loading...</div>
+          </template>
+        </suspense>
+      </div>
+      <div class="flex flex-col justify-end align-items-center mb-5">
+        <div>
+          <!-- bottom  -->
+        </div>
+      </div>
+    </div>
+
 </template>
 
 <script setup lang="ts">
@@ -517,6 +523,7 @@ defineExpose({
 </script>
 
 <style scoped>
+
 .openbtn {
   font-size: 1.5rem;
   margin-left: 15px;

@@ -1,7 +1,7 @@
 <template>
   <Suspense>
     <StackLayoutProvider :config="config">
-      <GridStackPage :id="pageId"></GridStackPage>
+      <StackPage :id="pageId"></StackPage>
     </StackLayoutProvider>
   </Suspense>
 </template>
@@ -13,7 +13,7 @@ import {
   StackLayoutProvider,
 } from "@/components/layout/StackLayoutConfig";
 import config from "@/components/dynamic/stack.config";
-import GridStackPage from "@/components/layout/StackPage.vue";
+import StackPage from "@/components/layout/StackPage.vue";
 
 const props = defineProps({
   id: {

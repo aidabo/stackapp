@@ -60,10 +60,11 @@ export default defineConfig(({ /*command,*/ mode }) => {
       },  
       rollupOptions: {  
         // 确保外部化 Vue，以便库用户能够自行提供 Vue 版本  
-        external: ['vue'],  
+        external: ['vue', 'vue-router'],  
         output: {  
           globals: {  
             vue: 'Vue',  
+            'vue-router': 'VueRouter'
           },  
           exports: 'named', // 将所有导出视为命名导出  
         },  
@@ -75,10 +76,11 @@ export default defineConfig(({ /*command,*/ mode }) => {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
         /** 在 Vue 3 中，默认情况下，Vue 打包为只包含运行时版本的代码，这意味着它不包含模板编译器。
          * 你可以通过配置别名来确保 import Vue from 'vue' 导入的是包含编译器的 Vue 版本。 */
-        //'vue': 'vue/dist/vue.esm-bundler.js'  
+        'vue': 'vue/dist/vue.esm-bundler.js'  
       },
       dedupe: [
-        'vue'
+        'vue',
+        'vue-router'        
       ]
     },
     

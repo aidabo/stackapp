@@ -24,7 +24,7 @@
   "homepage": "https://github.com/aidabo/stackapp.git",
   "files": [
     "dist"
-  ],  
+  ],
   "typings": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -50,6 +50,7 @@
   },
   "dependencies": {
     "@arco-plugins/vite-vue": "^1.4.5",
+    "@formkit/core": "^1.6.7",
     "@formkit/i18n": "^1.6.5",
     "@formkit/icons": "^1.6.5",
     "@formkit/themes": "^1.6.5",
@@ -76,7 +77,6 @@
     "tailwindcss": "^3.4.10",
     "url": "^0.11.4",
     "uuid": "^10.0.0",
-    "vee-validate": "^4.13.2",
     "vite-plugin-dts": "^4.2.4",
     "vue": "^3.4.37",
     "vue-router": "^4.4.5"
@@ -94,7 +94,6 @@
     "@vue/babel-plugin-jsx": "^1.2.2",
     "autoprefixer": "^10.4.20",
     "postcss-loader": "^8.1.1",
-    "rollup-plugin-url": "^3.0.1",
     "rollup-plugin-visualizer": "^5.12.0",
     "typescript": "^5.5.3",
     "unplugin-auto-import": "^0.18.2",

@@ -5,7 +5,6 @@ export const useDefaultDataStore = () => {
   const dataUrl = `${webApiUrl}/comp_data`;
 
   async function getDataList(): Promise<any> {
-    console.log("useSimpleDataStore...");
     try {
       const response = await fetch(`${dataUrl}`);
       if (!response.ok) {

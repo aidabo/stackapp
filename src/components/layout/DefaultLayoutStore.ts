@@ -5,7 +5,6 @@ export const useDefaultLayoutStore = () => {
   const dataUrl = `${webApiUrl}/pages`;
 
   async function getPageList(): Promise<PageProps[] | boolean> {
-    console.log("useSimpleLayoutStore...");
     try {
       const response = await fetch(`${dataUrl}`);
       if (!response.ok) {
