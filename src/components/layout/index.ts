@@ -5,6 +5,8 @@ import "@/assets/tailwind.css"
 import StackLayout from "./StackLayout.vue";
 import StackPage from "./StackPage.vue";
 import StackPageCreate from "./StackPageCreate.vue";
+import StackMenu from "./StackMenu.vue";
+import StackNaviPanel from "./StackNaviPanel.vue";
 
 import {
   StackEvent,
@@ -76,6 +78,8 @@ export type {
 const components = { 
   StackLayout: StackLayout, 
   StackPage: StackPage, 
+  StackMenu: StackMenu,
+  StackNaviPanel: StackNaviPanel,
   StackPageCreate: StackPageCreate
  };
 

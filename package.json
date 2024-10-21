@@ -1,6 +1,6 @@
 {
   "name": "stackapp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "description": "A draggable and resizable layout for Vue component to create page",
   "keywords": [

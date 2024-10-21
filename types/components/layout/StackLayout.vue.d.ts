@@ -3,7 +3,7 @@ import "gridstack/dist/gridstack.min.css";
 import "gridstack/dist/gridstack-extra.min.css";
 import { StackComponentHandlers, StackComponentRefs, StackEvent, PageProps } from "@/components/layout/StackEvent";
 declare function __VLS_template(): {
-    menu?(_: {}): any;
+    gridmenu?(_: {}): any;
 };
 declare const __VLS_component: import("vue").DefineComponent<{
     id: {

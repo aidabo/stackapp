@@ -140,8 +140,9 @@
             :pageStatic="pageStatic"
             :key="id"
           >
-            <template #menu>
+            <template #gridmenu>
               <stack-menu
+                :key="index"
                 :grid-id="id"
                 :last-grid="
                   index == gridStacks.length - 1 && gridStacks.length > 1
@@ -547,5 +548,8 @@ defineExpose({
 .grid-stack-item-removing {
   opacity: 0.8;
   filter: blur(5px);
+}
+.stack-menu {
+  z-index: 1
 }
 </style>

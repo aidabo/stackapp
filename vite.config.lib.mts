@@ -30,6 +30,7 @@ export default defineConfig(({ /*command,*/ mode }) => {
       vueJsx({
         // options are passed on to @vue/babel-plugin-jsx
       }),
+      //merge dts to index.d.ts file
       dts({rollupTypes: true, tsconfigPath: "tsconfig.lib.json"}),
       AutoImport({
         resolvers: [ArcoResolver()],
@@ -45,10 +46,10 @@ export default defineConfig(({ /*command,*/ mode }) => {
         style: 'css'
       }),
       url(),
-      visualizer({
-        emitFile: true,
-        filename: "stats.html",
-      }) as PluginOption,      
+      // visualizer({
+      //   emitFile: true,
+      //   filename: "stats.html",
+      // }) as PluginOption,      
     ], //plugins
 
     build: {  

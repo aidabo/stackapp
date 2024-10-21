@@ -6,7 +6,7 @@
       class="grid-stack"
       :class="{ editable: pageStatic == false }"
     >
-      <slot name="menu"></slot>
+      <slot name="gridmenu"></slot>
       <div v-if="!pageStatic" class="drag-to-here">Drag to here</div>
     </div>
     <hr />
